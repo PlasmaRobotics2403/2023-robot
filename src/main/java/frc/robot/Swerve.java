@@ -1,7 +1,4 @@
-package frc.robot.subsystems;
-
-import frc.robot.SwerveModule;
-import frc.robot.Constants;
+package frc.robot;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -10,11 +7,11 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,7 +22,7 @@ public class Swerve extends SubsystemBase {
     private AHRS navX;
 
     public Swerve() {
-        navX = new AHRS(SerialPort.Port.kUSB);
+        navX = new AHRS(SerialPort.Port.kMXP);
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
@@ -71,6 +68,19 @@ public class Swerve extends SubsystemBase {
 
     public void resetOdometry(Pose2d pose) {
         swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose);
+    }
+
+    public void teleopDrive(double translation, double strafe, double rotation, boolean robotCentric) {
+        double translationVal = MathUtil.applyDeadband(translation, Constants.stickDeadband);
+        double strafeVal = MathUtil.applyDeadband(strafe, Constants.stickDeadband);
+        double rotationVal = MathUtil.applyDeadband(rotation, Constants.stickDeadband);
+
+        drive(
+            new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed), 
+            rotationVal * Constants.Swerve.maxAngularVelocity, 
+            !robotCentric, 
+            true
+        );
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
@@ -119,8 +129,7 @@ public class Swerve extends SubsystemBase {
         return positions;
     }
 
-    @Override
-    public void periodic(){
+    public void logging(){
         swerveOdometry.update(getYaw(), getModulePositions());  
 
         for(SwerveModule mod : mSwerveMods){
