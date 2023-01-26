@@ -147,4 +147,10 @@ public final class Constants {
             new TrapezoidProfile.Constraints(
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     }
+
+    public static final class spindexerConstants{
+        public static final int spinnerMotorID = 8;
+        public static final int cwLimitSwitchID = 0;
+        public static final int ccwLimitSwitchID = 1;
+    }
 }

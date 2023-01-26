@@ -18,11 +18,13 @@ import frc.robot.controllers.PlasmaJoystick;
 public class Robot extends TimedRobot {
   PlasmaJoystick driver;
   Swerve swerve;
+  Spindexer spindexer;
 
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -32,6 +34,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     driver = new PlasmaJoystick(Constants.DRIVER_JOYSTICK_PORT);
     swerve = new Swerve();
+    spindexer = new Spindexer();
     
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
@@ -89,6 +92,15 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     swerve.teleopDrive(driver.LeftY.getTrueAxis(), driver.LeftX.getTrueAxis(), driver.RightX.getTrueAxis(), driver.START.isPressed());
+    spindexer.spin();
+
+    if(driver.X.isPressed()) {
+      spindexer.resetSpinState();
+    }
+    if(driver.Y.isPressed()) {
+      spindexer.stopSpinner();
+    }
+
   }
 
   /** This function is called once when the robot is disabled. */
