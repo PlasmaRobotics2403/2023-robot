@@ -23,14 +23,14 @@ public class Spindexer {
     public void spin() {
         switch(spinDirection) {
             case "ccw":
-                spinnerMotor.set(ControlMode.PercentOutput, -0.4);
+                spinnerMotor.set(ControlMode.PercentOutput, -Constants.spindexerConstants.spinnerMotorSpeed);
                 if (ccwLimitSwitch.get()) {
                     spinDirection = "cw";
                 }
             break;
 
             case "cw":
-                spinnerMotor.set(ControlMode.PercentOutput,0.4);
+                spinnerMotor.set(ControlMode.PercentOutput, Constants.spindexerConstants.spinnerMotorSpeed);
                 if (cwLimitSwitch.get()) {
                     spinDirection = "stop";
                 }

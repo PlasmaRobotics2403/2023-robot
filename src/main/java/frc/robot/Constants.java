@@ -16,7 +16,7 @@ public final class Constants {
     public static final int COPILOT_JOYSTICK_PORT = 1;
 
 
-    public static final class Swerve {
+    public static final class SwerveConstants {
         public static final boolean invertGyro = true; // Always ensure Gyro is CCW+ CW-
 
         public static final COTSFalconSwerveConstants chosenModule =  //TODO: This must be tuned to specific robot
@@ -150,7 +150,9 @@ public final class Constants {
 
     public static final class spindexerConstants{
         public static final int spinnerMotorID = 8;
-        public static final int cwLimitSwitchID = 0;
-        public static final int ccwLimitSwitchID = 1;
+        public static final int cwLimitSwitchID = 1;
+        public static final int ccwLimitSwitchID = 0;
+        
+        public static final double spinnerMotorSpeed = 0.15;
     }
 }
