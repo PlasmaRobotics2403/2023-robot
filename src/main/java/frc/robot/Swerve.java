@@ -72,8 +72,8 @@ public class Swerve extends SubsystemBase {
 
     public void teleopDrive(double translation, double strafe, double rotation, boolean robotCentric) {
         double translationVal = MathUtil.applyDeadband(translation, Constants.stickDeadband);
-        double strafeVal = MathUtil.applyDeadband(strafe, Constants.stickDeadband);
-        double rotationVal = MathUtil.applyDeadband(rotation, Constants.stickDeadband);
+        double strafeVal = -1 * MathUtil.applyDeadband(strafe, Constants.stickDeadband);
+        double rotationVal = -1 *   MathUtil.applyDeadband(rotation, Constants.stickDeadband);
 
         drive(
             new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed), 
