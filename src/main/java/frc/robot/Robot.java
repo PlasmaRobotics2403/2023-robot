@@ -89,6 +89,9 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     swerve.teleopDrive(driver.LeftY.getTrueAxis(), driver.LeftX.getTrueAxis(), driver.RightX.getTrueAxis(), driver.START.isPressed());
+    if (driver.BACK.isPressed()) {
+      swerve.zeroGyro();
+    }
   }
 
   /** This function is called once when the robot is disabled. */
