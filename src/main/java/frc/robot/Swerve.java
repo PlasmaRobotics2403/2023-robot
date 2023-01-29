@@ -5,6 +5,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.MathUtil;
@@ -40,6 +41,18 @@ public class Swerve extends SubsystemBase {
 
         swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), getModulePositions());
         drive(new Translation2d(0, 0), 0, true, true);
+    }
+
+    public void setBrakeMode(boolean drive, boolean angle) {
+        for(SwerveModule mod : mSwerveMods) {
+            mod.setBrakeMode(drive, angle);
+        }
+    }
+
+    public void defaultNeutralMode(boolean drive, boolean angle) {
+        for(SwerveModule mod : mSwerveMods) {
+            mod.defaultNeutralMode(drive, angle);
+        }
     }
 
     public void zeroHeading() {
@@ -102,7 +115,17 @@ public class Swerve extends SubsystemBase {
         for(SwerveModule mod : mSwerveMods){
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
         }
-    }    
+    } 
+    
+    public void drive(ChassisSpeeds speeds) {
+        SwerveModuleState[] swerveModuleStates =
+            Constants.Swerve.swerveKinematics.toSwerveModuleStates(speeds);
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxSpeed);
+
+        for(SwerveModule mod : mSwerveMods){
+            mod.setDesiredState(swerveModuleStates[mod.moduleNumber], false);
+        }
+    }
 
     /* Used by SwerveControllerCommand in Auto */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
