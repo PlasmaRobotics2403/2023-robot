@@ -50,6 +50,7 @@ public class FollowTrajectory  implements Action{
         swerve.setBrakeMode(true, true);
         timer.reset();
         timer.start();
+
         Pose2d iniitalPose = trajectory.getInitialPose();
         if(resetOdomety) {
             swerve.resetOdometry(new Pose2d(iniitalPose.getTranslation(), swerve.getRotation2d()));
@@ -63,7 +64,7 @@ public class FollowTrajectory  implements Action{
        ChassisSpeeds targetSpeeds = controller.calculate(swerve.getPose(), desiredState, new Rotation2d(desiredState.holonomicRotation.getRadians()));
 
        targetSpeeds.vyMetersPerSecond = -targetSpeeds.vyMetersPerSecond;
-       targetSpeeds.omegaRadiansPerSecond = -targetSpeeds.omegaRadiansPerSecond;
+       targetSpeeds.omegaRadiansPerSecond = targetSpeeds.omegaRadiansPerSecond;
 
        swerve.drive(targetSpeeds);
     }
