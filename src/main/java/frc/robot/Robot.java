@@ -83,7 +83,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    swerve.defaultNeutralMode(true, true);
+  }
 
   /** This function is called periodically during operator control. */
   @Override

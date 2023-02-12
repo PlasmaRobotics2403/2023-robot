@@ -62,8 +62,8 @@ public class FollowTrajectory  implements Action{
        PathPlannerState desiredState = (PathPlannerState) trajectory.sample(time);
        ChassisSpeeds targetSpeeds = controller.calculate(swerve.getPose(), desiredState, new Rotation2d(desiredState.holonomicRotation.getRadians()));
 
-       targetSpeeds.vyMetersPerSecond = -targetSpeeds.vyMetersPerSecond;
-       targetSpeeds.omegaRadiansPerSecond = -targetSpeeds.omegaRadiansPerSecond;
+       targetSpeeds.vyMetersPerSecond = targetSpeeds.vyMetersPerSecond;
+       targetSpeeds.omegaRadiansPerSecond = targetSpeeds.omegaRadiansPerSecond;
 
        swerve.drive(targetSpeeds);
     }
