@@ -5,10 +5,8 @@
 package frc.robot;
  
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.modes.DriveForward;
-import frc.robot.auto.modes.Nothing;
 import frc.robot.auto.util.AutoMode;
 import frc.robot.auto.util.AutoModeRunner;
 import frc.robot.controllers.PlasmaJoystick;
@@ -22,6 +20,7 @@ import frc.robot.controllers.PlasmaJoystick;
 public class Robot extends TimedRobot {
   PlasmaJoystick driver;
   Swerve swerve;
+  Limelight limelight;
 
   AutoModeRunner autoModeRunner;
   AutoMode[] autoModes;
@@ -35,6 +34,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     driver = new PlasmaJoystick(Constants.DRIVER_JOYSTICK_PORT);
     swerve = new Swerve();
+    limelight = new Limelight();
     
     autoModeRunner = new AutoModeRunner();
     autoModes = new AutoMode[20];
@@ -57,6 +57,7 @@ public class Robot extends TimedRobot {
 
 
     swerve.logging();
+    limelight.logging();
   }
 
   /**
@@ -90,7 +91,13 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    swerve.teleopDrive(driver.LeftY.getTrueAxis(), driver.LeftX.getTrueAxis(), driver.RightX.getTrueAxis(), driver.START.isPressed());
+    if(driver.A.isPressed()) {
+      swerve.teleopDrive(0, 0, limelight.SkewVisionAlign(), true);
+    }
+    else {
+      swerve.teleopDrive(driver.LeftY.getTrueAxis(), driver.LeftX.getTrueAxis(), driver.RightX.getTrueAxis(), driver.START.isPressed());
+    }
+
     if (driver.BACK.isPressed()) {
       swerve.zeroGyro();
     }
