@@ -4,12 +4,15 @@
 
 package frc.robot;
  
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.modes.DriveForward;
 import frc.robot.auto.util.AutoMode;
 import frc.robot.auto.util.AutoModeRunner;
 import frc.robot.controllers.PlasmaJoystick;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -21,6 +24,8 @@ public class Robot extends TimedRobot {
   PlasmaJoystick driver;
   Swerve swerve;
   Limelight limelight;
+  AHRS navX;
+
 
   AutoModeRunner autoModeRunner;
   AutoMode[] autoModes;
@@ -35,6 +40,7 @@ public class Robot extends TimedRobot {
     driver = new PlasmaJoystick(Constants.DRIVER_JOYSTICK_PORT);
     swerve = new Swerve();
     limelight = new Limelight();
+    
     
     autoModeRunner = new AutoModeRunner();
     autoModes = new AutoMode[20];
@@ -93,6 +99,9 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     if(driver.A.isPressed()) {
       swerve.teleopDrive(0, 0, limelight.SkewVisionAlign(), true);
+    }
+    else if(driver.B.isPressed()) {
+      swerve.balance(swerve.getPitch().getDegrees() - 360);
     }
     else {
       swerve.teleopDrive(driver.LeftY.getTrueAxis(), driver.LeftX.getTrueAxis(), driver.RightX.getTrueAxis(), driver.START.isPressed());

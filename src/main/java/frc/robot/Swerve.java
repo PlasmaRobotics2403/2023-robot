@@ -82,6 +82,10 @@ public class Swerve extends SubsystemBase {
         return (Constants.Swerve.invertGyro) ? Rotation2d.fromDegrees(360 - navX.getYaw()) : Rotation2d.fromDegrees(navX.getYaw());
     }
 
+    public Rotation2d getPitch() {
+        return (Constants.Swerve.invertGyro) ? Rotation2d.fromDegrees(360 - navX.getPitch()) : Rotation2d.fromDegrees(navX.getPitch());
+    }
+
     public void resetModulesToAbsolute(){
         for(SwerveModule mod : mSwerveMods){
             mod.resetToAbsolute();
@@ -90,6 +94,19 @@ public class Swerve extends SubsystemBase {
     
     public void resetOdometry(Pose2d pose) {
         swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose);
+    }
+
+    public void balance(double angle) {
+        double speed = 0.05*angle;
+        if(angle > 1) {
+            teleopDrive(0.15, 0, 0, false);
+        }
+        else if(angle < -1) {
+            teleopDrive(0.15, 0, 0, false);
+        }
+        else {
+            teleopDrive(0, 0, 0, false);
+        }
     }
 
     public void teleopDrive(double translation, double strafe, double rotation, boolean robotCentric) {
@@ -171,5 +188,6 @@ public class Swerve extends SubsystemBase {
         }
 
         SmartDashboard.putNumber("navX Yaw", getYaw().getDegrees());
+        SmartDashboard.putNumber("navx Pitch", getPitch().getDegrees() - 360);
     }
 }
