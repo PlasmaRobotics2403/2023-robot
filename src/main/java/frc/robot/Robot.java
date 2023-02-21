@@ -101,7 +101,7 @@ public class Robot extends TimedRobot {
       swerve.teleopDrive(0, 0, limelight.SkewVisionAlign(), true);
     }
     else if(driver.B.isPressed()) {
-      swerve.balance(swerve.getPitch().getDegrees() - 360);
+      swerve.balance();
     }
     else {
       swerve.teleopDrive(driver.LeftY.getTrueAxis(), driver.LeftX.getTrueAxis(), driver.RightX.getTrueAxis(), driver.START.isPressed());

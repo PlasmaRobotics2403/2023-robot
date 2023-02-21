@@ -5,7 +5,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.MathUtil;
@@ -86,6 +85,10 @@ public class Swerve extends SubsystemBase {
         return (Constants.Swerve.invertGyro) ? Rotation2d.fromDegrees(360 - navX.getPitch()) : Rotation2d.fromDegrees(navX.getPitch());
     }
 
+    public Rotation2d getRoll() {
+        return (Constants.Swerve.invertGyro) ? Rotation2d.fromDegrees(360 - navX.getRoll()) : Rotation2d.fromDegrees(navX.getRoll());
+    }
+
     public void resetModulesToAbsolute(){
         for(SwerveModule mod : mSwerveMods){
             mod.resetToAbsolute();
@@ -96,13 +99,14 @@ public class Swerve extends SubsystemBase {
         swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose);
     }
 
-    public void balance(double angle) {
-        double speed = 0.05*angle;
-        if(angle > 1) {
-            teleopDrive(0.15, 0, 0, false);
-        }
-        else if(angle < -1) {
-            teleopDrive(0.15, 0, 0, false);
+    public void balance() {
+        double yVal = (getPitch().getDegrees() - 360) * Math.cos(getYaw().getRadians()) * 0.02;
+        double xVal = (getRoll().getDegrees() - 360) * Math.sin(getYaw().getRadians()) * 0.02;
+
+        double transVal = yVal + xVal;
+
+        if( ( Math.abs(getPitch().getDegrees() - 360) > 2 ) || ( Math.abs(getRoll().getDegrees() - 360) > 2) ) {
+            teleopDrive(transVal, 0, 0, false);
         }
         else {
             teleopDrive(0, 0, 0, false);
@@ -119,8 +123,7 @@ public class Swerve extends SubsystemBase {
             rotationVal * Constants.Swerve.maxAngularVelocity, 
             !robotCentric, 
             true
-        );
-    }
+        );    }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
         SwerveModuleState[] swerveModuleStates =
@@ -187,7 +190,8 @@ public class Swerve extends SubsystemBase {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
         }
 
-        SmartDashboard.putNumber("navX Yaw", getYaw().getDegrees());
+        SmartDashboard.putNumber("navX Yaw", getYaw().getDegrees() - 360);
         SmartDashboard.putNumber("navx Pitch", getPitch().getDegrees() - 360);
+        SmartDashboard.putNumber("navX Roll", getRoll().getDegrees() - 360);
     }
 }
