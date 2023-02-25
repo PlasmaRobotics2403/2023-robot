@@ -41,16 +41,25 @@ public class Limelight {
 
     public double XVisionAlign() {
         double x_speed = x_value/-29;
-        x_speed = Math.max(x_speed, -0.35);
-        x_speed = Math.min(x_speed, 0.35);
+        x_speed = Math.max(x_speed, -Constants.LimelightConstants.maxTanslationalSpeed);
+        x_speed = Math.min(x_speed, Constants.LimelightConstants.maxTanslationalSpeed);
         return x_speed;
     }
 
     public double SkewVisionAlign() {
         double s_speed = s_value/29;
-        s_speed = Math.max(s_speed, -0.3);
-        s_speed = Math.min(s_value, 0.3);
+        s_speed = Math.max(s_speed, -Constants.LimelightConstants.maxSkewSpeed);
+        s_speed = Math.min(s_value, Constants.LimelightConstants.maxSkewSpeed);
         return s_speed;
+    }
+
+    public double distanceVisionAlign() {
+        double distance = a_value - 1.2;
+        double y_speed = distance * 1;
+        y_speed = Math.max(y_speed, -Constants.LimelightConstants.maxTanslationalSpeed);
+        y_speed = Math.min(y_speed, Constants.LimelightConstants.maxTanslationalSpeed);
+        
+        return y_speed;
     }
     public double getArea() {
         return a_value;

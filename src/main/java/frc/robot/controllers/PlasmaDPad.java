@@ -21,7 +21,7 @@ public class PlasmaDPad {
 	/**
 	 * Gets angle of d-pad
 	 * 
-	 * @return value from 0-360 degrees based on angle
+	 * @return value from 0-360 degrees based on angle, -1 if not pressed
 	 * 
 	 * @author Nic A
 	 */

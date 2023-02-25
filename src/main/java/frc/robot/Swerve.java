@@ -100,8 +100,8 @@ public class Swerve extends SubsystemBase {
     }
 
     public void balance() {
-        double yVal = (getPitch().getDegrees() - 360) * Math.cos(getYaw().getRadians()) * 0.02;
-        double xVal = (getRoll().getDegrees() - 360) * Math.sin(getYaw().getRadians()) * 0.02;
+        double yVal = (getPitch().getDegrees() - 360) * Math.cos(getYaw().getRadians()) * Constants.Swerve.balanceMultiplier;
+        double xVal = (getRoll().getDegrees() - 360) * Math.sin(getYaw().getRadians()) * Constants.Swerve.balanceMultiplier;
 
         double transVal = yVal + xVal;
 

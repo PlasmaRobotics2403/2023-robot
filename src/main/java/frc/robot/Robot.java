@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.modes.DriveForward;
 import frc.robot.auto.util.AutoMode;
 import frc.robot.auto.util.AutoModeRunner;
+import frc.robot.controllers.PlasmaDPad;
 import frc.robot.controllers.PlasmaJoystick;
 
 
@@ -25,7 +26,10 @@ public class Robot extends TimedRobot {
   Swerve swerve;
   Limelight limelight;
   AHRS navX;
+  Elevator elevator;
 
+  double elevatorTarget;
+ 
 
   AutoModeRunner autoModeRunner;
   AutoMode[] autoModes;
@@ -40,7 +44,9 @@ public class Robot extends TimedRobot {
     driver = new PlasmaJoystick(Constants.DRIVER_JOYSTICK_PORT);
     swerve = new Swerve();
     limelight = new Limelight();
-    
+    elevator = new Elevator();
+
+    elevatorTarget = 0;
     
     autoModeRunner = new AutoModeRunner();
     autoModes = new AutoMode[20];
@@ -64,6 +70,7 @@ public class Robot extends TimedRobot {
 
     swerve.logging();
     limelight.logging();
+    elevator.logger();
   }
 
   /**
@@ -98,7 +105,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     if(driver.A.isPressed()) {
-      swerve.teleopDrive(0, 0, limelight.SkewVisionAlign(), true);
+      swerve.teleopDrive(limelight.distanceVisionAlign(), limelight.XVisionAlign(), /*limelight.SkewVisionAlign()*/0, true);
     }
     else if(driver.B.isPressed()) {
       swerve.balance();
@@ -109,6 +116,17 @@ public class Robot extends TimedRobot {
 
     if (driver.BACK.isPressed()) {
       swerve.zeroGyro();
+    }
+
+    elevator.magicElevator(elevatorTarget);
+    if(driver.dPad.getPOV() == 0) {
+      elevatorTarget = 40;
+    }
+    else if(driver.dPad.getPOV() == 90 || driver.dPad.getPOV() == 270) {
+      elevatorTarget = 20;
+    }
+    else if(driver.dPad.getPOV() == 180){
+      elevatorTarget = 0;
     }
   }
 

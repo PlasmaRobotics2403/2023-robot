@@ -90,6 +90,9 @@ public final class Constants {
         public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
         public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
 
+        /*Balance Multiplier */
+        public static final double balanceMultiplier = 0.02;
+
         /* Module Specific Constants */
         /* Front Left Module - Module 0 */
         public static final class Mod0 { //TODO: This must be tuned to specific robot
@@ -132,6 +135,25 @@ public final class Constants {
         }
     }
 
+    public static final class ElevatorConstants {
+        public static int master = 8;
+        public static int slave = 9;
+
+        public static double elevatorSpeed = 0.75;
+        public static double ticksToInches = 0.000811297;
+        public static double inchesToTicks = 1232.5937;
+
+        /*Elevator Pid */
+        public static double kF = 0.6;
+        public static double kP = 0.5;
+        public static double kI = 0;
+        public static double kD = 0;
+    }
+
+    public static final class LimelightConstants {
+        public static double maxTanslationalSpeed = 0.35;
+        public static double maxSkewSpeed = 0.3;
+    }
     public static final class AutoConstants { //TODO: The below constants are used in the example auto, and must be tuned to specific robot
         public static final double kMaxSpeedMetersPerSecond = 3;
         public static final double kMaxAccelerationMetersPerSecondSquared = 4;

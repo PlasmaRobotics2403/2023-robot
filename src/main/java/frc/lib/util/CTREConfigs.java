@@ -55,14 +55,5 @@ public final class CTREConfigs {
         config.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
         config.sensorTimeBase = SensorTimeBase.PerSecond;
         return config;
-}
     }
-
-        /* Swerve Angle Motor Configurations */
-        
-
-        /* Swerve Drive Motor Configuration */
-        
-        
-        /* Swerve CANCoder Configuration */
-        
+}
