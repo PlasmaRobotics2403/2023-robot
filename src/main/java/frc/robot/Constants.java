@@ -150,6 +150,16 @@ public final class Constants {
         public static double kD = 0;
     }
 
+    public static final class GrabberConstants{
+        public static int arm_id = 10;
+
+        /*Arm Pid */
+        public static double kF = 0;
+        public static double kP = 0;
+        public static double kI = 0;
+        public static double kD = 0;
+    }
+
     public static final class LimelightConstants {
         public static double maxTanslationalSpeed = 0.35;
         public static double maxSkewSpeed = 0.3;

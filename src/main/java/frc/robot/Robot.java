@@ -27,9 +27,9 @@ public class Robot extends TimedRobot {
   Limelight limelight;
   AHRS navX;
   Elevator elevator;
+  Grabber grabber;
 
   double elevatorTarget;
- 
 
   AutoModeRunner autoModeRunner;
   AutoMode[] autoModes;
@@ -45,6 +45,7 @@ public class Robot extends TimedRobot {
     swerve = new Swerve();
     limelight = new Limelight();
     elevator = new Elevator();
+    grabber = new Grabber();
 
     elevatorTarget = 0;
     
@@ -71,6 +72,7 @@ public class Robot extends TimedRobot {
     swerve.logging();
     limelight.logging();
     elevator.logger();
+    grabber.logging();
   }
 
   /**
@@ -118,16 +120,35 @@ public class Robot extends TimedRobot {
       swerve.zeroGyro();
     }
 
-    elevator.magicElevator(elevatorTarget);
+    if(driver.RB.isPressed()) {
+      grabber.ArmRot(0.9);
+    }
+
+    else if(driver.LB.isPressed()){
+      grabber.ArmRot(-0.9);
+    }
+
+    else {
+      grabber.ArmRot(0);  
+    }
+
+    //elevator.magicElevator(elevatorTarget);
     if(driver.dPad.getPOV() == 0) {
       elevatorTarget = 40;
+      elevator.spin(0.3);
     }
     else if(driver.dPad.getPOV() == 90 || driver.dPad.getPOV() == 270) {
       elevatorTarget = 20;
     }
     else if(driver.dPad.getPOV() == 180){
       elevatorTarget = 0;
+      elevator.spin(-0.3);
     }
+    else {
+      elevator.spin(0);
+    }
+
+    
   }
 
   /** This function is called once when the robot is disabled. */
