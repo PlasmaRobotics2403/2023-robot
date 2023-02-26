@@ -4,15 +4,20 @@
 
 package frc.robot;
  
+import com.ctre.phoenix.CANifier;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.modes.DriveForward;
 import frc.robot.auto.util.AutoMode;
 import frc.robot.auto.util.AutoModeRunner;
 import frc.robot.controllers.PlasmaDPad;
 import frc.robot.controllers.PlasmaJoystick;
+
 
 
 /**
@@ -22,18 +27,13 @@ import frc.robot.controllers.PlasmaJoystick;
  * project.
  */
 public class Robot extends TimedRobot {
-  PlasmaJoystick driver;
-  Swerve swerve;
-  Limelight limelight;
-  AHRS navX;
-  Elevator elevator;
-  Grabber grabber;
+    LEDs leds;
 
-  double elevatorTarget;
-
-  AutoModeRunner autoModeRunner;
-  AutoMode[] autoModes;
-  int autoModeSelection;
+    private static final String Default = "LED off";
+    private static final String purple = "LED Purple";
+    private static final String yellow = "LED Yellow";
+    private String m_autoSelected;
+    private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -41,19 +41,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    driver = new PlasmaJoystick(Constants.DRIVER_JOYSTICK_PORT);
-    swerve = new Swerve();
-    limelight = new Limelight();
-    elevator = new Elevator();
-    grabber = new Grabber();
+    leds = new LEDs();
 
-    elevatorTarget = 0;
-    
-    autoModeRunner = new AutoModeRunner();
-    autoModes = new AutoMode[20];
-        autoModes[0] = new DriveForward(swerve);
-
-    autoModeSelection = 0;
+    m_chooser.setDefaultOption("LED off", Default);
+    m_chooser.addOption("LED Purple", purple);
+    m_chooser.addOption("LED Yellow", yellow);
+    SmartDashboard.putData("LED choices", m_chooser);
   }
 
   /**
@@ -65,14 +58,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    autoModeSelection = (int) SmartDashboard.getNumber("Auton Mode", 0.0);
-    SmartDashboard.putNumber("Auton Mode", autoModeSelection);
-
-
-    swerve.logging();
-    limelight.logging();
-    elevator.logger();
-    grabber.logging();
+    leds.setRGB( 230, 230, 250);
   }
 
   /**
@@ -87,8 +73,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    autoModeRunner.chooseAutoMode(autoModes[autoModeSelection]);
-    autoModeRunner.start();   
+  
   }
 
   /** This function is called periodically during autonomous. */
@@ -100,55 +85,26 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    swerve.defaultNeutralMode(true, true);
+    m_autoSelected = m_chooser.getSelected();
+    System.out.println("Auto selected: " + m_autoSelected);
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    if(driver.A.isPressed()) {
-      swerve.teleopDrive(limelight.distanceVisionAlign(), limelight.XVisionAlign(), /*limelight.SkewVisionAlign()*/0, true);
-    }
-    else if(driver.B.isPressed()) {
-      swerve.balance();
-    }
-    else {
-      swerve.teleopDrive(driver.LeftY.getTrueAxis(), driver.LeftX.getTrueAxis(), driver.RightX.getTrueAxis(), driver.START.isPressed());
-    }
-
-    if (driver.BACK.isPressed()) {
-      swerve.zeroGyro();
-    }
-
-    if(driver.RB.isPressed()) {
-      grabber.ArmRot(0.9);
-    }
-
-    else if(driver.LB.isPressed()){
-      grabber.ArmRot(-0.9);
-    }
-
-    else {
-      grabber.ArmRot(0);  
-    }
-
-    //elevator.magicElevator(elevatorTarget);
-    if(driver.dPad.getPOV() == 0) {
-      elevatorTarget = 40;
-      elevator.spin(0.3);
-    }
-    else if(driver.dPad.getPOV() == 90 || driver.dPad.getPOV() == 270) {
-      elevatorTarget = 20;
-    }
-    else if(driver.dPad.getPOV() == 180){
-      elevatorTarget = 0;
-      elevator.spin(-0.3);
-    }
-    else {
-      elevator.spin(0);
-    }
-
-    
+    switch (m_autoSelected) {
+      case purple:
+      leds.startLED();
+      leds.setRGB( 230, 230, 250);
+        break;
+      case yellow:
+        leds.startLED();
+        leds.setRGB( 255, 255, 0);
+        break;
+      default:
+        leds.stopLED();
+        break;
+    }                
   }
 
   /** This function is called once when the robot is disabled. */
