@@ -134,11 +134,11 @@ public class Robot extends TimedRobot {
 
     //elevator.magicElevator(elevatorTarget);
     if(driver.dPad.getPOV() == 0) {
-      elevatorTarget = 40;
-      elevator.spin(0.3);
+      elevatorTarget = 15;
+      elevator.spin(0.7);
     }
     else if(driver.dPad.getPOV() == 90 || driver.dPad.getPOV() == 270) {
-      elevatorTarget = 20;
+      elevatorTarget = 10;
     }
     else if(driver.dPad.getPOV() == 180){
       elevatorTarget = 0;

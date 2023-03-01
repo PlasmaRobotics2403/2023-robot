@@ -139,9 +139,10 @@ public final class Constants {
         public static int master = 8;
         public static int slave = 9;
 
-        public static double elevatorSpeed = 0.75;
+        public static double elevatorSpeed = 0.3;
         public static double ticksToInches = 0.000811297;
         public static double inchesToTicks = 1232.5937;
+        public static final int ELEVATOR_LIMIT_ID = 0;
 
         /*Elevator Pid */
         public static double kF = 0.6;
