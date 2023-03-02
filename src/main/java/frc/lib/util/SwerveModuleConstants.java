@@ -6,6 +6,7 @@ public class SwerveModuleConstants {
     public final int driveMotorID;
     public final int angleMotorID;
     public final int cancoderID;
+    public final String canbus;
     public final Rotation2d angleOffset;
 
     /**
@@ -19,6 +20,7 @@ public class SwerveModuleConstants {
         this.driveMotorID = driveMotorID;
         this.angleMotorID = angleMotorID;
         this.cancoderID = canCoderID;
+        canbus = "swerve";
         this.angleOffset = angleOffset;
     }
 }

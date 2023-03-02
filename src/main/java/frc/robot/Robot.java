@@ -121,11 +121,11 @@ public class Robot extends TimedRobot {
     }
 
     if(driver.RB.isPressed()) {
-      grabber.ArmRot(0.1);
+      grabber.ArmRot(-0.1);
     }
 
     else if(driver.LB.isPressed()){
-      grabber.ArmRot(-0.1);
+      grabber.ArmRot(0.1);
     }
 
     else {
