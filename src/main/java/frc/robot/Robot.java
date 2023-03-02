@@ -121,34 +121,29 @@ public class Robot extends TimedRobot {
     }
 
     if(driver.RB.isPressed()) {
-      grabber.ArmRot(0.9);
+      grabber.ArmRot(0.1);
     }
 
     else if(driver.LB.isPressed()){
-      grabber.ArmRot(-0.9);
+      grabber.ArmRot(-0.1);
     }
 
     else {
       grabber.ArmRot(0);  
     }
 
-    //elevator.magicElevator(elevatorTarget);
+    elevator.magicElevator(elevatorTarget);
     if(driver.dPad.getPOV() == 0) {
-      elevatorTarget = 15;
-      elevator.spin(0.7);
+      elevatorTarget = 30;
+      //elevator.spin(0.2);
     }
-    else if(driver.dPad.getPOV() == 90 || driver.dPad.getPOV() == 270) {
-      elevatorTarget = 10;
-    }
-    else if(driver.dPad.getPOV() == 180){
+    else if(driver.dPad.getPOV() == 180) {
       elevatorTarget = 0;
-      elevator.spin(-0.3);
+      //elevator.spin(-0.2);
     }
     else {
-      elevator.spin(0);
+      //elevator.spin(0.0);
     }
-
-    
   }
 
   /** This function is called once when the robot is disabled. */
