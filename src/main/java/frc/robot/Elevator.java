@@ -3,14 +3,20 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.math.controller.ElevatorFeedforward;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Elevator {
     private TalonSRX master;
     private TalonSRX slave;
+
+    DigitalInput limitSwitch;
 
     public Elevator(){
         master = new TalonSRX(Constants.ElevatorConstants.master);
@@ -20,8 +26,25 @@ public class Elevator {
         master.configFactoryDefault();
         slave.configFactoryDefault();
 
-        master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
-        master.setSelectedSensorPosition(0, 0, 0);
+        master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, Constants.ElevatorConstants.PID_IDX, Constants.TIMEOUT_MS);
+        master.setSelectedSensorPosition(0, Constants.ElevatorConstants.PID_IDX, Constants.TIMEOUT_MS);
+
+        master.configNominalOutputForward(0, Constants.TIMEOUT_MS);
+        master.configNominalOutputReverse(0, Constants.TIMEOUT_MS);
+        master.configPeakOutputForward(1, Constants.TIMEOUT_MS);
+        master.configPeakOutputReverse(-1, Constants.TIMEOUT_MS);
+
+        master.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, Constants.TIMEOUT_MS);
+		master.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, Constants.TIMEOUT_MS);
+
+        master.selectProfileSlot(Constants.ElevatorConstants.SLOT_IDX, Constants.ElevatorConstants.PID_IDX);
+        master.config_kF(Constants.ElevatorConstants.PID_IDX, Constants.ElevatorConstants.kF, Constants.TIMEOUT_MS);
+        master.config_kP(Constants.ElevatorConstants.PID_IDX, Constants.ElevatorConstants.kP, Constants.TIMEOUT_MS);
+        master.config_kI(Constants.ElevatorConstants.PID_IDX, Constants.ElevatorConstants.kI, Constants.TIMEOUT_MS);
+        master.config_kD(Constants.ElevatorConstants.PID_IDX, Constants.ElevatorConstants.kD, Constants.TIMEOUT_MS);
+
+        master.configMotionCruiseVelocity(Constants.ElevatorConstants.MOTION_CRUISE_VELOCITY);
+        master.configMotionAcceleration(Constants.ElevatorConstants.MOTION_ACCELERATION);
        
         master.setNeutralMode(NeutralMode.Brake);
         slave.setNeutralMode(NeutralMode.Brake);
@@ -30,21 +53,8 @@ public class Elevator {
         
         master.setInverted(true);
         slave.setInverted(false);
-        
-        /*master motor pid */
-        master.config_kF(0, Constants.ElevatorConstants.kF);
-        master.config_kP(0, Constants.ElevatorConstants.kP);
-        master.config_kI(0, Constants.ElevatorConstants.kI);
-        master.config_kD(0, Constants.ElevatorConstants.kD);
-        currentLimit(master);
 
-        /*slave motor pid */
-        slave.config_kF(0, Constants.ElevatorConstants.kF);
-        slave.config_kP(0, Constants.ElevatorConstants.kP);
-        slave.config_kI(0, Constants.ElevatorConstants.kI);
-        slave.config_kD(0, Constants.ElevatorConstants.kD);
-        currentLimit(slave);
-
+        limitSwitch = new DigitalInput(Constants.ElevatorConstants.ELEVATOR_LIMIT_ID);
     }
 
     public void currentLimit(final TalonSRX talon) {
@@ -52,7 +62,16 @@ public class Elevator {
     }
 
     public void spin(double speed) {
-        master.set(ControlMode.PercentOutput, speed);
+        if(speed > 0 && master.getSelectedSensorPosition() >= Constants.ElevatorConstants.MAX_EXTEND) {
+            master.set(ControlMode.PercentOutput, 0);
+        }
+        else if(speed < 0 && master.getSelectedSensorPosition() <= 500 && !limitSwitch.get()) {
+            master.setSelectedSensorPosition(0);
+            master.set(ControlMode.PercentOutput, 0);
+        }
+        else {
+            master.set(ControlMode.PercentOutput, speed);
+        }
     }
 
     /**
@@ -61,16 +80,20 @@ public class Elevator {
      */
     public void magicElevator(double position) {
         double ticks = position * Constants.ElevatorConstants.inchesToTicks;
-        if (ticks == 0 && master.getSelectedSensorPosition() <= 0){
-            master.setSelectedSensorPosition(0, 0, 0);
+        if(ticks >= 45000 || ticks < 0) {
+            master.set(ControlMode.PercentOutput, 0);
+        }
+        else if(ticks <= 0 && master.getSelectedSensorPosition() <= 500 && !limitSwitch.get()) {
+            master.setSelectedSensorPosition(0);
             master.set(ControlMode.PercentOutput, 0);
         }
         else {
-            master.set(ControlMode.Position, ticks);
+            master.set(ControlMode.MotionMagic, ticks);
         }
     }
 
     public void logger() {
         SmartDashboard.putNumber("elevatorEncoder", master.getSelectedSensorPosition(0));
+        SmartDashboard.putBoolean("Elevator limit", limitSwitch.get());
     }
 }

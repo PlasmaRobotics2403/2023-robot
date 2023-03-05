@@ -3,6 +3,7 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -13,21 +14,34 @@ public class Grabber {
     public Grabber() {
         arm = new TalonSRX(Constants.GrabberConstants.arm_id);
 
-        arm.configFactoryDefault();
-        arm.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+        arm.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, Constants.GrabberConstants.PID_IDX, Constants.TIMEOUT_MS);
+        arm.setSelectedSensorPosition(0, Constants.GrabberConstants.PID_IDX, Constants.TIMEOUT_MS);
+
+        arm.setInverted(true);
         arm.setNeutralMode(NeutralMode.Brake);
 
-        arm.setSensorPhase(false);
-        arm.setInverted(true);
-
-        arm.config_kF(0, Constants.GrabberConstants.kF);
-        arm.config_kP(0, Constants.GrabberConstants.kP);
-        arm.config_kI(0, Constants.GrabberConstants.kI);
-        arm.config_kD(0, Constants.GrabberConstants.kD);
+       
     }
 
     public void ArmRot(double armSpeed) {
-        arm.set(ControlMode.PercentOutput, armSpeed);
+        if(armSpeed > 0 && arm.getSelectedSensorPosition() >= Constants.GrabberConstants.MAX_EXTEND) {
+            arm.set(ControlMode.PercentOutput, 0);
+        }
+        else if (armSpeed < 0 && arm.getSelectedSensorPosition() <= Constants.GrabberConstants.MIN_EXTEND) {
+            arm.set(ControlMode.PercentOutput, 0);
+        }
+        else {
+            arm.set(ControlMode.PercentOutput, armSpeed);
+        }
+    }
+
+    public void magicElevator(double position) {
+        if(position >= Constants.GrabberConstants.MAX_EXTEND || position < Constants.GrabberConstants.MIN_EXTEND) {
+            arm.set(ControlMode.PercentOutput, 0);
+        }
+        else {
+            arm.set(ControlMode.MotionMagic, position);
+        }
     }
 
     public void logging() {

@@ -15,6 +15,7 @@ public final class Constants {
     public static final int DRIVER_JOYSTICK_PORT = 0;
     public static final int COPILOT_JOYSTICK_PORT = 1;
 
+    public static final int TIMEOUT_MS = 60;
 
     public static final class Swerve {
         public static final boolean invertGyro = true; // Always ensure Gyro is CCW+ CW-
@@ -139,19 +140,38 @@ public final class Constants {
         public static int master = 8;
         public static int slave = 9;
 
-        public static double elevatorSpeed = 0.75;
+        public static double elevatorSpeed = 0.3;
         public static double ticksToInches = 0.000811297;
         public static double inchesToTicks = 1232.5937;
+        public static final int ELEVATOR_LIMIT_ID = 0;
+        public static final double MAX_EXTEND = 4500;
+
 
         /*Elevator Pid */
-        public static double kF = 0.6;
-        public static double kP = 0.5;
+        public static final int PID_IDX = 0;
+        public static final int SLOT_IDX = 0;
+
+        public static final double MOTION_CRUISE_VELOCITY = 15000;
+        public static final double MOTION_ACCELERATION = 5000;
+
+        public static double kF = 0.3;
+        public static double kP = 0.3;
         public static double kI = 0;
         public static double kD = 0;
     }
 
     public static final class GrabberConstants{
         public static int arm_id = 10;
+
+        public static final int PID_IDX = 0;
+        public static final int SLOT_IDX = 0;
+
+        public static final double MOTION_CRUISE_VELOCITY = 3000;
+        public static final double MOTION_ACCELERATION = 1500;
+
+        public static final double MAX_EXTEND = 3500;
+        public static final double MIN_EXTEND = -1000;
+
 
         /*Arm Pid */
         public static double kF = 0;
