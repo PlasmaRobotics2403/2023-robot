@@ -9,8 +9,6 @@ public class PlasmaTrigger {
 	
 	boolean isHeld = false;
 	
-	private DriverStation driveStation;
-
 	/**
 	 * Constructor for plasma trigger
 	 * 

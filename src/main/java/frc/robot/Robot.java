@@ -4,20 +4,13 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.CANifier;
-import com.kauailabs.navx.frc.AHRS;
-
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.modes.DriveForward;
 import frc.robot.auto.util.AutoMode;
 import frc.robot.auto.util.AutoModeRunner;
-import frc.robot.controllers.PlasmaDPad;
 import frc.robot.controllers.PlasmaGuitar;
 import frc.robot.controllers.PlasmaJoystick;
 
@@ -33,7 +26,6 @@ public class Robot extends TimedRobot {
   PlasmaJoystick driver;
   Swerve swerve;
   Limelight limelight;
-  AHRS navX;
   Elevator elevator;
   Grabber grabber;
 
@@ -135,12 +127,14 @@ public class Robot extends TimedRobot {
 
     if (driver.BACK.isPressed()) {
       swerve.zeroGyro();
+    }
     if(navigator.YELLOW.isPressed()) {
       leds.setHSV(15, 255, 255);
     }
 
     if(driver.RB.isPressed()) {
       grabber.ArmRot(0.9);
+    }
     else if(navigator.BLUE.isPressed()) {
       leds.setHSV(130, 255, 255);
     }
@@ -168,8 +162,6 @@ public class Robot extends TimedRobot {
     else {
       elevator.spin(0);
     }
-
-
   }
 
   /** This function is called once when the robot is disabled. */
@@ -178,7 +170,6 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically when disabled. */
   @Override
-  public void disabledPeriodic() {}
   public void disabledPeriodic() {
     int value = 128 + (int)(navigator.WAMMY.getTrueAxis() * 127);
 
