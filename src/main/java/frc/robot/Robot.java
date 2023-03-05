@@ -3,16 +3,24 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
- 
+
+import com.ctre.phoenix.CANifier;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.modes.DriveForward;
 import frc.robot.auto.util.AutoMode;
 import frc.robot.auto.util.AutoModeRunner;
 import frc.robot.controllers.PlasmaDPad;
+import frc.robot.controllers.PlasmaGuitar;
 import frc.robot.controllers.PlasmaJoystick;
+
 
 
 /**
@@ -34,7 +42,11 @@ public class Robot extends TimedRobot {
   AutoModeRunner autoModeRunner;
   AutoMode[] autoModes;
   int autoModeSelection;
+    LEDs leds;
+    PlasmaGuitar navigator;
 
+    int hue;
+    boolean FMS_Connected;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -48,12 +60,15 @@ public class Robot extends TimedRobot {
     grabber = new Grabber();
 
     elevatorTarget = 0;
-    
+
     autoModeRunner = new AutoModeRunner();
     autoModes = new AutoMode[20];
         autoModes[0] = new DriveForward(swerve);
+    leds = new LEDs();
+    navigator = new PlasmaGuitar(1);
 
     autoModeSelection = 0;
+    FMS_Connected = false;
   }
 
   /**
@@ -73,6 +88,7 @@ public class Robot extends TimedRobot {
     limelight.logging();
     elevator.logger();
     grabber.logging();
+    leds.sendData();
   }
 
   /**
@@ -89,6 +105,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     autoModeRunner.chooseAutoMode(autoModes[autoModeSelection]);
     autoModeRunner.start();   
+
   }
 
   /** This function is called periodically during autonomous. */
@@ -96,11 +113,11 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     
   }
-
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
     swerve.defaultNeutralMode(true, true);
+    leds.setRGB(0, 0, 0);
   }
 
   /** This function is called periodically during operator control. */
@@ -118,32 +135,41 @@ public class Robot extends TimedRobot {
 
     if (driver.BACK.isPressed()) {
       swerve.zeroGyro();
+    if(navigator.YELLOW.isPressed()) {
+      leds.setHSV(15, 255, 255);
     }
 
     if(driver.RB.isPressed()) {
-      grabber.ArmRot(-0.1);
+      grabber.ArmRot(0.9);
+    else if(navigator.BLUE.isPressed()) {
+      leds.setHSV(130, 255, 255);
     }
 
     else if(driver.LB.isPressed()){
-      grabber.ArmRot(0.1);
+      grabber.ArmRot(-0.9);
     }
 
     else {
       grabber.ArmRot(0);  
     }
 
-    elevator.magicElevator(elevatorTarget);
+    //elevator.magicElevator(elevatorTarget);
     if(driver.dPad.getPOV() == 0) {
-      elevatorTarget = 30;
-      //elevator.spin(0.2);
+      elevatorTarget = 40;
+      elevator.spin(0.3);
     }
-    else if(driver.dPad.getPOV() == 180) {
+    else if(driver.dPad.getPOV() == 90 || driver.dPad.getPOV() == 270) {
+      elevatorTarget = 20;
+    }
+    else if(driver.dPad.getPOV() == 180){
       elevatorTarget = 0;
-      //elevator.spin(-0.2);
+      elevator.spin(-0.3);
     }
     else {
-      //elevator.spin(0.0);
+      elevator.spin(0);
     }
+
+
   }
 
   /** This function is called once when the robot is disabled. */
@@ -153,19 +179,48 @@ public class Robot extends TimedRobot {
   /** This function is called periodically when disabled. */
   @Override
   public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    int value = 128 + (int)(navigator.WAMMY.getTrueAxis() * 127);
+
+    if(FMS_Connected) {
+      if(navigator.GREEN.isPressed()) {
+        hue = 60;
+      }
+      else if(navigator.RED.isPressed()) {
+        hue = 0;
+      }
+      else if(navigator.YELLOW.isPressed()) {
+        hue = 15;
+      }
+      else if(navigator.BLUE.isPressed()) {
+        hue = 130;
+      }
+      else if(navigator.ORANGE.isPressed()) {
+        hue = 7;
+      }
+      leds.setHSV(hue, 255, value);
+    }
+    else {
+      if(DriverStation.getAlliance() == Alliance.Red && DriverStation.isDSAttached()) {
+        hue = 0;
+        FMS_Connected = true;
+      }
+      else if(DriverStation.getAlliance() == Alliance.Blue && DriverStation.isDSAttached()) {
+        hue = 130;
+        FMS_Connected = true;
+      }
+    }
+  }
 
   /** This function is called once when test mode is enabled. */
   @Override
   public void testInit() {}
-
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
-
   /** This function is called once when the robot is first started up. */
   @Override
   public void simulationInit() {}
-
   /** This function is called periodically whilst in simulation. */
   @Override
   public void simulationPeriodic() {}
