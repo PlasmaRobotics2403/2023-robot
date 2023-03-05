@@ -24,6 +24,8 @@ import frc.robot.controllers.PlasmaJoystick;
  */
 public class Robot extends TimedRobot {
   PlasmaJoystick driver;
+  PlasmaGuitar navigator;
+
   Swerve swerve;
   Limelight limelight;
   Elevator elevator;
@@ -34,11 +36,10 @@ public class Robot extends TimedRobot {
   AutoModeRunner autoModeRunner;
   AutoMode[] autoModes;
   int autoModeSelection;
-    LEDs leds;
-    PlasmaGuitar navigator;
-
-    int hue;
-    boolean FMS_Connected;
+    
+  LEDs leds;
+  int hue;
+   boolean FMS_Connected;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -46,6 +47,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     driver = new PlasmaJoystick(Constants.DRIVER_JOYSTICK_PORT);
+    navigator = new PlasmaGuitar(Constants.COPILOT_JOYSTICK_PORT);
+
     swerve = new Swerve();
     limelight = new Limelight();
     elevator = new Elevator();
@@ -55,11 +58,12 @@ public class Robot extends TimedRobot {
 
     autoModeRunner = new AutoModeRunner();
     autoModes = new AutoMode[20];
-        autoModes[0] = new DriveForward(swerve);
-    leds = new LEDs();
-    navigator = new PlasmaGuitar(1);
-
+    autoModes[0] = new DriveForward(swerve);
+    
     autoModeSelection = 0;
+    
+    leds = new LEDs();
+    hue = 0;   
     FMS_Connected = false;
   }
 
@@ -75,11 +79,11 @@ public class Robot extends TimedRobot {
     autoModeSelection = (int) SmartDashboard.getNumber("Auton Mode", 0.0);
     SmartDashboard.putNumber("Auton Mode", autoModeSelection);
 
-
     swerve.logging();
     limelight.logging();
     elevator.logger();
     grabber.logging();
+
     leds.sendData();
   }
 
@@ -97,7 +101,6 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     autoModeRunner.chooseAutoMode(autoModes[autoModeSelection]);
     autoModeRunner.start();   
-
   }
 
   /** This function is called periodically during autonomous. */
@@ -115,6 +118,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    /* Driver Controls */
     if(driver.A.isPressed()) {
       swerve.teleopDrive(limelight.distanceVisionAlign(), limelight.XVisionAlign(), /*limelight.SkewVisionAlign()*/0, true);
     }
@@ -128,21 +132,13 @@ public class Robot extends TimedRobot {
     if (driver.BACK.isPressed()) {
       swerve.zeroGyro();
     }
-    if(navigator.YELLOW.isPressed()) {
-      leds.setHSV(15, 255, 255);
-    }
 
     if(driver.RB.isPressed()) {
       grabber.ArmRot(0.9);
     }
-    else if(navigator.BLUE.isPressed()) {
-      leds.setHSV(130, 255, 255);
-    }
-
     else if(driver.LB.isPressed()){
       grabber.ArmRot(-0.9);
     }
-
     else {
       grabber.ArmRot(0);  
     }
@@ -161,6 +157,14 @@ public class Robot extends TimedRobot {
     }
     else {
       elevator.spin(0);
+    }
+
+    /* Navigator Controls */
+    if(navigator.YELLOW.isPressed()) {
+      leds.setHSV(15, 255, 255);
+    }
+    else if(navigator.BLUE.isPressed()) {
+      leds.setHSV(130, 255, 255);
     }
   }
 
