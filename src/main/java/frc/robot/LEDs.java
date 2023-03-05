@@ -43,6 +43,12 @@ public class LEDs {
         LEDBuffer.setHSV(i, hue, saturation, value);
     }
 
+    public void setHSV(int hue, int saturation, int value) {
+        for (int i = 0; i < getBufferLength(); i++) {
+            LEDBuffer.setHSV(i, hue, saturation, value);
+        }
+    }
+
     public void setRGB(int i, int red, int green, int blue) {
         LEDBuffer.setRGB(i, red, green, blue);
     }
