@@ -134,10 +134,10 @@ public class Robot extends TimedRobot {
     }
 
     if(driver.RB.isPressed()) {
-      grabber.ArmRot(0.9);
+      grabber.ArmRot(Constants.GrabberConstants.Arm_Rot_Speed);
     }
     else if(driver.LB.isPressed()){
-      grabber.ArmRot(-0.9);
+      grabber.ArmRot(-Constants.GrabberConstants.Arm_Rot_Speed);
     }
     else {
       grabber.ArmRot(0);  
@@ -146,17 +146,27 @@ public class Robot extends TimedRobot {
     //elevator.magicElevator(elevatorTarget);
     if(driver.dPad.getPOV() == 0) {
       elevatorTarget = 40;
-      elevator.spin(0.3);
+      elevator.spin(Constants.GrabberConstants.Up_Arm_Speed);
     }
     else if(driver.dPad.getPOV() == 90 || driver.dPad.getPOV() == 270) {
       elevatorTarget = 20;
     }
     else if(driver.dPad.getPOV() == 180){
       elevatorTarget = 0;
-      elevator.spin(-0.3);
+      elevator.spin(Constants.GrabberConstants.Down_Arm_Speed);
     }
     else {
       elevator.spin(0);
+    }
+
+    if(driver.X.isPressed()) {
+      grabber.grabberRun(Constants.GrabberConstants.Grabber_Speed);
+    }
+    else if(driver.Y.isPressed()) {
+      grabber.grabberRun(-Constants.GrabberConstants.Grabber_Speed);
+    }
+    else {
+      grabber.grabberRun(0);
     }
 
     /* Navigator Controls */
