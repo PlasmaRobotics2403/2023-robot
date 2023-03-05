@@ -143,6 +143,7 @@ public final class Constants {
         public static double elevatorSpeed = 0.3;
         public static double ticksToInches = 0.000811297;
         public static double inchesToTicks = 1232.5937;
+
         public static final int ELEVATOR_LIMIT_ID = 0;
         public static final double MAX_EXTEND = 4500;
 
@@ -162,18 +163,28 @@ public final class Constants {
 
     public static final class GrabberConstants{
         public static int arm_id = 10;
+        public static int grabber_id = 11;
 
+
+        /* Extention Positions */
+        public static final double MAX_EXTEND = 3500;
+        public static final double MIN_EXTEND = -1000;
+
+
+        /* Arm/Grabber Speeds */
+        public static final double Up_Arm_Speed = 0.3;
+        public static final double Down_Arm_Speed = -0.3;
+        public static final double Arm_Rot_Speed = 0.9;
+        public static final double Grabber_Speed = 0.3;
+
+
+        /*Arm Pid */
         public static final int PID_IDX = 0;
         public static final int SLOT_IDX = 0;
 
         public static final double MOTION_CRUISE_VELOCITY = 3000;
         public static final double MOTION_ACCELERATION = 1500;
 
-        public static final double MAX_EXTEND = 3500;
-        public static final double MIN_EXTEND = -1000;
-
-
-        /*Arm Pid */
         public static double kF = 0;
         public static double kP = 0;
         public static double kI = 0;

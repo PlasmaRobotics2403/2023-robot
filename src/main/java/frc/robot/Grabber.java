@@ -9,8 +9,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Grabber {
     private TalonSRX arm;
+    private TalonSRX grabber;
 
     public Grabber() {
+
+        /* Arm Setup */
         arm = new TalonSRX(Constants.GrabberConstants.arm_id);
 
         arm.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, Constants.GrabberConstants.PID_IDX, Constants.TIMEOUT_MS);
@@ -18,6 +21,15 @@ public class Grabber {
 
         arm.setInverted(true);
         arm.setNeutralMode(NeutralMode.Brake);
+
+        /* Grabber Setup */
+        grabber = new TalonSRX(Constants.GrabberConstants.grabber_id);
+
+        grabber.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, Constants.GrabberConstants.PID_IDX, Constants.TIMEOUT_MS);
+        grabber.setSelectedSensorPosition(0, Constants.GrabberConstants.PID_IDX, Constants.TIMEOUT_MS);
+
+        grabber.setInverted(true);
+        grabber.setNeutralMode(NeutralMode.Brake);
 
        
     }
@@ -41,6 +53,10 @@ public class Grabber {
         else {
             arm.set(ControlMode.MotionMagic, position);
         }
+    }
+
+    public void grabberRun(double grabberSpeed) {
+        grabber.set(ControlMode.PercentOutput, grabberSpeed);
     }
 
     public void logging() {
