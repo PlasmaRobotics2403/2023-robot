@@ -1,7 +1,5 @@
 package frc.robot.controllers;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 public class PlasmaGuitar {
     
     public PlasmaButton GREEN;
