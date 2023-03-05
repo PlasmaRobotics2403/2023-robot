@@ -9,12 +9,15 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.util.AutoMode;
 import frc.robot.auto.util.AutoModeRunner;
 import frc.robot.controllers.PlasmaDPad;
+import frc.robot.controllers.PlasmaGuitar;
 import frc.robot.controllers.PlasmaJoystick;
 
 
@@ -27,13 +30,10 @@ import frc.robot.controllers.PlasmaJoystick;
  */
 public class Robot extends TimedRobot {
     LEDs leds;
+    PlasmaGuitar navigator;
 
-    private static final String Default = "LED off";
-    private static final String purple = "LED Purple";
-    private static final String yellow = "LED Yellow";
-    private String m_autoSelected;
-    private final SendableChooser<String> m_chooser = new SendableChooser<>();
-
+    int hue;
+    boolean FMS_Connected;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -41,11 +41,9 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     leds = new LEDs();
+    navigator = new PlasmaGuitar(1);
 
-    m_chooser.setDefaultOption("LED off", Default);
-    m_chooser.addOption("LED Purple", purple);
-    m_chooser.addOption("LED Yellow", yellow);
-    SmartDashboard.putData("LED choices", m_chooser);
+    FMS_Connected = false;
   }
 
   /**
@@ -57,7 +55,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    leds.setRGB( 230, 230, 250);
+    leds.sendData();
   }
 
   /**
@@ -84,26 +82,19 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    m_autoSelected = m_chooser.getSelected();
-    System.out.println("Auto selected: " + m_autoSelected);
+    leds.setRGB(0, 0, 0);
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    switch (m_autoSelected) {
-      case purple:
-      leds.startLED();
-      leds.setRGB( 230, 230, 250);
-        break;
-      case yellow:
-        leds.startLED();
-        leds.setRGB( 255, 255, 0);
-        break;
-      default:
-        leds.stopLED();
-        break;
-    }                
+
+    if(navigator.YELLOW.isPressed()) {
+      leds.setHSV(15, 255, 255);
+    }
+    else if(navigator.BLUE.isPressed()) {
+      leds.setHSV(130, 255, 255);
+    }
   }
 
   /** This function is called once when the robot is disabled. */
@@ -112,7 +103,38 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically when disabled. */
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    int value = 128 + (int)(navigator.WAMMY.getTrueAxis() * 127);
+
+    if(FMS_Connected) {
+      if(navigator.GREEN.isPressed()) {
+        hue = 60;
+      }
+      else if(navigator.RED.isPressed()) {
+        hue = 0;
+      }
+      else if(navigator.YELLOW.isPressed()) {
+        hue = 15;
+      }
+      else if(navigator.BLUE.isPressed()) {
+        hue = 130;
+      }
+      else if(navigator.ORANGE.isPressed()) {
+        hue = 7;
+      }
+      leds.setHSV(hue, 255, value);
+    }
+    else {
+      if(DriverStation.getAlliance() == Alliance.Red && DriverStation.isDSAttached()) {
+        hue = 0;
+        FMS_Connected = true;
+      }
+      else if(DriverStation.getAlliance() == Alliance.Blue && DriverStation.isDSAttached()) {
+        hue = 130;
+        FMS_Connected = true;
+      }
+    }
+  }
 
   /** This function is called once when test mode is enabled. */
   @Override
