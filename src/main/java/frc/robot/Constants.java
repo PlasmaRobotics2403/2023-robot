@@ -174,7 +174,7 @@ public final class Constants {
         /* Arm/Grabber Speeds */
         public static final double Up_Arm_Speed = 0.3;
         public static final double Down_Arm_Speed = -0.3;
-        public static final double Arm_Rot_Speed = 0.9;
+        public static final double Arm_Rot_Speed = 0.2;
         public static final double Grabber_Speed = 0.3;
 
 
@@ -185,10 +185,10 @@ public final class Constants {
         public static final double MOTION_CRUISE_VELOCITY = 3000;
         public static final double MOTION_ACCELERATION = 1500;
 
-        public static double kF = 0;
-        public static double kP = 0;
-        public static double kI = 0;
-        public static double kD = 0;
+        public static double armkF = 0.2;
+        public static double armkP = 0.2;
+        public static double armkI = 0;
+        public static double armkD = 0;
     }
 
     public static final class LimelightConstants {

@@ -22,6 +22,11 @@ public class Grabber {
         arm.setInverted(true);
         arm.setNeutralMode(NeutralMode.Brake);
 
+        arm.config_kF(0, Constants.GrabberConstants.armkF);
+        arm.config_kP(0, Constants.GrabberConstants.armkP);
+        arm.config_kI(0, Constants.GrabberConstants.armkI);
+        arm.config_kD(0, Constants.GrabberConstants.armkD);
+
         /* Grabber Setup */
         grabber = new TalonSRX(Constants.GrabberConstants.grabber_id);
 
@@ -30,8 +35,6 @@ public class Grabber {
 
         grabber.setInverted(true);
         grabber.setNeutralMode(NeutralMode.Brake);
-
-       
     }
 
     public void ArmRot(double armSpeed) {

@@ -32,6 +32,7 @@ public class Robot extends TimedRobot {
   Grabber grabber;
 
   double elevatorTarget;
+  double armTarget;
 
   AutoModeRunner autoModeRunner;
   AutoMode[] autoModes;
@@ -55,6 +56,7 @@ public class Robot extends TimedRobot {
     grabber = new Grabber();
 
     elevatorTarget = 0;
+    armTarget = 0;
 
     autoModeRunner = new AutoModeRunner();
     autoModes = new AutoMode[20];
@@ -133,14 +135,12 @@ public class Robot extends TimedRobot {
       swerve.zeroGyro();
     }
 
+    grabber.magicElevator(armTarget);
     if(driver.RB.isPressed()) {
-      grabber.ArmRot(Constants.GrabberConstants.Arm_Rot_Speed);
+      armTarget = 3000;
     }
     else if(driver.LB.isPressed()){
-      grabber.ArmRot(-Constants.GrabberConstants.Arm_Rot_Speed);
-    }
-    else {
-      grabber.ArmRot(0);  
+      armTarget = 0;
     }
 
     //elevator.magicElevator(elevatorTarget);
