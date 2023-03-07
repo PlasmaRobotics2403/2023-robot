@@ -40,7 +40,7 @@ public class Robot extends TimedRobot {
     
   LEDs leds;
   int hue;
-   boolean FMS_Connected;
+  boolean FMS_Connected;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -135,7 +135,7 @@ public class Robot extends TimedRobot {
       swerve.zeroGyro();
     }
 
-    grabber.magicElevator(armTarget);
+    grabber.magicArm(armTarget);
     if(driver.RB.isPressed()) {
       armTarget = 3000;
     }

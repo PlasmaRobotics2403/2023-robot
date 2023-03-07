@@ -49,7 +49,7 @@ public class Grabber {
         }
     }
 
-    public void magicElevator(double position) {
+    public void magicArm(double position) {
         if(position >= Constants.GrabberConstants.MAX_EXTEND || position < Constants.GrabberConstants.MIN_EXTEND) {
             arm.set(ControlMode.PercentOutput, 0);
         }
