@@ -179,8 +179,8 @@ public final class Constants {
 
 
         /*Arm Pid */
-        public static final int PID_IDX = 0;
-        public static final int SLOT_IDX = 0;
+        public static final int ARM_PID_IDX = 0;
+        public static final int ARM_SLOT_IDX = 0;
 
         public static final double MOTION_CRUISE_VELOCITY = 3000;
         public static final double MOTION_ACCELERATION = 1500;
@@ -194,6 +194,18 @@ public final class Constants {
     public static final class LimelightConstants {
         public static double maxTanslationalSpeed = 0.35;
         public static double maxSkewSpeed = 0.3;
+    }
+
+    public static final class IntakeConstants {
+        public static int sliderMotorId = 12;
+
+        public static final double horizontalSpeed = 0.2;
+        public static final int INTAKE_PID_IDX = 0;
+
+        public static double linearkF = 0;
+        public static double linearkP = 0;
+        public static double linearkI = 0;
+        public static double linearkD = 0;
     }
     public static final class AutoConstants { //TODO: The below constants are used in the example auto, and must be tuned to specific robot
         public static final double kMaxSpeedMetersPerSecond = 3;

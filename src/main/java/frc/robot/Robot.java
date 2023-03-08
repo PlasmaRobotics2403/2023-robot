@@ -34,6 +34,8 @@ public class Robot extends TimedRobot {
   double elevatorTarget;
   double armTarget;
 
+  Intake intake;
+
   AutoModeRunner autoModeRunner;
   AutoMode[] autoModes;
   int autoModeSelection;
@@ -53,6 +55,7 @@ public class Robot extends TimedRobot {
     swerve = new Swerve();
     limelight = new Limelight();
     elevator = new Elevator();
+    intake = new Intake();
     grabber = new Grabber();
 
     elevatorTarget = 0;
@@ -141,6 +144,13 @@ public class Robot extends TimedRobot {
     }
     else if(driver.LB.isPressed()){
       armTarget = 0;
+    }
+
+    if(driver.LT.isPressed()) {
+      intake.ActuateIntake(Constants.IntakeConstants.horizontalSpeed);
+    }
+    else if(driver.RB.isPressed()) {
+      intake.ActuateIntake(-Constants.IntakeConstants.horizontalSpeed);
     }
 
     //elevator.magicElevator(elevatorTarget);
