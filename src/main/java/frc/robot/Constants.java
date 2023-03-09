@@ -197,9 +197,11 @@ public final class Constants {
     }
 
     public static final class IntakeConstants {
-        public static int sliderMotorId = 12;
+        public static final int sliderMotorID = 12;
+        public static final int frontRollerID = 14;
+        public static final int backRollerID = 15;
 
-        public static final double horizontalSpeed = 0.2;
+        public static final double linearMotorSpeed = 0.2;
         public static final int INTAKE_PID_IDX = 0;
 
         public static double linearkF = 0;

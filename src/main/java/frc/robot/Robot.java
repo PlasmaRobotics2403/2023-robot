@@ -147,10 +147,21 @@ public class Robot extends TimedRobot {
     }
 
     if(driver.LT.isPressed()) {
-      intake.ActuateIntake(Constants.IntakeConstants.horizontalSpeed);
+      intake.ActuateIntake(Constants.IntakeConstants.linearMotorSpeed);
     }
-    else if(driver.RB.isPressed()) {
-      intake.ActuateIntake(-Constants.IntakeConstants.horizontalSpeed);
+    else if(driver.RT.isPressed()) {
+      intake.ActuateIntake(-Constants.IntakeConstants.linearMotorSpeed);
+    }
+    else if(driver.dPad.getPOV() == 90) {
+      intake.RunFrontRoller(0.5);
+      intake.RunBackRoller(0.5);
+    }
+    else {
+      intake.ActuateIntake(0);
+      
+      intake.RunBackRoller(0);
+      intake.RunFrontRoller(0);
+
     }
 
     //elevator.magicElevator(elevatorTarget);

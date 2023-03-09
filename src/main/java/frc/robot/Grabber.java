@@ -16,8 +16,8 @@ public class Grabber {
         /* Arm Setup */
         arm = new TalonSRX(Constants.GrabberConstants.arm_id);
 
-        arm.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, Constants.GrabberConstants.PID_IDX, Constants.TIMEOUT_MS);
-        arm.setSelectedSensorPosition(0, Constants.GrabberConstants.PID_IDX, Constants.TIMEOUT_MS);
+        arm.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, Constants.GrabberConstants.ARM_PID_IDX, Constants.TIMEOUT_MS);
+        arm.setSelectedSensorPosition(0, Constants.GrabberConstants.ARM_PID_IDX, Constants.TIMEOUT_MS);
 
         arm.setInverted(true);
         arm.setNeutralMode(NeutralMode.Brake);
@@ -30,8 +30,8 @@ public class Grabber {
         /* Grabber Setup */
         grabber = new TalonSRX(Constants.GrabberConstants.grabber_id);
 
-        grabber.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, Constants.GrabberConstants.PID_IDX, Constants.TIMEOUT_MS);
-        grabber.setSelectedSensorPosition(0, Constants.GrabberConstants.PID_IDX, Constants.TIMEOUT_MS);
+        grabber.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, Constants.GrabberConstants.ARM_PID_IDX, Constants.TIMEOUT_MS);
+        grabber.setSelectedSensorPosition(0, Constants.GrabberConstants.ARM_PID_IDX, Constants.TIMEOUT_MS);
 
         grabber.setInverted(true);
         grabber.setNeutralMode(NeutralMode.Brake);
