@@ -164,12 +164,17 @@ public final class Constants {
     public static final class GrabberConstants{
         public static int arm_id = 10;
         public static int grabber_id = 11;
-
+        public static int extender_id = 16;
 
         /* Extention Positions */
-        public static final double MAX_EXTEND = 3500;
-        public static final double MIN_EXTEND = -1000;
+        public static final double ARM_MAX_EXTEND = 3500;
+        public static final double ARM_MIN_EXTEND = -1000;
 
+        public static final double EXTENDER_MAX_EXTEND = 0;
+        public static final double EXTENDER_MIN_EXTEND = 0;
+
+        public static final double GRABBER_MAX_EXTEND = 0;
+        public static final double GRABBER_MIN_EXTEND = 0;
 
         /* Arm/Grabber Speeds */
         public static final double Up_Arm_Speed = 0.3;
@@ -178,7 +183,7 @@ public final class Constants {
         public static final double Grabber_Speed = 0.3;
 
 
-        /*Arm Pid */
+        /*Pid */
         public static final int ARM_PID_IDX = 0;
         public static final int ARM_SLOT_IDX = 0;
 
@@ -189,6 +194,16 @@ public final class Constants {
         public static double armkP = 0.2;
         public static double armkI = 0;
         public static double armkD = 0;
+
+        public static double extenderkF = 0.2;
+        public static double extenderkP = 0.2;
+        public static double extenderkI = 0;
+        public static double extenderkD = 0;
+
+        public static double grabberkF = 0.2;
+        public static double grabberkP = 0.2;
+        public static double grabberkI = 0;
+        public static double grabberkD = 0;
     }
 
     public static final class LimelightConstants {

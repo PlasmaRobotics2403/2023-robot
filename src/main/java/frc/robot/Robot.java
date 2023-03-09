@@ -33,6 +33,8 @@ public class Robot extends TimedRobot {
 
   double elevatorTarget;
   double armTarget;
+  double extenderTarget;
+  double grabberTarget;
 
   Intake intake;
 
@@ -124,11 +126,14 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     /* Driver Controls */
+    grabber.extendPos(extenderTarget);
     if(driver.A.isPressed()) {
-      swerve.teleopDrive(limelight.distanceVisionAlign(), limelight.XVisionAlign(), /*limelight.SkewVisionAlign()*/0, true);
+      //swerve.teleopDrive(limelight.distanceVisionAlign(), limelight.XVisionAlign(), /*limelight.SkewVisionAlign()*/0, true);
+        extenderTarget = 0;
     }
     else if(driver.B.isPressed()) {
-      swerve.balance();
+      //swerve.balance();
+      extenderTarget = 0;
     }
     else {
       swerve.teleopDrive(driver.LeftY.getTrueAxis(), driver.LeftX.getTrueAxis(), driver.RightX.getTrueAxis(), driver.START.isPressed());
@@ -153,8 +158,8 @@ public class Robot extends TimedRobot {
       intake.ActuateIntake(-Constants.IntakeConstants.linearMotorSpeed);
     }
     else if(driver.dPad.getPOV() == 90) {
-      intake.RunFrontRoller(0.5);
-      intake.RunBackRoller(0.5);
+      intake.RunFrontRoller(0.7);
+      intake.RunBackRoller(-0.7);
     }
     else {
       intake.ActuateIntake(0);
@@ -179,12 +184,12 @@ public class Robot extends TimedRobot {
     else {
       elevator.spin(0);
     }
-
+    grabber.grabberPos(grabberTarget);
     if(driver.X.isPressed()) {
-      grabber.grabberRun(Constants.GrabberConstants.Grabber_Speed);
+      grabberTarget = 0;
     }
     else if(driver.Y.isPressed()) {
-      grabber.grabberRun(-Constants.GrabberConstants.Grabber_Speed);
+      grabberTarget = 0;
     }
     else {
       grabber.grabberRun(0);
