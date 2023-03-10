@@ -12,10 +12,12 @@ public class Intake {
     private TalonSRX linearMotor;
     private VictorSPX frontRoller;
     private VictorSPX backRoller;
+    private VictorSPX bottomConveyer;
 
     public Intake() {
         /* Linear Configs */
         linearMotor = new TalonSRX(Constants.IntakeConstants.sliderMotorID);
+        bottomConveyer = new VictorSPX(Constants.IntakeConstants.bottomConveyerID);
 
         linearMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, Constants.IntakeConstants.INTAKE_PID_IDX, Constants.TIMEOUT_MS);
         linearMotor.setSelectedSensorPosition(0, Constants.IntakeConstants.INTAKE_PID_IDX, Constants.TIMEOUT_MS);
@@ -36,6 +38,8 @@ public class Intake {
         backRoller.setInverted(true);
         frontRoller.setNeutralMode(NeutralMode.Brake);
         backRoller.setNeutralMode(NeutralMode.Brake);
+        bottomConveyer.setInverted(true);
+        bottomConveyer.setNeutralMode(NeutralMode.Brake);
 
     }
     public void ActuateIntake(double slidingSpeed) {
@@ -48,5 +52,9 @@ public class Intake {
 
     public void RunBackRoller(double backRollerSpeed) {
         backRoller.set(ControlMode.PercentOutput, backRollerSpeed);
+    }
+
+    public void RunBottomConveyer(double bottomConveyerSpeed) {
+        bottomConveyer.set(ControlMode.PercentOutput, bottomConveyerSpeed);
     }
 }
