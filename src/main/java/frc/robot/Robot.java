@@ -158,12 +158,11 @@ public class Robot extends TimedRobot {
       intake.ActuateIntake(-Constants.IntakeConstants.linearMotorSpeed);
     }
     else if(driver.dPad.getPOV() == 90) {
-      intake.RunFrontRoller(0.7);
-      intake.RunBackRoller(-0.7);
+      intake.RunFrontRoller(Constants.IntakeConstants.frontRollerSpeed);
+      intake.RunBackRoller(-Constants.IntakeConstants.backRollerSpeed);
     }
     else {
       intake.ActuateIntake(0);
-      
       intake.RunBackRoller(0);
       intake.RunFrontRoller(0);
 
@@ -184,15 +183,18 @@ public class Robot extends TimedRobot {
     else {
       elevator.spin(0);
     }
-    grabber.grabberPos(grabberTarget);
+    //grabber.grabberPos(grabberTarget);
     if(driver.X.isPressed()) {
       grabberTarget = 0;
+      intake.RunBottomConveyer(Constants.IntakeConstants.bottomConveyerSpeed);
     }
     else if(driver.Y.isPressed()) {
       grabberTarget = 0;
+      intake.RunBottomConveyer(-Constants.IntakeConstants.bottomConveyerSpeed);
     }
     else {
       grabber.grabberRun(0);
+      intake.RunBottomConveyer(0);
     }
 
     /* Navigator Controls */

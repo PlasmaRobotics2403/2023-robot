@@ -215,14 +215,23 @@ public final class Constants {
         public static final int sliderMotorID = 12;
         public static final int frontRollerID = 14;
         public static final int backRollerID = 15;
+        public static final int bottomConveyerID = 13;
 
+        public static final double frontRollerSpeed = 0.7;
+        public static final double backRollerSpeed = 0.7;
         public static final double linearMotorSpeed = 0.2;
+        public static final double bottomConveyerSpeed = 0.3;
+
         public static final int INTAKE_PID_IDX = 0;
 
         public static double linearkF = 0;
         public static double linearkP = 0;
         public static double linearkI = 0;
         public static double linearkD = 0;
+    }
+
+    public static final class SpindexerConstants {
+        public static final int spindexerMotorID = 16;
     }
     public static final class AutoConstants { //TODO: The below constants are used in the example auto, and must be tuned to specific robot
         public static final double kMaxSpeedMetersPerSecond = 3;
