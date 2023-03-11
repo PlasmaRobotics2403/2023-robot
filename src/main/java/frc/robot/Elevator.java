@@ -24,6 +24,9 @@ public class Elevator {
         master.configFactoryDefault();
         slave.configFactoryDefault();
 
+        currentLimit(master);
+        currentLimit(slave);
+
         master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, Constants.ElevatorConstants.PID_IDX, Constants.TIMEOUT_MS);
         master.setSelectedSensorPosition(0, Constants.ElevatorConstants.PID_IDX, Constants.TIMEOUT_MS);
 
@@ -54,12 +57,20 @@ public class Elevator {
 
         limitSwitch = new DigitalInput(Constants.ElevatorConstants.ELEVATOR_LIMIT_ID);
     }
-
-    public void currentLimit(final TalonSRX talon) {
+    /**
+     * limits current the talon can draw from the PDH
+     * @param talon
+     */
+    private void currentLimit(final TalonSRX talon) {
         talon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30, 30,0));
     }
 
-    public void spin(double speed) {
+
+    /**
+     * extend-retract the elevator
+     * @param speed
+     */
+    public void elevatorExtend(double speed) {
         if(speed > 0 && master.getSelectedSensorPosition() >= Constants.ElevatorConstants.MAX_EXTEND) {
             master.set(ControlMode.PercentOutput, 0);
         }
@@ -72,8 +83,9 @@ public class Elevator {
         }
     }
 
+
     /**
-     * 
+     * magicly put the elevator ina set position
      * @param position in inches
      */
     public void magicElevator(double position) {
@@ -90,6 +102,11 @@ public class Elevator {
         }
     }
 
+
+    /**
+     * all values that need to be updated periodically
+     * and smartdashboard display
+     */
     public void logger() {
         SmartDashboard.putNumber("elevatorEncoder", master.getSelectedSensorPosition(0));
         SmartDashboard.putBoolean("Elevator limit", limitSwitch.get());

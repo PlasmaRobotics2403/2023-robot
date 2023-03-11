@@ -23,6 +23,10 @@ public class Limelight {
         ts = table.getEntry("ts");
     }
 
+    /**
+     * all values that need to be updated periodically
+     * and smartdashboard display
+     */
     public void logging() {
         //read values periodically
         x_value = tx.getDouble(0.0);
@@ -35,10 +39,11 @@ public class Limelight {
         SmartDashboard.putNumber("LimelightSkew", s_value);
     }
 
-    public double getX() {
-        return x_value;
-    }
 
+    /**
+     * offset from the vision target left and right
+     * @return speed needed to be centered with the vision target
+     */
     public double XVisionAlign() {
         double x_speed = x_value/-29;
         x_speed = Math.max(x_speed, -Constants.LimelightConstants.maxTanslationalSpeed);
@@ -46,6 +51,11 @@ public class Limelight {
         return x_speed;
     }
 
+
+    /**
+     * show how far off in degrees rotation across the horizontal axis
+     * @return the speed needed to rotate parallel with the horizontal axis
+     */
     public double SkewVisionAlign() {
         double s_speed = s_value/29;
         s_speed = Math.max(s_speed, -Constants.LimelightConstants.maxSkewSpeed);
@@ -53,6 +63,12 @@ public class Limelight {
         return s_speed;
     }
 
+
+    /**
+     * showes how far the limelight is from the vision target
+     * centered at 1.2 meters
+     * @return speed needed to get to 1.2 meters
+     */
     public double distanceVisionAlign() {
         double distance = a_value - 1.2;
         double y_speed = distance * 1;
@@ -61,11 +77,31 @@ public class Limelight {
         
         return y_speed;
     }
+
+
+    /**
+     * shows how much of the screen is taken up by the vision target
+     * @return area of vision taget in percentage
+     */
     public double getArea() {
         return a_value;
     }
 
+
+    /**
+     * rotation off compared to the horizontal axis of the vision taget
+     * @return angle from horizontal axis
+     */
     public double getSkew() {
         return s_value;
+    }
+
+
+    /**
+     * left and right from the vision target
+     * @return diistance from virtical axis
+     */
+    public double getX() {
+        return x_value;
     }
 }

@@ -45,22 +45,39 @@ public class Swerve extends SubsystemBase {
         drive(new Translation2d(0, 0), 0, true, true);
     }
 
+    /**
+     * sets brake mode for motors
+     * @param drive set drive motor in brake mode
+     * @param angle set angle motor in brake mode
+     */
     public void setBrakeMode(boolean drive, boolean angle) {
         for(SwerveModule mod : mSwerveMods) {
             mod.setBrakeMode(drive, angle);
         }
     }
 
+    /**
+     * set default neutral modes for motors
+     * @param drive set default (brake)
+     * @param angle set default (coast)
+     */
     public void defaultNeutralMode(boolean drive, boolean angle) {
         for(SwerveModule mod : mSwerveMods) {
             mod.defaultNeutralMode(drive, angle);
         }
     }
 
+    /**
+     * reset the gyro heading
+     */
     public void zeroHeading() {
         navX.reset();
     }
 
+    /**
+     * returns the current heading of th gyro
+     * @return heading in degrees
+     */
     public double getHeading() {
         return Math.IEEEremainder(navX.getAngle(), 360);
     }

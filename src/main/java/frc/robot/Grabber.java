@@ -57,6 +57,11 @@ public class Grabber {
         extender.config_kD(0, Constants.GrabberConstants.extenderkD);
     }
 
+
+    /**
+     * rotates the arm at a speed
+     * @param armSpeed speed in Percent Output
+     */
     public void ArmRot(double armSpeed) {
         if(armSpeed > 0 && arm.getSelectedSensorPosition() >= Constants.GrabberConstants.ARM_MAX_EXTEND) {
             arm.set(ControlMode.PercentOutput, 0);
@@ -69,6 +74,11 @@ public class Grabber {
         }
     }
 
+
+    /**
+     * magicaly rotates the arm to position
+     * @param rotPosition
+     */
     public void magicArm(double rotPosition) {
         if(rotPosition >= Constants.GrabberConstants.ARM_MAX_EXTEND || rotPosition < Constants.GrabberConstants.ARM_MIN_EXTEND) {
             arm.set(ControlMode.PercentOutput, 0);
@@ -78,6 +88,11 @@ public class Grabber {
         }
     }
 
+
+    /**
+     * grabber opens and closing at a speed
+     * @param grabberSpeed speed in Percent Output
+     */
     public void grabberRun(double grabberSpeed) {
         if(grabberSpeed > 0 && arm.getSelectedSensorPosition() >= Constants.GrabberConstants.GRABBER_MAX_EXTEND) {
             arm.set(ControlMode.PercentOutput, 0);
@@ -87,8 +102,14 @@ public class Grabber {
         }
         else {
             arm.set(ControlMode.PercentOutput, grabberSpeed);
-        }    }
+        }    
+    }
 
+
+    /**
+     * grabber opening-closing at a position
+     * @param grabberPosition position it needs to open
+     */
     public void grabberPos(double grabberPosition) {
         if(grabberPosition >= Constants.GrabberConstants.ARM_MAX_EXTEND || grabberPosition < Constants.GrabberConstants.ARM_MIN_EXTEND) {
             arm.set(ControlMode.PercentOutput, 0);
@@ -98,6 +119,11 @@ public class Grabber {
         }
     }
 
+
+    /**
+     * arm extender extends at a speed
+     * @param extendSpeed speed in Percent Output
+     */
     public void extend(double extendSpeed) {
         if(extendSpeed > 0 && arm.getSelectedSensorPosition() >= Constants.GrabberConstants.ARM_MAX_EXTEND) {
             arm.set(ControlMode.PercentOutput, 0);
@@ -107,8 +133,14 @@ public class Grabber {
         }
         else {
             arm.set(ControlMode.PercentOutput, extendSpeed);
-        }    }
+        }
+    }
 
+
+    /**
+     * arm extender extend at a position 
+     * @param extendPos position it needs to extend to
+     */    
     public void extendPos(double extendPos) {
         if(extendPos >= Constants.GrabberConstants.EXTENDER_MAX_EXTEND || extendPos < Constants.GrabberConstants.EXTENDER_MIN_EXTEND) {
             arm.set(ControlMode.PercentOutput, 0);
@@ -118,6 +150,11 @@ public class Grabber {
         }
     }
 
+    
+    /**
+     * all values that need to be updated periodically
+     * and smartdashboard display
+     */
     public void logging() {
         SmartDashboard.putNumber("Arm Encoder", arm.getSelectedSensorPosition());
     }

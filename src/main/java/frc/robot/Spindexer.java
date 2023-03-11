@@ -14,6 +14,11 @@ public class Spindexer {
         spindexerMotor.setNeutralMode(NeutralMode.Brake);
     }
 
+    
+    /**
+     * runs spindexer with Percent Output
+     * @param spinSpeed percentage to run at
+     */
     public void spin(double spinSpeed) {
         spindexerMotor.set(ControlMode.PercentOutput, spinSpeed);
     }

@@ -30,13 +30,12 @@ public class Robot extends TimedRobot {
   Limelight limelight;
   Elevator elevator;
   Grabber grabber;
+  Intake intake;
 
   double elevatorTarget;
   double armTarget;
   double extenderTarget;
   double grabberTarget;
-
-  Intake intake;
 
   AutoModeRunner autoModeRunner;
   AutoMode[] autoModes;
@@ -44,7 +43,10 @@ public class Robot extends TimedRobot {
     
   LEDs leds;
   int hue;
+  int value;
   boolean FMS_Connected;
+
+  String gamePiece;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -71,6 +73,7 @@ public class Robot extends TimedRobot {
     
     leds = new LEDs();
     hue = 0;   
+    value = 255;
     FMS_Connected = false;
   }
 
@@ -126,83 +129,93 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     /* Driver Controls */
-    grabber.extendPos(extenderTarget);
+
+    /* vision align */
     if(driver.A.isPressed()) {
-      //swerve.teleopDrive(limelight.distanceVisionAlign(), limelight.XVisionAlign(), /*limelight.SkewVisionAlign()*/0, true);
-        extenderTarget = 0;
+      swerve.teleopDrive(limelight.distanceVisionAlign(), limelight.XVisionAlign(), limelight.SkewVisionAlign(), true);
     }
-    else if(driver.B.isPressed()) {
-      //swerve.balance();
-      extenderTarget = 0;
+    /* auto balance */
+    else if(driver.BACK.isPressed()) {
+      swerve.balance();
     }
+    /* creep drive */
+    else if(driver.L3.isToggledOn()) {
+      swerve.teleopDrive(0.5*driver.LeftY.getTrueAxis(), 0.5*driver.LeftX.getTrueAxis(), 0.5*driver.RightX.getTrueAxis(), false);
+    }
+    /* regular drive */
     else {
-      swerve.teleopDrive(driver.LeftY.getTrueAxis(), driver.LeftX.getTrueAxis(), driver.RightX.getTrueAxis(), driver.START.isPressed());
+      swerve.teleopDrive(driver.LeftY.getTrueAxis(), driver.LeftX.getTrueAxis(), driver.RightX.getTrueAxis(), false);
     }
 
-    if (driver.BACK.isPressed()) {
-      swerve.zeroGyro();
-    }
-
+    /* scoring positions */
+    elevator.magicElevator(elevatorTarget);
     grabber.magicArm(armTarget);
-    if(driver.RB.isPressed()) {
-      armTarget = 3000;
-    }
-    else if(driver.LB.isPressed()){
-      armTarget = 0;
-    }
-
-    if(driver.LT.isPressed()) {
-      intake.ActuateIntake(Constants.IntakeConstants.linearMotorSpeed);
-    }
-    else if(driver.RT.isPressed()) {
-      intake.ActuateIntake(-Constants.IntakeConstants.linearMotorSpeed);
-    }
-    else if(driver.dPad.getPOV() == 90) {
-      intake.RunFrontRoller(Constants.IntakeConstants.frontRollerSpeed);
-      intake.RunBackRoller(-Constants.IntakeConstants.backRollerSpeed);
-    }
-    else {
-      intake.ActuateIntake(0);
-      intake.RunBackRoller(0);
-      intake.RunFrontRoller(0);
-
-    }
-
-    //elevator.magicElevator(elevatorTarget);
-    if(driver.dPad.getPOV() == 0) {
-      elevatorTarget = 40;
-      elevator.spin(Constants.GrabberConstants.Up_Arm_Speed);
-    }
-    else if(driver.dPad.getPOV() == 90 || driver.dPad.getPOV() == 270) {
-      elevatorTarget = 20;
-    }
-    else if(driver.dPad.getPOV() == 180){
+    if(driver.dPad.getPOV() == 0) { /* high score */
       elevatorTarget = 0;
-      elevator.spin(Constants.GrabberConstants.Down_Arm_Speed);
+      armTarget = 0;
+      grabber.extendPos(0);
+      grabber.grabberPos(0);
     }
-    else {
-      elevator.spin(0);
+    else if(driver.dPad.getPOV() == 90) { /* mid scrore */
+      elevator.magicElevator(0);
+      grabber.magicArm(0);
+      grabber.extendPos(0);
+      grabber.grabberPos(0);
     }
-    //grabber.grabberPos(grabberTarget);
-    if(driver.X.isPressed()) {
+    else if(driver.dPad.getPOV() == 180) { /* stow */
+      elevator.magicElevator(0);
+      grabber.magicArm(0);
+      grabber.extendPos(0);
+      grabber.grabberPos(0);
+    }
+    else if(driver.dPad.getPOV() == 270) { /* low score */
+      elevator.magicElevator(0);
+      grabber.magicArm(0);
+      grabber.extendPos(0);
+      grabber.grabberPos(0);
+    }
+    else if(driver.Y.isPressed()) { /* feeder station */
+      elevator.magicElevator(0);
+      grabber.magicArm(0);
+      grabber.extendPos(0);
+      grabber.grabberPos(0);
+      
+    }
+
+    /* intake */
+    if(driver.RT.getTrueAxis() > 0.2) {
+      intake.ActuateIntake(0.2);
+      intake.RunBackRoller(0.3);
+      intake.RunFrontRoller(0.5);
+      intake.RunConveyer(0.5);
+    }
+
+    /* grab game piece */
+    grabber.grabberPos(grabberTarget);
+    if(driver.LB.isPressed()) {
       grabberTarget = 0;
-      intake.RunBottomConveyer(Constants.IntakeConstants.bottomConveyerSpeed);
     }
-    else if(driver.Y.isPressed()) {
-      grabberTarget = 0;
-      intake.RunBottomConveyer(-Constants.IntakeConstants.bottomConveyerSpeed);
+    else if(driver.RB.isPressed()) {
+      if(gamePiece == "cone") {
+        grabberTarget = 0;
+      }
+      else {
+        grabberTarget = 0;
+      }
     }
-    else {
-      grabber.grabberRun(0);
-      intake.RunBottomConveyer(0);
-    }
+
 
     /* Navigator Controls */
+    leds.setHSV(hue, 255, 255);
+    value = 128 + (int)(navigator.WAMMY.getTrueAxis() * 127);
+    
     if(navigator.YELLOW.isPressed()) {
-      leds.setHSV(15, 255, 255);
+      hue = 15;
+      gamePiece = "cone";
     }
     else if(navigator.BLUE.isPressed()) {
-      leds.setHSV(130, 255, 255);
+      hue = 130;
+      gamePiece = "cube";
     }
   }
 
@@ -213,7 +226,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically when disabled. */
   @Override
   public void disabledPeriodic() {
-    int value = 128 + (int)(navigator.WAMMY.getTrueAxis() * 127);
+    value = 128 + (int)(navigator.WAMMY.getTrueAxis() * 127);
 
     if(FMS_Connected) {
       if(navigator.GREEN.isPressed()) {

@@ -6,8 +6,6 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
-import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
-
 public class Intake {
     private TalonSRX linearMotor;
     private VictorSPX frontRoller;
@@ -42,19 +40,40 @@ public class Intake {
         bottomConveyer.setNeutralMode(NeutralMode.Brake);
 
     }
+
+    
+    /**
+     * controls intake extend and retract
+     * @param slidingSpeed speed in Percent Output
+     */
     public void ActuateIntake(double slidingSpeed) {
         linearMotor.set(ControlMode.PercentOutput, slidingSpeed);
     }
 
+
+    /**
+     * runs front roller
+     * @param frontRollerSpeed speed in Percent Output
+     */
     public void RunFrontRoller(double frontRollerSpeed) {
         frontRoller.set(ControlMode.PercentOutput, frontRollerSpeed);
     }
 
+
+    /**
+     * runs rollers closested to the bumper to bring the game pieces into the robot
+     * @param backRollerSpeed speed in Percent Output
+     */
     public void RunBackRoller(double backRollerSpeed) {
         backRoller.set(ControlMode.PercentOutput, backRollerSpeed);
     }
 
-    public void RunBottomConveyer(double bottomConveyerSpeed) {
-        bottomConveyer.set(ControlMode.PercentOutput, bottomConveyerSpeed);
+
+    /**
+     * runs convyer that brings game pieces to the spindexer
+     * @param conveyerSpeed speed in Percent Output
+     */
+    public void RunConveyer(double conveyerSpeed) {
+        bottomConveyer.set(ControlMode.PercentOutput, conveyerSpeed);
     }
 }
