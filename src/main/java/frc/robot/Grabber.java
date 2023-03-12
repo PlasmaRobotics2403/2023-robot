@@ -3,6 +3,7 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,13 +21,25 @@ public class Grabber {
         arm.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, Constants.GrabberConstants.ARM_PID_IDX, Constants.TIMEOUT_MS);
         arm.setSelectedSensorPosition(0, Constants.GrabberConstants.ARM_PID_IDX, Constants.TIMEOUT_MS);
 
+        arm.configNominalOutputForward(0, Constants.TIMEOUT_MS);
+        arm.configNominalOutputReverse(0, Constants.TIMEOUT_MS);
+        arm.configPeakOutputForward(1, Constants.TIMEOUT_MS);
+        arm.configPeakOutputReverse(-1, Constants.TIMEOUT_MS);
+
+        arm.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, Constants.TIMEOUT_MS);
+		arm.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, Constants.TIMEOUT_MS);
+
         arm.setInverted(true);
         arm.setNeutralMode(NeutralMode.Brake);
 
+        arm.selectProfileSlot(Constants.GrabberConstants.ARM_SLOT_IDX, Constants.GrabberConstants.ARM_PID_IDX);
         arm.config_kF(0, Constants.GrabberConstants.armkF);
         arm.config_kP(0, Constants.GrabberConstants.armkP);
         arm.config_kI(0, Constants.GrabberConstants.armkI);
         arm.config_kD(0, Constants.GrabberConstants.armkD);
+
+        arm.configMotionCruiseVelocity(Constants.GrabberConstants.ARM_MOTION_CRUISE_VELOCITY);
+        arm.configMotionAcceleration(Constants.GrabberConstants.ARM_MOTION_ACCELERATION);
 
         /* Grabber Setup */
         grabber = new TalonSRX(Constants.GrabberConstants.grabber_id);
@@ -94,15 +107,7 @@ public class Grabber {
      * @param grabberSpeed speed in Percent Output
      */
     public void grabberRun(double grabberSpeed) {
-        if(grabberSpeed > 0 && arm.getSelectedSensorPosition() >= Constants.GrabberConstants.GRABBER_MAX_EXTEND) {
-            arm.set(ControlMode.PercentOutput, 0);
-        }
-        else if (grabberSpeed < 0 && arm.getSelectedSensorPosition() <= Constants.GrabberConstants.GRABBER_MIN_EXTEND) {
-            arm.set(ControlMode.PercentOutput, 0);
-        }
-        else {
-            arm.set(ControlMode.PercentOutput, grabberSpeed);
-        }    
+        grabber.set(ControlMode.PercentOutput, grabberSpeed);  
     }
 
 
@@ -157,5 +162,6 @@ public class Grabber {
      */
     public void logging() {
         SmartDashboard.putNumber("Arm Encoder", arm.getSelectedSensorPosition());
+        SmartDashboard.putNumber("Arm Extendor Encoder", extender.getSelectedSensorPosition());
     }
 }

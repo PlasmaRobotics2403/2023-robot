@@ -70,20 +70,21 @@ public final class Constants {
         public static final double angleKF = chosenModule.angleKF;
 
         /* Drive Motor PID Values */
-        public static final double driveKP = 0.427; //TODO: This must be tuned to specific robot was 0.2214
-        public static final double driveKI = 0.001;
-        public static final double driveKD = 9.146;
-        public static final double driveKF = 0.061;
+        public static final double driveKF = 0.035;
+        public static final double driveKP = 0.03; //TODO: This must be tuned to specific robot was 0.2214
+        public static final double driveKI = 0;
+        public static final double driveKD = 0;
 
         /* Drive Motor Characterization Values 
          * Divide SYSID values by 12 to convert from volts to percent output for CTRE */
-        public static final double driveKS = (0.11416 / 12); //TODO: This must be tuned to specific robot
-        public static final double driveKV = (0.3397 / 12);
-        public static final double driveKA = (0.12174 / 12);
+        public static final double driveKS = (0.16215 / 12); //TODO: This must be tuned to specific robot
+        public static final double driveKV = (0.73438 / 12);
+        public static final double driveKA = (0.11115 / 12);
 
         /* Swerve Profiling Values */
         /** Meters per Second */
         public static final double maxSpeed = 10; //TODO: This must be tuned to specific robot
+        public static final double creepSpeed = 0.3;
         /** Radians per Second */
         public static final double maxAngularVelocity = 10; //TODO: This must be tuned to specific robot
 
@@ -145,7 +146,7 @@ public final class Constants {
         public static double inchesToTicks = 1232.5937;
 
         public static final int ELEVATOR_LIMIT_ID = 0;
-        public static final double MAX_EXTEND = 4500;
+        public static final double MAX_EXTEND = 45000;
 
 
         /*Elevator Pid */
@@ -167,8 +168,8 @@ public final class Constants {
         public static int extender_id = 16;
 
         /* Extention Positions */
-        public static final double ARM_MAX_EXTEND = 3500;
-        public static final double ARM_MIN_EXTEND = -1000;
+        public static final double ARM_MAX_EXTEND = 5100;
+        public static final double ARM_MIN_EXTEND = 0;
 
         public static final double EXTENDER_MAX_EXTEND = 0;
         public static final double EXTENDER_MIN_EXTEND = 0;
@@ -187,8 +188,8 @@ public final class Constants {
         public static final int ARM_PID_IDX = 0;
         public static final int ARM_SLOT_IDX = 0;
 
-        public static final double MOTION_CRUISE_VELOCITY = 3000;
-        public static final double MOTION_ACCELERATION = 1500;
+        public static final double ARM_MOTION_CRUISE_VELOCITY = 3000;
+        public static final double ARM_MOTION_ACCELERATION = 1500;
 
         public static double armkF = 0.2;
         public static double armkP = 0.2;
@@ -207,8 +208,8 @@ public final class Constants {
     }
 
     public static final class LimelightConstants {
-        public static double maxTanslationalSpeed = 0.35;
-        public static double maxSkewSpeed = 0.3;
+        public static double maxTanslationalSpeed = 0.25;
+        public static double maxSkewSpeed = 0.25;
     }
 
     public static final class IntakeConstants {
@@ -222,12 +223,16 @@ public final class Constants {
         public static final double linearMotorSpeed = 0.2;
         public static final double bottomConveyerSpeed = 0.3;
 
-        public static final int INTAKE_PID_IDX = 0;
+        public static final int SLOT_IDX = 0;
+        public static final int PID_IDX = 0;
 
-        public static double linearkF = 0;
-        public static double linearkP = 0;
-        public static double linearkI = 0;
-        public static double linearkD = 0;
+        public static double linearkF = 0.7;
+        public static double linearkP = 0.1;
+        public static double linearkI = 0.00003;
+        public static double linearkD = 0.0;
+
+        public static final double MOTION_CRUISE_VELOCITY = 30000;
+        public static final double MOTION_ACCELERATION = 20000;
     }
 
     public static final class SpindexerConstants {

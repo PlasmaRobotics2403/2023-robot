@@ -89,16 +89,15 @@ public class Elevator {
      * @param position in inches
      */
     public void magicElevator(double position) {
-        double ticks = position * Constants.ElevatorConstants.inchesToTicks;
-        if(ticks >= 45000 || ticks < 0) {
+        if(position >= Constants.ElevatorConstants.MAX_EXTEND || position < 0) {
             master.set(ControlMode.PercentOutput, 0);
         }
-        else if(ticks <= 0 && master.getSelectedSensorPosition() <= 500 && !limitSwitch.get()) {
+        else if(position <= 0 && master.getSelectedSensorPosition() <= 500 && !limitSwitch.get()) {
             master.setSelectedSensorPosition(0);
             master.set(ControlMode.PercentOutput, 0);
         }
         else {
-            master.set(ControlMode.MotionMagic, ticks);
+            master.set(ControlMode.MotionMagic, position);
         }
     }
 

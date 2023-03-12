@@ -8,7 +8,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.auto.modes.CableToCharge;
 import frc.robot.auto.modes.DriveForward;
+import frc.robot.auto.modes.FlatToCharge;
 import frc.robot.auto.util.AutoMode;
 import frc.robot.auto.util.AutoModeRunner;
 import frc.robot.controllers.PlasmaGuitar;
@@ -36,6 +38,7 @@ public class Robot extends TimedRobot {
   double armTarget;
   double extenderTarget;
   double grabberTarget;
+  double intakeTarget;
 
   AutoModeRunner autoModeRunner;
   AutoMode[] autoModes;
@@ -68,6 +71,8 @@ public class Robot extends TimedRobot {
     autoModeRunner = new AutoModeRunner();
     autoModes = new AutoMode[20];
     autoModes[0] = new DriveForward(swerve);
+    autoModes[1] = new FlatToCharge(swerve);
+    autoModes[2] = new CableToCharge(swerve);
     
     autoModeSelection = 0;
     
@@ -93,6 +98,7 @@ public class Robot extends TimedRobot {
     limelight.logging();
     elevator.logger();
     grabber.logging();
+    intake.logging();
 
     leds.sendData();
   }
@@ -121,6 +127,8 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
+    autoModeRunner.stop();
+
     swerve.defaultNeutralMode(true, true);
     leds.setRGB(0, 0, 0);
   }
@@ -140,7 +148,7 @@ public class Robot extends TimedRobot {
     }
     /* creep drive */
     else if(driver.L3.isToggledOn()) {
-      swerve.teleopDrive(0.5*driver.LeftY.getTrueAxis(), 0.5*driver.LeftX.getTrueAxis(), 0.5*driver.RightX.getTrueAxis(), false);
+      swerve.teleopDrive(Constants.Swerve.creepSpeed*driver.LeftY.getTrueAxis(), Constants.Swerve.creepSpeed*driver.LeftX.getTrueAxis(), Constants.Swerve.creepSpeed*driver.RightX.getTrueAxis(), false);
     }
     /* regular drive */
     else {
@@ -150,72 +158,32 @@ public class Robot extends TimedRobot {
     /* scoring positions */
     elevator.magicElevator(elevatorTarget);
     grabber.magicArm(armTarget);
-    if(driver.dPad.getPOV() == 0) { /* high score */
+    if(driver.dPad.getPOV() == 0) { /* high score position */
+      elevatorTarget = 42000;
+      armTarget = 5000;
+    }
+    else if(driver.dPad.getPOV() == 90) { /* mid score position */
+      elevatorTarget = 20000;
+      armTarget = 4800;
+    }
+    else if(driver.dPad.getPOV() == 270) { /* low score position */
+      elevatorTarget = 0;
+      armTarget = 1700;
+    }
+    else if(driver.dPad.getPOV() == 180) { /* stow position */
       elevatorTarget = 0;
       armTarget = 0;
-      grabber.extendPos(0);
-      grabber.grabberPos(0);
-    }
-    else if(driver.dPad.getPOV() == 90) { /* mid scrore */
-      elevator.magicElevator(0);
-      grabber.magicArm(0);
-      grabber.extendPos(0);
-      grabber.grabberPos(0);
-    }
-    else if(driver.dPad.getPOV() == 180) { /* stow */
-      elevator.magicElevator(0);
-      grabber.magicArm(0);
-      grabber.extendPos(0);
-      grabber.grabberPos(0);
-    }
-    else if(driver.dPad.getPOV() == 270) { /* low score */
-      elevator.magicElevator(0);
-      grabber.magicArm(0);
-      grabber.extendPos(0);
-      grabber.grabberPos(0);
-    }
-    else if(driver.Y.isPressed()) { /* feeder station */
-      elevator.magicElevator(0);
-      grabber.magicArm(0);
-      grabber.extendPos(0);
-      grabber.grabberPos(0);
-      
     }
 
-    /* intake */
-    if(driver.RT.getTrueAxis() > 0.2) {
-      intake.ActuateIntake(0.2);
-      intake.RunBackRoller(0.3);
-      intake.RunFrontRoller(0.5);
-      intake.RunConveyer(0.5);
-    }
-
-    /* grab game piece */
-    grabber.grabberPos(grabberTarget);
+    /* grabber open close */
     if(driver.LB.isPressed()) {
-      grabberTarget = 0;
+      grabber.grabberRun(-0.2);
     }
     else if(driver.RB.isPressed()) {
-      if(gamePiece == "cone") {
-        grabberTarget = 0;
-      }
-      else {
-        grabberTarget = 0;
-      }
+      grabber.grabberRun(0.2);
     }
-
-
-    /* Navigator Controls */
-    leds.setHSV(hue, 255, 255);
-    value = 128 + (int)(navigator.WAMMY.getTrueAxis() * 127);
-    
-    if(navigator.YELLOW.isPressed()) {
-      hue = 15;
-      gamePiece = "cone";
-    }
-    else if(navigator.BLUE.isPressed()) {
-      hue = 130;
-      gamePiece = "cube";
+    else {
+      grabber.grabberRun(0);
     }
   }
 
