@@ -148,6 +148,10 @@ public final class Constants {
         public static final int ELEVATOR_LIMIT_ID = 0;
         public static final double MAX_EXTEND = 45000;
 
+        public static final double ELEVATOR_HIGH_EXTEND = 42000;
+        public static final double ELEVATOR_MID_EXTEND = 20000;
+        public static final double ELEVATOR_LOW_EXTEND = 5000;
+        public static final double ELEVATOR_BOTTTOM_EXTEND = 0;
 
         /*Elevator Pid */
         public static final int PID_IDX = 0;
@@ -171,11 +175,18 @@ public final class Constants {
         public static final double ARM_MAX_EXTEND = 5100;
         public static final double ARM_MIN_EXTEND = 0;
 
-        public static final double EXTENDER_MAX_EXTEND = 0;
-        public static final double EXTENDER_MIN_EXTEND = 0;
+        public static final double EXTENDER_MAX_EXTEND = 5000;
+        public static final double EXTENDER_MIN_EXTEND = -100;
 
-        public static final double GRABBER_MAX_EXTEND = 0;
+        public static final double GRABBER_MAX_EXTEND = 10000;
         public static final double GRABBER_MIN_EXTEND = 0;
+
+        public static final double GRABBER_CLOSED_CONE = 3500;
+        public static final double GRABBER_CLOSED_CUBE = 3060;
+        public static final double GRABBER_OPEN = 0;
+
+        public static final double EXTENDER_UP_POSITION = 4300;
+        public static final double EXTENDER_DOWN_POSITION = 790;
 
         /* Arm/Grabber Speeds */
         public static final double Up_Arm_Speed = 0.3;
@@ -188,8 +199,25 @@ public final class Constants {
         public static final int ARM_PID_IDX = 0;
         public static final int ARM_SLOT_IDX = 0;
 
+        public static final int GRABBER_PID_IDX = 0;
+        public static final int GRABBER_SLOT_IDX = 0;
+
+        public static final int EXTENDER_PID_IDX = 0;
+        public static final int EXTENDER_SLOT_IDX = 0;
+
         public static final double ARM_MOTION_CRUISE_VELOCITY = 3000;
         public static final double ARM_MOTION_ACCELERATION = 1500;
+
+        public static final double GRABBER_MOTION_CRUISE_VELOCITY = 3000;
+        public static final double GRABBER_MOTION_ACCELERATION = 1500;
+
+        public static final double EXTENDER_MOTION_CRUISE_VELOCITY = 2000;
+        public static final double EXTENDER_MOTION_ACCELERATION = 1000;
+
+        public static final double ARM_HIGH_EXTEND = 5000;
+        public static final double ARM_LOW_EXTEND = 2000;
+        public static final double ARM_STOWED_EXTEND = 0;
+
 
         public static double armkF = 0.2;
         public static double armkP = 0.2;
@@ -197,8 +225,8 @@ public final class Constants {
         public static double armkD = 0;
 
         public static double extenderkF = 0.2;
-        public static double extenderkP = 0.2;
-        public static double extenderkI = 0;
+        public static double extenderkP = 0.3;
+        public static double extenderkI = 0.0003;
         public static double extenderkD = 0;
 
         public static double grabberkF = 0.2;

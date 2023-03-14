@@ -71,7 +71,7 @@ public class Robot extends TimedRobot {
     autoModeRunner = new AutoModeRunner();
     autoModes = new AutoMode[20];
     autoModes[0] = new DriveForward(swerve);
-    autoModes[1] = new FlatToCharge(swerve);
+    autoModes[1] = new FlatToCharge(swerve, elevator, grabber);
     autoModes[2] = new CableToCharge(swerve);
     
     autoModeSelection = 0;
@@ -80,6 +80,8 @@ public class Robot extends TimedRobot {
     hue = 0;   
     value = 255;
     FMS_Connected = false;
+
+    DriverStation.silenceJoystickConnectionWarning(true);
   }
 
   /**
@@ -159,31 +161,44 @@ public class Robot extends TimedRobot {
     elevator.magicElevator(elevatorTarget);
     grabber.magicArm(armTarget);
     if(driver.dPad.getPOV() == 0) { /* high score position */
-      elevatorTarget = 42000;
-      armTarget = 5000;
+      elevatorTarget = Constants.ElevatorConstants.ELEVATOR_HIGH_EXTEND;
+      armTarget = Constants.GrabberConstants.ARM_HIGH_EXTEND;
     }
     else if(driver.dPad.getPOV() == 90) { /* mid score position */
-      elevatorTarget = 20000;
-      armTarget = 4800;
+      elevatorTarget = Constants.ElevatorConstants.ELEVATOR_MID_EXTEND;
+      armTarget = Constants.GrabberConstants.ARM_HIGH_EXTEND;
     }
     else if(driver.dPad.getPOV() == 270) { /* low score position */
-      elevatorTarget = 0;
-      armTarget = 1700;
+      elevatorTarget = Constants.ElevatorConstants.ELEVATOR_LOW_EXTEND;
+      armTarget = Constants.GrabberConstants.ARM_LOW_EXTEND;
     }
     else if(driver.dPad.getPOV() == 180) { /* stow position */
-      elevatorTarget = 0;
-      armTarget = 0;
+      elevatorTarget = Constants.ElevatorConstants.ELEVATOR_BOTTTOM_EXTEND;
+      armTarget = Constants.GrabberConstants.ARM_STOWED_EXTEND;
+    }
+
+    grabber.extendPos(extenderTarget);
+    if(driver.X.isPressed()) {
+      extenderTarget = Constants.GrabberConstants.EXTENDER_UP_POSITION;
+      //grabber.extend(0.2);
+
+    }
+    else if(driver.B.isPressed()) {
+      extenderTarget = Constants.GrabberConstants.EXTENDER_DOWN_POSITION;
+      //grabber.extend(-0.2);
     }
 
     /* grabber open close */
+    grabber.grabberPos(grabberTarget);
     if(driver.LB.isPressed()) {
-      grabber.grabberRun(-0.2);
+      grabberTarget = Constants.GrabberConstants.GRABBER_CLOSED_CONE;
     }
     else if(driver.RB.isPressed()) {
-      grabber.grabberRun(0.2);
+      grabberTarget = Constants.GrabberConstants.GRABBER_CLOSED_CUBE;
+      
     }
-    else {
-      grabber.grabberRun(0);
+    else{
+      grabberTarget = Constants.GrabberConstants.GRABBER_OPEN;
     }
   }
 

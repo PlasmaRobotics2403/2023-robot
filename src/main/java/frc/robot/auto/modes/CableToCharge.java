@@ -5,7 +5,12 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.Constants;
+import frc.robot.Elevator;
+import frc.robot.Grabber;
 import frc.robot.Swerve;
+import frc.robot.auto.actions.AutoArm;
+import frc.robot.auto.actions.AutoElevator;
 import frc.robot.auto.actions.Balance;
 import frc.robot.auto.actions.FollowTrajectory;
 import frc.robot.auto.util.AutoMode;
@@ -14,6 +19,8 @@ import frc.robot.auto.util.AutoModeEndedException;
 public class CableToCharge extends AutoMode {
 
     Swerve swerve;
+    Elevator elevator;
+    Grabber grabber;
     PathPlannerTrajectory cable_run_to_charge;
 
     public CableToCharge(Swerve swerve) {
@@ -28,10 +35,12 @@ public class CableToCharge extends AutoMode {
 
     @Override
     protected void routine() throws AutoModeEndedException {
-        DriverStation.reportWarning("Running Drive_Forward", false);
+        DriverStation.reportWarning("Running Cable_To_Charge", false);
+        runAction(new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_HIGH_EXTEND));
+        runAction(new AutoArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND));
         runAction(new FollowTrajectory(cable_run_to_charge, swerve, true));
         runAction(new Balance(swerve));
-        DriverStation.reportWarning("Finished Drive_Forward", false);
+        DriverStation.reportWarning("Finished Cable_To_Charge", false);
 
     }
     
