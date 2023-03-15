@@ -8,9 +8,12 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.auto.modes.CableToCharge;
+import frc.robot.auto.modes.AudienceToCharge;
 import frc.robot.auto.modes.DriveForward;
-import frc.robot.auto.modes.FlatToCharge;
+import frc.robot.auto.modes.LeaveCommunity;
+import frc.robot.auto.modes.OverChargedStation;
+import frc.robot.auto.modes.Score;
+import frc.robot.auto.modes.ScoringTableToCharge;
 import frc.robot.auto.util.AutoMode;
 import frc.robot.auto.util.AutoModeRunner;
 import frc.robot.controllers.PlasmaGuitar;
@@ -39,6 +42,8 @@ public class Robot extends TimedRobot {
   double extenderTarget;
   double grabberTarget;
   double intakeTarget;
+
+  String robotState;
 
   AutoModeRunner autoModeRunner;
   AutoMode[] autoModes;
@@ -71,8 +76,11 @@ public class Robot extends TimedRobot {
     autoModeRunner = new AutoModeRunner();
     autoModes = new AutoMode[20];
     autoModes[0] = new DriveForward(swerve);
-    autoModes[1] = new FlatToCharge(swerve, elevator, grabber);
-    autoModes[2] = new CableToCharge(swerve);
+    autoModes[1] = new ScoringTableToCharge(swerve, elevator, grabber);
+    autoModes[2] = new AudienceToCharge(swerve, elevator, grabber);
+    autoModes[3] = new LeaveCommunity(swerve, elevator, grabber);
+    autoModes[4] = new OverChargedStation(swerve, elevator, grabber);
+    autoModes[5] = new Score(swerve, elevator, grabber);
     
     autoModeSelection = 0;
     
@@ -80,6 +88,8 @@ public class Robot extends TimedRobot {
     hue = 0;   
     value = 255;
     FMS_Connected = false;
+    gamePiece = "cube";
+    robotState = "stow";
 
     DriverStation.silenceJoystickConnectionWarning(true);
   }
@@ -95,6 +105,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     autoModeSelection = (int) SmartDashboard.getNumber("Auton Mode", 0.0);
     SmartDashboard.putNumber("Auton Mode", autoModeSelection);
+    SmartDashboard.putString("game piece", gamePiece);
 
     swerve.logging();
     limelight.logging();
@@ -148,8 +159,12 @@ public class Robot extends TimedRobot {
     else if(driver.BACK.isPressed()) {
       swerve.balance();
     }
+    /* rezero robot heading */
+    else if(driver.START.isPressed()) {
+      swerve.zeroHeading();
+    }
     /* creep drive */
-    else if(driver.L3.isToggledOn()) {
+    else if(driver.RT.isPressed()) {
       swerve.teleopDrive(Constants.Swerve.creepSpeed*driver.LeftY.getTrueAxis(), Constants.Swerve.creepSpeed*driver.LeftX.getTrueAxis(), Constants.Swerve.creepSpeed*driver.RightX.getTrueAxis(), false);
     }
     /* regular drive */
@@ -157,50 +172,76 @@ public class Robot extends TimedRobot {
       swerve.teleopDrive(driver.LeftY.getTrueAxis(), driver.LeftX.getTrueAxis(), driver.RightX.getTrueAxis(), false);
     }
 
-    /* scoring positions */
-    elevator.magicElevator(elevatorTarget);
-    grabber.magicArm(armTarget);
-    if(driver.dPad.getPOV() == 0) { /* high score position */
+    /* robot States */
+    grabber.extendPos(extenderTarget);
+    if(robotState != "stow") {
+      elevator.magicElevator(elevatorTarget);
+      if(elevator.distanceToPosition(elevatorTarget) <= 0.5*elevatorTarget) {
+        grabber.magicArm(armTarget);
+      }
+    }
+    else {
+      grabber.magicArm(armTarget);
+      if(grabber.distanceToArmPosition(elevatorTarget) <= 500) {
+        elevator.magicElevator(elevatorTarget);
+      }
+    }
+    if(driver.dPad.getPOV() == 0) { /* high score state */
       elevatorTarget = Constants.ElevatorConstants.ELEVATOR_HIGH_EXTEND;
       armTarget = Constants.GrabberConstants.ARM_HIGH_EXTEND;
+      extenderTarget = Constants.GrabberConstants.EXTENDER_RETRACTED_POSITION;
+      robotState = "high";
     }
-    else if(driver.dPad.getPOV() == 90) { /* mid score position */
+    else if(driver.dPad.getPOV() == 90) { /* mid score state */
       elevatorTarget = Constants.ElevatorConstants.ELEVATOR_MID_EXTEND;
       armTarget = Constants.GrabberConstants.ARM_HIGH_EXTEND;
+      extenderTarget = Constants.GrabberConstants.EXTENDER_RETRACTED_POSITION;
+      robotState = "mid";
     }
-    else if(driver.dPad.getPOV() == 270) { /* low score position */
+    else if(driver.dPad.getPOV() == 270) { /* low score state */
       elevatorTarget = Constants.ElevatorConstants.ELEVATOR_LOW_EXTEND;
       armTarget = Constants.GrabberConstants.ARM_LOW_EXTEND;
+      extenderTarget = Constants.GrabberConstants.EXTENDER_RETRACTED_POSITION;
+      robotState = "low";
     }
-    else if(driver.dPad.getPOV() == 180) { /* stow position */
+    else if(driver.dPad.getPOV() == 180) { /* stow state */
       elevatorTarget = Constants.ElevatorConstants.ELEVATOR_BOTTTOM_EXTEND;
       armTarget = Constants.GrabberConstants.ARM_STOWED_EXTEND;
+      extenderTarget = Constants.GrabberConstants.EXTENDER_RETRACTED_POSITION;
+      robotState = "stow";
+    }
+    else if(driver.Y.isPressed()) { /* feeder state */
+      elevatorTarget = Constants.ElevatorConstants.ELEVATOR_FEEDER_EXTEND;
+      armTarget = Constants.GrabberConstants.ARM_LEVEL_EXTEND;
+      extenderTarget = Constants.GrabberConstants.EXTENDER_EXTENDED_POSITION;
+      robotState = "feeder";
     }
 
-    grabber.extendPos(extenderTarget);
-    if(driver.X.isPressed()) {
-      extenderTarget = Constants.GrabberConstants.EXTENDER_UP_POSITION;
-      //grabber.extend(0.2);
-
-    }
-    else if(driver.B.isPressed()) {
-      extenderTarget = Constants.GrabberConstants.EXTENDER_DOWN_POSITION;
-      //grabber.extend(-0.2);
-    }
 
     /* grabber open close */
     grabber.grabberPos(grabberTarget);
     if(driver.LB.isPressed()) {
-      grabberTarget = Constants.GrabberConstants.GRABBER_CLOSED_CONE;
-    }
-    else if(driver.RB.isPressed()) {
-      grabberTarget = Constants.GrabberConstants.GRABBER_CLOSED_CUBE;
-      
-    }
-    else{
       grabberTarget = Constants.GrabberConstants.GRABBER_OPEN;
     }
-  }
+    else if(driver.RB.isPressed()) {
+      if(gamePiece == "Cube") {
+        grabberTarget = Constants.GrabberConstants.GRABBER_CLOSED_CUBE;
+      }
+      else if(gamePiece == "Cone") {
+        grabberTarget = Constants.GrabberConstants.GRABBER_CLOSED_CONE;
+      }
+    } 
+    value = 128 + (int)(navigator.WAMMY.getTrueAxis() * 127);
+  
+    if(navigator.BLUE.isPressed()) {
+      hue = 130;
+      gamePiece = "Cube";
+      }
+    else if(navigator.YELLOW.isPressed()) {
+      hue = 15;
+      gamePiece = "Cone";
+      }
+    }
 
   /** This function is called once when the robot is disabled. */
   @Override

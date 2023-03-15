@@ -76,6 +76,9 @@ public class Elevator {
     public double getPosition() {
         return master.getSelectedSensorPosition();
     }
+    public double distanceToPosition(double position) {
+        return Math.abs(position - getPosition());
+    }
     public void elevatorExtend(double speed) {
         if(speed > 0 && master.getSelectedSensorPosition() >= Constants.ElevatorConstants.MAX_EXTEND) {
             master.set(ControlMode.PercentOutput, 0);

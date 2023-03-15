@@ -110,6 +110,9 @@ public class Grabber {
     public double getExtenderPosition() {
         return extender.getSelectedSensorPosition();
     }
+    public double distanceToArmPosition(double position) {
+        return Math.abs(position - getArmPosition());
+    }
     public void ArmRot(double armSpeed) {
         if(armSpeed > 0 && arm.getSelectedSensorPosition() >= Constants.GrabberConstants.ARM_MAX_EXTEND) {
             arm.set(ControlMode.PercentOutput, 0);

@@ -93,7 +93,7 @@ public final class Constants {
         public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
 
         /*Balance Multiplier */
-        public static final double balanceMultiplier = 0.02;
+        public static final double balanceMultiplier = 0.017;
 
         /* Module Specific Constants */
         /* Front Left Module - Module 0 */
@@ -148,8 +148,9 @@ public final class Constants {
         public static final int ELEVATOR_LIMIT_ID = 0;
         public static final double MAX_EXTEND = 45000;
 
-        public static final double ELEVATOR_HIGH_EXTEND = 42000;
-        public static final double ELEVATOR_MID_EXTEND = 20000;
+        public static final double ELEVATOR_HIGH_EXTEND = 44000;
+        public static final double ELEVATOR_FEEDER_EXTEND = 23500;
+        public static final double ELEVATOR_MID_EXTEND = 21000;
         public static final double ELEVATOR_LOW_EXTEND = 5000;
         public static final double ELEVATOR_BOTTTOM_EXTEND = 0;
 
@@ -181,12 +182,12 @@ public final class Constants {
         public static final double GRABBER_MAX_EXTEND = 10000;
         public static final double GRABBER_MIN_EXTEND = 0;
 
-        public static final double GRABBER_CLOSED_CONE = 3500;
+        public static final double GRABBER_CLOSED_CONE = 5000;
         public static final double GRABBER_CLOSED_CUBE = 3060;
         public static final double GRABBER_OPEN = 0;
 
-        public static final double EXTENDER_UP_POSITION = 4300;
-        public static final double EXTENDER_DOWN_POSITION = 790;
+        public static final double EXTENDER_RETRACTED_POSITION = 4300;
+        public static final double EXTENDER_EXTENDED_POSITION = 790;
 
         /* Arm/Grabber Speeds */
         public static final double Up_Arm_Speed = 0.3;
@@ -215,6 +216,7 @@ public final class Constants {
         public static final double EXTENDER_MOTION_ACCELERATION = 1000;
 
         public static final double ARM_HIGH_EXTEND = 5000;
+        public static final double ARM_LEVEL_EXTEND = 4800;
         public static final double ARM_LOW_EXTEND = 2000;
         public static final double ARM_STOWED_EXTEND = 0;
 
