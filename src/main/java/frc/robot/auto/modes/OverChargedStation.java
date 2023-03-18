@@ -41,13 +41,13 @@ public class OverChargedStation extends AutoMode {
     @Override
     protected void routine() throws AutoModeEndedException {
         DriverStation.reportWarning("Running Audience_To_Charge", false);
-        runActionsRace(new AutoGrabber(grabber, 2800, 0.7), new AutoExtender(grabber, Constants.GrabberConstants.EXTENDER_RETRACTED_POSITION, 0.7));
-        runAction(new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_HIGH_EXTEND, 1));
+        runActionsRace(new AutoGrabber(grabber, Constants.GrabberConstants.GRABBER_CLOSED_CUBE, 0.7), new AutoExtender(grabber, Constants.GrabberConstants.EXTENDER_RETRACTED_POSITION, 0.7));        runAction(new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_HIGH_EXTEND, 1));
         runAction (new AutoArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND, 1)) ;
         runAction(new AutoExtender(grabber, Constants.GrabberConstants.EXTENDER_EXTENDED_POSITION, 0.3));
         runAction(new AutoGrabber(grabber, Constants.GrabberConstants.GRABBER_OPEN, 0.3));
         runActionsParallel(new AutoExtender(grabber, Constants.GrabberConstants.EXTENDER_RETRACTED_POSITION, 0.5), new AutoArm(grabber, Constants.GrabberConstants.ARM_STOWED_EXTEND, 0.5));
         runActionsParallel(new FollowTrajectory(overChargedStation, swerve, true), new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_BOTTTOM_EXTEND, 1.5));
+        runAction(new Balance(swerve));
         DriverStation.reportWarning("Finished Audience_To_Charge", false);
 
     }

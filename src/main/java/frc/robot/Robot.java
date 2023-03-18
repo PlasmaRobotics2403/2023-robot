@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.modes.AudienceToCharge;
 import frc.robot.auto.modes.DriveForward;
 import frc.robot.auto.modes.LeaveCommunity;
+import frc.robot.auto.modes.Nothing;
 import frc.robot.auto.modes.OverChargedStation;
 import frc.robot.auto.modes.Score;
 import frc.robot.auto.modes.ScoringTableToCharge;
@@ -75,7 +76,7 @@ public class Robot extends TimedRobot {
 
     autoModeRunner = new AutoModeRunner();
     autoModes = new AutoMode[20];
-    autoModes[0] = new DriveForward(swerve);
+    autoModes[0] = new Nothing();
     autoModes[1] = new ScoringTableToCharge(swerve, elevator, grabber);
     autoModes[2] = new AudienceToCharge(swerve, elevator, grabber);
     autoModes[3] = new LeaveCommunity(swerve, elevator, grabber);
@@ -177,15 +178,43 @@ public class Robot extends TimedRobot {
     if(robotState != "stow") {
       elevator.magicElevator(elevatorTarget);
       if(elevator.distanceToPosition(elevatorTarget) <= 0.5*elevatorTarget) {
-        grabber.magicArm(armTarget);
+        if(navigator.DPAD.getPOV() == 0) {
+          grabber.ArmRot(0.2);
+        }
+        else if(navigator.DPAD.getPOV() == 180) {
+          grabber.ArmRot(-0.2);
+        }
+        else if(navigator.RED.isPressed()) {
+          grabber.ArmRot(0);
+        }
+        else {
+          grabber.magicArm(armTarget);
+        }
       }
     }
     else {
-      grabber.magicArm(armTarget);
+      if(navigator.DPAD.getPOV() == 0) {
+        grabber.ArmRot(0.15);
+      }
+      else if(navigator.DPAD.getPOV() == 180) {
+        grabber.ArmRot(-0.15);
+      }
+      else if(navigator.RED.isPressed()) {
+        grabber.ArmRot(0);
+      }
+      else {
+        grabber.magicArm(armTarget);
+      }
       if(grabber.distanceToArmPosition(elevatorTarget) <= 500) {
         elevator.magicElevator(elevatorTarget);
       }
     }
+
+
+    if(navigator.GREEN.isPressed() && robotState == "stow") {
+      grabber.zeroArm();
+    }
+
     if(driver.dPad.getPOV() == 0) { /* high score state */
       elevatorTarget = Constants.ElevatorConstants.ELEVATOR_HIGH_EXTEND;
       armTarget = Constants.GrabberConstants.ARM_HIGH_EXTEND;
@@ -231,8 +260,9 @@ public class Robot extends TimedRobot {
         grabberTarget = Constants.GrabberConstants.GRABBER_CLOSED_CONE;
       }
     } 
+
+
     value = 128 + (int)(navigator.WAMMY.getTrueAxis() * 127);
-  
     if(navigator.BLUE.isPressed()) {
       hue = 130;
       gamePiece = "Cube";

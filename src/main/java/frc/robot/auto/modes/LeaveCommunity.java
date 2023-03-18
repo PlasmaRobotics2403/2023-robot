@@ -41,7 +41,7 @@ public class LeaveCommunity extends AutoMode {
     @Override
     protected void routine() throws AutoModeEndedException {
         DriverStation.reportWarning("Running Audience_To_Charge", false);
-        runActionsRace(new AutoGrabber(grabber, 2800, 0.7), new AutoExtender(grabber, Constants.GrabberConstants.EXTENDER_RETRACTED_POSITION, 0.7));
+        runActionsRace(new AutoGrabber(grabber, Constants.GrabberConstants.GRABBER_CLOSED_CUBE, 0.7), new AutoExtender(grabber, Constants.GrabberConstants.EXTENDER_RETRACTED_POSITION, 0.7));
         runAction(new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_HIGH_EXTEND, 1));
         runAction (new AutoArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND, 1)) ;
         runAction(new AutoExtender(grabber, Constants.GrabberConstants.EXTENDER_EXTENDED_POSITION, 0.3));

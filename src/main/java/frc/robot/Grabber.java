@@ -83,7 +83,7 @@ public class Grabber {
         extender.setSelectedSensorPosition(0, Constants.GrabberConstants.EXTENDER_PID_IDX, Constants.TIMEOUT_MS);
 
         extender.setInverted(true);
-        extender.setSensorPhase(true);
+        extender.setSensorPhase(false);
         extender.setNeutralMode(NeutralMode.Brake);
         
         extender.selectProfileSlot(Constants.GrabberConstants.EXTENDER_SLOT_IDX, Constants.GrabberConstants.EXTENDER_PID_IDX);
@@ -114,15 +114,7 @@ public class Grabber {
         return Math.abs(position - getArmPosition());
     }
     public void ArmRot(double armSpeed) {
-        if(armSpeed > 0 && arm.getSelectedSensorPosition() >= Constants.GrabberConstants.ARM_MAX_EXTEND) {
-            arm.set(ControlMode.PercentOutput, 0);
-        }
-        else if (armSpeed < 0 && arm.getSelectedSensorPosition() <= Constants.GrabberConstants.ARM_MIN_EXTEND) {
-            arm.set(ControlMode.PercentOutput, 0);
-        }
-        else {
-            arm.set(ControlMode.PercentOutput, armSpeed);
-        }
+        arm.set(ControlMode.PercentOutput, armSpeed);
     }
 
 
@@ -146,6 +138,10 @@ public class Grabber {
      */
     public void grabberRun(double grabberSpeed) {
         grabber.set(ControlMode.PercentOutput, grabberSpeed);  
+    }
+
+    public void zeroArm() {
+        arm.setSelectedSensorPosition(0);
     }
 
 
@@ -201,7 +197,7 @@ public class Grabber {
             extender.set(ControlMode.PercentOutput, 0);
         }
         else {
-            extender.set(ControlMode.MotionMagic, extendPos);
+            extender.set(ControlMode.MotionMagic, -extendPos);
         }
     }
 
