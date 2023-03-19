@@ -93,7 +93,7 @@ public final class Constants {
         public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
 
         /*Balance Multiplier */
-        public static final double balanceMultiplier = 0.017;
+        public static final double balanceMultiplier = 0.019;
 
         /* Module Specific Constants */
         /* Front Left Module - Module 0 */
