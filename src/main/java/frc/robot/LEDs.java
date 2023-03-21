@@ -17,7 +17,7 @@ public class LEDs {
     public LEDStripStatus stripStatus;
 
     public LEDs() {
-        LED = new AddressableLED(1);
+        LED = new AddressableLED(0);
         LEDBuffer = new AddressableLEDBuffer(92);
     
         LED.setLength(LEDBuffer.getLength());

@@ -7,18 +7,20 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Intake {
     private TalonSRX linearMotor;
-    private VictorSPX frontRoller;
-    private VictorSPX backRoller;
-    private VictorSPX bottomConveyer;
+    private VictorSPX intakeRoller;
+    private VictorSPX conveyer;
+
+    private DigitalInput limitSwitch;
 
     public Intake() {
         /* Linear Configs */
         linearMotor = new TalonSRX(Constants.IntakeConstants.sliderMotorID);
-        bottomConveyer = new VictorSPX(Constants.IntakeConstants.bottomConveyerID);
+        conveyer = new VictorSPX(Constants.IntakeConstants.conveyerID);
 
         linearMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, Constants.IntakeConstants.PID_IDX, Constants.TIMEOUT_MS);
         linearMotor.setSelectedSensorPosition(0, Constants.IntakeConstants.PID_IDX, Constants.TIMEOUT_MS);
@@ -44,15 +46,14 @@ public class Intake {
         linearMotor.configMotionAcceleration(Constants.IntakeConstants.MOTION_ACCELERATION);
 
         /* Front Roller Configs */
-        frontRoller = new VictorSPX(Constants.IntakeConstants.frontRollerID);
-        backRoller = new VictorSPX(Constants.IntakeConstants.backRollerID);
+        intakeRoller = new VictorSPX(Constants.IntakeConstants.intakeRollerID);
 
-        frontRoller.setInverted(false);
-        backRoller.setInverted(true);
-        frontRoller.setNeutralMode(NeutralMode.Brake);
-        backRoller.setNeutralMode(NeutralMode.Brake);
-        bottomConveyer.setInverted(true);
-        bottomConveyer.setNeutralMode(NeutralMode.Brake);
+        intakeRoller.setInverted(false);
+        intakeRoller.setNeutralMode(NeutralMode.Brake);
+        conveyer.setInverted(true);
+        conveyer.setNeutralMode(NeutralMode.Brake);
+
+        limitSwitch = new DigitalInput(Constants.IntakeConstants.backLimitSwitchID);
 
     }
 
@@ -65,8 +66,16 @@ public class Intake {
         linearMotor.set(ControlMode.PercentOutput, slidingSpeed);
     }
 
+    /**
+     * 
+     * @param extendPosition
+     */
     public void MagicIntake(double extendPosition) {
-        if(extendPosition >= 22600 || extendPosition < -200) {
+        if(extendPosition >= Constants.IntakeConstants.MAX_INTAKE_EXTEND || extendPosition < Constants.IntakeConstants.MAX_INTAKE_RETRACT) {
+            linearMotor.set(ControlMode.PercentOutput, 0);
+        }
+        else if(extendPosition <= 0 && limitSwitch.get()) {
+            linearMotor.setSelectedSensorPosition(0);
             linearMotor.set(ControlMode.PercentOutput, 0);
         }
         else {
@@ -79,17 +88,8 @@ public class Intake {
      * runs front roller
      * @param frontRollerSpeed speed in Percent Output
      */
-    public void RunFrontRoller(double frontRollerSpeed) {
-        frontRoller.set(ControlMode.PercentOutput, frontRollerSpeed);
-    }
-
-
-    /**
-     * runs rollers closested to the bumper to bring the game pieces into the robot
-     * @param backRollerSpeed speed in Percent Output
-     */
-    public void RunBackRoller(double backRollerSpeed) {
-        backRoller.set(ControlMode.PercentOutput, backRollerSpeed);
+    public void RunRoller(double frontRollerSpeed) {
+        intakeRoller.set(ControlMode.PercentOutput, frontRollerSpeed);
     }
 
 
@@ -98,10 +98,11 @@ public class Intake {
      * @param conveyerSpeed speed in Percent Output
      */
     public void RunConveyer(double conveyerSpeed) {
-        bottomConveyer.set(ControlMode.PercentOutput, conveyerSpeed);
+        conveyer.set(ControlMode.PercentOutput, conveyerSpeed);
     }
     
     public void logging() {
         SmartDashboard.putNumber("Intake Encoder", linearMotor.getSelectedSensorPosition());
+        SmartDashboard.putBoolean("intake limit switch", limitSwitch.get());
     }
 }

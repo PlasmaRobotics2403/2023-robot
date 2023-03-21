@@ -12,7 +12,7 @@ public class GuitarConstants {
     public static final int DPAD_ID = 0;
     public static final int STUMBAR_ID = 0;
 
-    public static final int WAMMY_ID = 1;
+    public static final int WAMMY_ID = 4;
     public static final int TILT_ID = 0;
 
 }

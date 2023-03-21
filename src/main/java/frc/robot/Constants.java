@@ -244,9 +244,10 @@ public final class Constants {
 
     public static final class IntakeConstants {
         public static final int sliderMotorID = 12;
-        public static final int frontRollerID = 14;
-        public static final int backRollerID = 15;
-        public static final int bottomConveyerID = 13;
+        public static final int intakeRollerID = 14;
+        public static final int conveyerID = 13;
+
+        public static final int backLimitSwitchID = 1;
 
         public static final double frontRollerSpeed = 0.7;
         public static final double backRollerSpeed = 0.7;
@@ -263,6 +264,9 @@ public final class Constants {
 
         public static final double MOTION_CRUISE_VELOCITY = 30000;
         public static final double MOTION_ACCELERATION = 20000;
+
+        public static final double MAX_INTAKE_EXTEND = 1000;
+        public static final double MAX_INTAKE_RETRACT = -100;
     }
 
     public static final class SpindexerConstants {

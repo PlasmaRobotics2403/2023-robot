@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.modes.AudienceToCharge;
-import frc.robot.auto.modes.DriveForward;
 import frc.robot.auto.modes.LeaveCommunity;
 import frc.robot.auto.modes.Nothing;
 import frc.robot.auto.modes.OverChargedStation;
@@ -107,6 +106,8 @@ public class Robot extends TimedRobot {
     autoModeSelection = (int) SmartDashboard.getNumber("Auton Mode", 0.0);
     SmartDashboard.putNumber("Auton Mode", autoModeSelection);
     SmartDashboard.putString("game piece", gamePiece);
+
+    SmartDashboard.putNumber("wammy bar value", value);
 
     swerve.logging();
     limelight.logging();
@@ -263,6 +264,7 @@ public class Robot extends TimedRobot {
 
 
     value = 128 + (int)(navigator.WAMMY.getTrueAxis() * 127);
+    leds.setHSV(hue, 255, value);
     if(navigator.BLUE.isPressed()) {
       hue = 130;
       gamePiece = "Cube";
