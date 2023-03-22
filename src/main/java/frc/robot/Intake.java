@@ -63,7 +63,12 @@ public class Intake {
      * @param slidingSpeed speed in Percent Output
      */
     public void ActuateIntake(double slidingSpeed) {
-        linearMotor.set(ControlMode.PercentOutput, slidingSpeed);
+        if(limitSwitch.get() && slidingSpeed < 0) {
+            linearMotor.set(ControlMode.PercentOutput, 0);
+        }
+        else {
+           linearMotor.set(ControlMode.PercentOutput, slidingSpeed); 
+        }
     }
 
     /**
@@ -86,10 +91,10 @@ public class Intake {
 
     /**
      * runs front roller
-     * @param frontRollerSpeed speed in Percent Output
+     * @param rollerSpeed speed in Percent Output
      */
-    public void RunRoller(double frontRollerSpeed) {
-        intakeRoller.set(ControlMode.PercentOutput, frontRollerSpeed);
+    public void RunRoller(double rollerSpeed) {
+        intakeRoller.set(ControlMode.PercentOutput, rollerSpeed);
     }
 
 
@@ -100,6 +105,53 @@ public class Intake {
     public void RunConveyer(double conveyerSpeed) {
         conveyer.set(ControlMode.PercentOutput, conveyerSpeed);
     }
+
+    /**
+     * process to extend intake and pick up game piece
+     */
+    public void intakeGamePiece() {
+        if(linearMotor.getSelectedSensorPosition() < Constants.IntakeConstants.INTAKE_EXTEND_POS) {
+            linearMotor.set(ControlMode.PercentOutput, Constants.IntakeConstants.linearMotorSpeed);
+        }
+        else {
+            linearMotor.set(ControlMode.PercentOutput, 0);
+        }
+
+        conveyer.set(ControlMode.PercentOutput, Constants.IntakeConstants.conveyerSpeed);
+        intakeRoller.set(ControlMode.PercentOutput, Constants.IntakeConstants.rollerSpeed);
+    }
+
+    /**
+     * process when intake isnt active
+     */
+    public void idleGamePiece() {
+        if(limitSwitch.get()) {
+            linearMotor.set(ControlMode.PercentOutput, 0);
+            intakeRoller.set(ControlMode.PercentOutput, 0);
+            conveyer.set(ControlMode.PercentOutput, 0);
+            linearMotor.setSelectedSensorPosition(0);
+        }
+        else {
+            linearMotor.set(ControlMode.PercentOutput, -Constants.IntakeConstants.linearMotorSpeed);
+            intakeRoller.set(ControlMode.PercentOutput, 0);
+            conveyer.set(ControlMode.PercentOutput, 0);
+        }
+    }
+
+    public void ejectGamePiece() {
+        // need to run it out
+        if(linearMotor.getSelectedSensorPosition() < Constants.IntakeConstants.INTAKE_EXTEND_POS) {
+            linearMotor.set(ControlMode.PercentOutput, Constants.IntakeConstants.linearMotorSpeed);
+            intakeRoller.set(ControlMode.PercentOutput, 0);
+            conveyer.set(ControlMode.PercentOutput, -Constants.IntakeConstants.conveyerSpeed);
+        }
+        else {
+            linearMotor.set(ControlMode.PercentOutput, 0);
+            intakeRoller.set(ControlMode.PercentOutput, -Constants.IntakeConstants.rollerSpeed);
+            conveyer.set(ControlMode.PercentOutput, -Constants.IntakeConstants.conveyerSpeed);
+        }
+    }
+
     
     public void logging() {
         SmartDashboard.putNumber("Intake Encoder", linearMotor.getSelectedSensorPosition());

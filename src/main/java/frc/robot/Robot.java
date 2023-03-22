@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -92,6 +93,7 @@ public class Robot extends TimedRobot {
     robotState = "stow";
 
     DriverStation.silenceJoystickConnectionWarning(true);
+    CameraServer.startAutomaticCapture();
   }
 
   /**
@@ -106,8 +108,6 @@ public class Robot extends TimedRobot {
     autoModeSelection = (int) SmartDashboard.getNumber("Auton Mode", 0.0);
     SmartDashboard.putNumber("Auton Mode", autoModeSelection);
     SmartDashboard.putString("game piece", gamePiece);
-
-    SmartDashboard.putNumber("wammy bar value", value);
 
     swerve.logging();
     limelight.logging();
@@ -166,7 +166,7 @@ public class Robot extends TimedRobot {
       swerve.zeroHeading();
     }
     /* creep drive */
-    else if(driver.RT.isPressed()) {
+    else if(driver.LT.isPressed()) {
       swerve.teleopDrive(Constants.Swerve.creepSpeed*driver.LeftY.getTrueAxis(), Constants.Swerve.creepSpeed*driver.LeftX.getTrueAxis(), Constants.Swerve.creepSpeed*driver.RightX.getTrueAxis(), false);
     }
     /* regular drive */
@@ -211,7 +211,7 @@ public class Robot extends TimedRobot {
       }
     }
 
-
+    // reset arm zero position
     if(navigator.GREEN.isPressed() && robotState == "stow") {
       grabber.zeroArm();
     }
@@ -262,7 +262,18 @@ public class Robot extends TimedRobot {
       }
     } 
 
+    // intake controls
+    if(driver.B.isPressed()) {
+      intake.ejectGamePiece();
+    }
+    else if(driver.RT.isPressed()) {
+      intake.intakeGamePiece();
+    }
+    else {
+      intake.idleGamePiece();
+    }
 
+    // leds and game piece determinant
     value = 128 + (int)(navigator.WAMMY.getTrueAxis() * 127);
     leds.setHSV(hue, 255, value);
     if(navigator.BLUE.isPressed()) {

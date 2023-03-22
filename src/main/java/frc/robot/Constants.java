@@ -158,13 +158,13 @@ public final class Constants {
         public static final int PID_IDX = 0;
         public static final int SLOT_IDX = 0;
 
-        public static final double MOTION_CRUISE_VELOCITY = 20000;
-        public static final double MOTION_ACCELERATION = 7000;
+        public static final double MOTION_CRUISE_VELOCITY = 15000;
+        public static final double MOTION_ACCELERATION = 5000;
 
-        public static double kF = 0.6;
-        public static double kP = 0.4;
+        public static double kF = 0.3;
+        public static double kP = 0.3;
         public static double kI = 0;
-        public static double kD = 0.04;
+        public static double kD = 0;
     }
 
     public static final class GrabberConstants{
@@ -206,8 +206,8 @@ public final class Constants {
         public static final int EXTENDER_PID_IDX = 0;
         public static final int EXTENDER_SLOT_IDX = 0;
 
-        public static final double ARM_MOTION_CRUISE_VELOCITY = 4000;
-        public static final double ARM_MOTION_ACCELERATION = 2000;
+        public static final double ARM_MOTION_CRUISE_VELOCITY = 3000;
+        public static final double ARM_MOTION_ACCELERATION = 1500;
 
         public static final double GRABBER_MOTION_CRUISE_VELOCITY = 3000;
         public static final double GRABBER_MOTION_ACCELERATION = 1500;
@@ -221,10 +221,10 @@ public final class Constants {
         public static final double ARM_STOWED_EXTEND = 0;
 
 
-        public static double armkF = 0.6;
-        public static double armkP = 0.4;
+        public static double armkF = 0.2;
+        public static double armkP = 0.2;
         public static double armkI = 0;
-        public static double armkD = 0.04;
+        public static double armkD = 0;
 
         public static double extenderkF = 0.2;
         public static double extenderkP = 0.3;
@@ -249,10 +249,9 @@ public final class Constants {
 
         public static final int backLimitSwitchID = 1;
 
-        public static final double frontRollerSpeed = 0.7;
-        public static final double backRollerSpeed = 0.7;
-        public static final double linearMotorSpeed = 0.2;
-        public static final double bottomConveyerSpeed = 0.3;
+        public static final double rollerSpeed = 0.9;
+        public static final double linearMotorSpeed = 0.9;
+        public static final double conveyerSpeed = 0.7;
 
         public static final int SLOT_IDX = 0;
         public static final int PID_IDX = 0;
@@ -265,8 +264,10 @@ public final class Constants {
         public static final double MOTION_CRUISE_VELOCITY = 30000;
         public static final double MOTION_ACCELERATION = 20000;
 
-        public static final double MAX_INTAKE_EXTEND = 1000;
+        public static final double MAX_INTAKE_EXTEND = 20000;
         public static final double MAX_INTAKE_RETRACT = -100;
+
+        public static final double INTAKE_EXTEND_POS = 17500;
     }
 
     public static final class SpindexerConstants {
