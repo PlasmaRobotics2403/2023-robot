@@ -242,7 +242,7 @@ public class Robot extends TimedRobot {
     }
     else if(driver.Y.isPressed()) { /* feeder state */
       elevatorTarget = Constants.ElevatorConstants.ELEVATOR_FEEDER_EXTEND;
-      armTarget = Constants.GrabberConstants.ARM_LEVEL_EXTEND;
+      armTarget = Constants.GrabberConstants.ARM_FEEDER_EXTEND;
       extenderTarget = Constants.GrabberConstants.EXTENDER_EXTENDED_POSITION;
       robotState = "feeder";
     }

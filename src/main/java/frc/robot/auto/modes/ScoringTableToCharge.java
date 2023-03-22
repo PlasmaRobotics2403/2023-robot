@@ -32,10 +32,10 @@ public class ScoringTableToCharge extends AutoMode {
         this.grabber = grabber;
         try {
             if(DriverStation.getAlliance() == DriverStation.Alliance.Blue){
-                scoring_table_to_charge = PathPlanner.loadPath("left turn charge", new PathConstraints(1.5, 2));
+                scoring_table_to_charge = PathPlanner.loadPath("left turn charge Copy", new PathConstraints(2, 2));
             }
             else {
-                scoring_table_to_charge = PathPlanner.loadPath("right turn charge", new PathConstraints(1.5, 2));
+                scoring_table_to_charge = PathPlanner.loadPath("right turn charge Copy", new PathConstraints(2, 2));
             }
         }
         catch (Exception e) {
@@ -46,10 +46,11 @@ public class ScoringTableToCharge extends AutoMode {
     @Override
     protected void routine() throws AutoModeEndedException {
         DriverStation.reportWarning("Running Scoring_Table_To_Charge", false);
-        runActionsRace(new AutoGrabber(grabber, Constants.GrabberConstants.GRABBER_CLOSED_CUBE, 0.7), new AutoExtender(grabber, Constants.GrabberConstants.EXTENDER_RETRACTED_POSITION, 0.7));        runAction(new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_HIGH_EXTEND, 1));
+        runActionsRace(new AutoGrabber(grabber, Constants.GrabberConstants.GRABBER_CLOSED_CUBE, 0.7), new AutoExtender(grabber, Constants.GrabberConstants.EXTENDER_RETRACTED_POSITION, 0.7));
+        runAction(new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_HIGH_EXTEND, 1));
         runAction (new AutoArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND, 1)) ;
         runAction(new AutoExtender(grabber, Constants.GrabberConstants.EXTENDER_EXTENDED_POSITION, 0.3));
-        runAction(new AutoGrabber(grabber, Constants.GrabberConstants.GRABBER_OPEN, 0.3));
+        runAction(new AutoGrabber(grabber, Constants.GrabberConstants.GRABBER_OPEN, 0.7));
         runActionsParallel(new AutoExtender(grabber, Constants.GrabberConstants.EXTENDER_RETRACTED_POSITION, 0.5), new AutoArm(grabber, Constants.GrabberConstants.ARM_STOWED_EXTEND, 0.5));
         runActionsParallel(new FollowTrajectory(scoring_table_to_charge, swerve, true), new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_BOTTTOM_EXTEND, 1.5));
         DriverStation.reportError("balancing", false);
