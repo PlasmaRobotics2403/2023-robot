@@ -101,7 +101,7 @@ public final class Constants {
             public static final int driveMotorID = 0;
             public static final int angleMotorID = 1;
             public static final int canCoderID = 0;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(150.59);//250.75
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(150.59); //Practice: 250.75    Final: 150.59
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -111,7 +111,7 @@ public final class Constants {
             public static final int driveMotorID = 2;
             public static final int angleMotorID = 3;
             public static final int canCoderID = 1;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(16.52);//136.4
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(16.52); //Practice: 136.40    Final: 16.52
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -121,7 +121,7 @@ public final class Constants {
             public static final int driveMotorID = 4;
             public static final int angleMotorID = 5;
             public static final int canCoderID = 2;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(269.03);//111
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(269.03); //Practice: 111.00    Final: 269.03
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -131,7 +131,7 @@ public final class Constants {
             public static final int driveMotorID = 6;
             public static final int angleMotorID = 7;
             public static final int canCoderID = 3;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(28.82);//82.61
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(28.82); //Practice: 82.61    Final: 28.82
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -149,7 +149,7 @@ public final class Constants {
         public static final double MAX_EXTEND = 45000;
 
         public static final double ELEVATOR_HIGH_EXTEND = 44000;
-        public static final double ELEVATOR_FEEDER_EXTEND = 23500;
+        public static final double ELEVATOR_FEEDER_EXTEND = 32500;
         public static final double ELEVATOR_MID_EXTEND = 21000;
         public static final double ELEVATOR_LOW_EXTEND = 5000;
         public static final double ELEVATOR_BOTTTOM_EXTEND = 0;
@@ -158,13 +158,13 @@ public final class Constants {
         public static final int PID_IDX = 0;
         public static final int SLOT_IDX = 0;
 
-        public static final double MOTION_CRUISE_VELOCITY = 15000;
-        public static final double MOTION_ACCELERATION = 5000;
+        public static final double MOTION_CRUISE_VELOCITY = 20000;
+        public static final double MOTION_ACCELERATION = 7000;
 
-        public static double kF = 0.3;
-        public static double kP = 0.3;
+        public static double kF = 0.6;
+        public static double kP = 0.4;
         public static double kI = 0;
-        public static double kD = 0;
+        public static double kD = 0.04;
     }
 
     public static final class GrabberConstants{
@@ -206,8 +206,8 @@ public final class Constants {
         public static final int EXTENDER_PID_IDX = 0;
         public static final int EXTENDER_SLOT_IDX = 0;
 
-        public static final double ARM_MOTION_CRUISE_VELOCITY = 3000;
-        public static final double ARM_MOTION_ACCELERATION = 1500;
+        public static final double ARM_MOTION_CRUISE_VELOCITY = 4000;
+        public static final double ARM_MOTION_ACCELERATION = 2000;
 
         public static final double GRABBER_MOTION_CRUISE_VELOCITY = 3000;
         public static final double GRABBER_MOTION_ACCELERATION = 1500;
@@ -216,15 +216,15 @@ public final class Constants {
         public static final double EXTENDER_MOTION_ACCELERATION = 1000;
 
         public static final double ARM_HIGH_EXTEND = 5000;
-        public static final double ARM_LEVEL_EXTEND = 4800;
+        public static final double ARM_FEEDER_EXTEND = 4000;
         public static final double ARM_LOW_EXTEND = 2000;
         public static final double ARM_STOWED_EXTEND = 0;
 
 
-        public static double armkF = 0.2;
-        public static double armkP = 0.2;
+        public static double armkF = 0.6;
+        public static double armkP = 0.4;
         public static double armkI = 0;
-        public static double armkD = 0;
+        public static double armkD = 0.04;
 
         public static double extenderkF = 0.2;
         public static double extenderkP = 0.3;
