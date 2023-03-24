@@ -93,7 +93,7 @@ public final class Constants {
         public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
 
         /*Balance Multiplier */
-        public static final double balanceMultiplier = 0.019;
+        public static final double balanceMultiplier = 0.0172;
 
         /* Module Specific Constants */
         /* Front Left Module - Module 0 */
@@ -149,7 +149,7 @@ public final class Constants {
         public static final double MAX_EXTEND = 45000;
 
         public static final double ELEVATOR_HIGH_EXTEND = 44000;
-        public static final double ELEVATOR_FEEDER_EXTEND = 32500;
+        public static final double ELEVATOR_FEEDER_EXTEND = 34000;
         public static final double ELEVATOR_MID_EXTEND = 21000;
         public static final double ELEVATOR_LOW_EXTEND = 5000;
         public static final double ELEVATOR_BOTTTOM_EXTEND = 0;
@@ -250,7 +250,7 @@ public final class Constants {
         public static final int backLimitSwitchID = 1;
 
         public static final double rollerSpeed = 0.9;
-        public static final double linearMotorSpeed = 0.9;
+        public static final double linearMotorSpeed = 0.7;
         public static final double conveyerSpeed = 0.7;
 
         public static final int SLOT_IDX = 0;
@@ -259,13 +259,13 @@ public final class Constants {
         public static double linearkF = 0.7;
         public static double linearkP = 0.1;
         public static double linearkI = 0.00003;
-        public static double linearkD = 0.0;
+        public static double linearkD = 0.01;
 
         public static final double MOTION_CRUISE_VELOCITY = 30000;
         public static final double MOTION_ACCELERATION = 20000;
 
         public static final double MAX_INTAKE_EXTEND = 20000;
-        public static final double MAX_INTAKE_RETRACT = -100;
+        public static final double MAX_INTAKE_RETRACT = 100;
 
         public static final double INTAKE_EXTEND_POS = 17500;
     }

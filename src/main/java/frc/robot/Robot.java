@@ -284,6 +284,9 @@ public class Robot extends TimedRobot {
       hue = 15;
       gamePiece = "Cone";
       }
+      else if(navigator.ORANGE.isPressed()) {
+        hue = 7;
+      }
     }
 
   /** This function is called once when the robot is disabled. */

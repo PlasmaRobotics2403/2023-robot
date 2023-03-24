@@ -113,6 +113,11 @@ public class Intake {
         if(linearMotor.getSelectedSensorPosition() < Constants.IntakeConstants.INTAKE_EXTEND_POS) {
             linearMotor.set(ControlMode.PercentOutput, Constants.IntakeConstants.linearMotorSpeed);
         }
+        else if(linearMotor.getSelectedSensorPosition() <= 2000) {
+            linearMotor.set(ControlMode.PercentOutput, -0.2);
+            intakeRoller.set(ControlMode.PercentOutput, 0);
+            conveyer.set(ControlMode.PercentOutput, 0);
+        }
         else {
             linearMotor.set(ControlMode.PercentOutput, 0);
         }
