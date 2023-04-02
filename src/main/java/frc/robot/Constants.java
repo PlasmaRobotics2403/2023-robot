@@ -93,7 +93,7 @@ public final class Constants {
         public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
 
         /*Balance Multiplier */
-        public static final double balanceMultiplier = 0.0172;
+        public static final double balanceMultiplier = 0.0162;
 
         /* Module Specific Constants */
         /* Front Left Module - Module 0 */
@@ -142,14 +142,14 @@ public final class Constants {
         public static int slave = 9;
 
         public static double elevatorSpeed = 0.3;
-        public static double ticksToInches = 0.000811297;
+        public static double ticksToInch= 0.000811297;
         public static double inchesToTicks = 1232.5937;
 
         public static final int ELEVATOR_LIMIT_ID = 0;
         public static final double MAX_EXTEND = 45000;
 
         public static final double ELEVATOR_HIGH_EXTEND = 44000;
-        public static final double ELEVATOR_FEEDER_EXTEND = 34000;
+        public static final double ELEVATOR_FEEDER_EXTEND = 36000;
         public static final double ELEVATOR_MID_EXTEND = 21000;
         public static final double ELEVATOR_LOW_EXTEND = 5000;
         public static final double ELEVATOR_BOTTTOM_EXTEND = 0;
@@ -246,6 +246,9 @@ public final class Constants {
         public static final int sliderMotorID = 12;
         public static final int intakeRollerID = 14;
         public static final int conveyerID = 13;
+
+        public static final int INTAKE_SOLENOID_CHANNEL = 0;
+        public static final int PNUEMATIC_HUB_ID = 31;
 
         public static final int backLimitSwitchID = 1;
 

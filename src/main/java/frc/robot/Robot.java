@@ -5,11 +5,16 @@
 package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.modes.AudienceToCharge;
+import frc.robot.auto.modes.DoubleScore;
 import frc.robot.auto.modes.LeaveCommunity;
 import frc.robot.auto.modes.Nothing;
 import frc.robot.auto.modes.OverChargedStation;
@@ -38,6 +43,8 @@ public class Robot extends TimedRobot {
   Grabber grabber;
   Intake intake;
 
+  Compressor compressor;
+
   double elevatorTarget;
   double armTarget;
   double extenderTarget;
@@ -65,6 +72,8 @@ public class Robot extends TimedRobot {
     driver = new PlasmaJoystick(Constants.DRIVER_JOYSTICK_PORT);
     navigator = new PlasmaGuitar(Constants.COPILOT_JOYSTICK_PORT);
 
+    compressor = new Compressor(31, PneumaticsModuleType.REVPH);  
+
     swerve = new Swerve();
     limelight = new Limelight();
     elevator = new Elevator();
@@ -82,6 +91,7 @@ public class Robot extends TimedRobot {
     autoModes[3] = new LeaveCommunity(swerve, elevator, grabber);
     autoModes[4] = new OverChargedStation(swerve, elevator, grabber);
     autoModes[5] = new Score(swerve, elevator, grabber);
+    autoModes[6] = new DoubleScore(swerve);
     
     autoModeSelection = 0;
     
@@ -94,6 +104,7 @@ public class Robot extends TimedRobot {
 
     DriverStation.silenceJoystickConnectionWarning(true);
     CameraServer.startAutomaticCapture();
+    compressor.enableDigital();
   }
 
   /**
