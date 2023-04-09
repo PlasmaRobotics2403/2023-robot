@@ -189,6 +189,8 @@ public final class Constants {
         public static final double EXTENDER_RETRACTED_POSITION = 3100;
         public static final double EXTENDER_EXTENDED_POSITION = 790;
 
+        public static final double GRABBER_SPEED = 0.25;
+
         /* Arm/Grabber Speeds */
         public static final double Up_Arm_Speed = 0.3;
         public static final double Down_Arm_Speed = -0.3;

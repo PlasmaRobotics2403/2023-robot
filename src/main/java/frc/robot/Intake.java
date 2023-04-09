@@ -27,6 +27,7 @@ public class Intake {
         intakeRoller.setNeutralMode(NeutralMode.Brake);
         conveyer.setInverted(true);
         conveyer.setNeutralMode(NeutralMode.Brake);
+
     }
 
     /**
@@ -65,18 +66,17 @@ public class Intake {
      */
     public void intakeGamePiece() {
         extendIntake();
-        conveyer.set(ControlMode.PercentOutput, Constants.IntakeConstants.conveyerSpeed);
         intakeRoller.set(ControlMode.PercentOutput, Constants.IntakeConstants.rollerSpeed);
+    }
+
+    public void passthrough(){
+        conveyer.set(ControlMode.PercentOutput, Constants.IntakeConstants.conveyerSpeed);
     }
 
     /**
      * process when intake isnt active
      */
     public void idleGamePiece() {
-        /*if(intakePiston.get()) {
-            intakeRoller.set(ControlMode.PercentOutput, 0);
-            conveyer.set(ControlMode.PercentOutput, 0);
-        }*/
             retractIntake();
             intakeRoller.set(ControlMode.PercentOutput, 0);
             conveyer.set(ControlMode.PercentOutput, 0);

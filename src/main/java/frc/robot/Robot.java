@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.revrobotics.CANSparkMax;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -24,6 +26,9 @@ import frc.robot.auto.util.AutoMode;
 import frc.robot.auto.util.AutoModeRunner;
 import frc.robot.controllers.PlasmaGuitar;
 import frc.robot.controllers.PlasmaJoystick;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.REVLibError;
 
 
 
@@ -104,7 +109,7 @@ public class Robot extends TimedRobot {
 
     DriverStation.silenceJoystickConnectionWarning(true);
     CameraServer.startAutomaticCapture();
-    compressor.enableDigital();
+    compressor.disable();
   }
 
   /**
@@ -186,7 +191,7 @@ public class Robot extends TimedRobot {
     }
 
     /* robot States */
-    grabber.extendPos(extenderTarget);
+    //grabber.extendPos(extenderTarget);
     if(robotState != "stow") {
       elevator.magicElevator(elevatorTarget);
       if(elevator.distanceToPosition(elevatorTarget) <= 0.5*elevatorTarget) {
@@ -260,18 +265,22 @@ public class Robot extends TimedRobot {
 
 
     /* grabber open close */
-    grabber.grabberPos(grabberTarget);
-    if(driver.LB.isPressed()) {
-      grabberTarget = Constants.GrabberConstants.GRABBER_OPEN;
+    if(driver.RB.isPressed()) {
+      if(gamePiece == "Cone") {
+        grabber.closeGrabber();
+      }
+      else if(gamePiece == "Cube") {
+        grabber.openGrabber();
+      }
+      grabber.runGrabber(Constants.GrabberConstants.GRABBER_SPEED);
     }
-    else if(driver.RB.isPressed()) {
-      if(gamePiece == "Cube") {
-        grabberTarget = Constants.GrabberConstants.GRABBER_CLOSED_CUBE;
-      }
-      else if(gamePiece == "Cone") {
-        grabberTarget = Constants.GrabberConstants.GRABBER_CLOSED_CONE;
-      }
-    } 
+    
+    else if(driver.LB.isPressed()) {
+      grabber.runGrabber(-Constants.GrabberConstants.GRABBER_SPEED);
+    }
+    else {
+      grabber.runGrabber(0);
+    }
 
     // intake controls
     if(driver.B.isPressed()) {
@@ -280,9 +289,15 @@ public class Robot extends TimedRobot {
     else if(driver.RT.isPressed()) {
       intake.intakeGamePiece();
     }
+
+    else if(driver.X.isPressed()) {
+      intake.passthrough();
+      grabber.runGrabber(0.25);
+    }
     else {
       intake.idleGamePiece();
     }
+
 
     // leds and game piece determinant
     value = 128 + (int)(navigator.WAMMY.getTrueAxis() * 127);

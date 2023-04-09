@@ -22,12 +22,12 @@ public class AutoExtender implements Action {
 
     @Override
     public boolean isFinished() {
-        if((grabber.getExtenderPosition() <= position + 300 && grabber.getExtenderPosition() >= position - 300)
+        /*if((grabber.getExtenderPosition() <= position + 300 && grabber.getExtenderPosition() >= position - 300)
         || (Timer.getFPGATimestamp() > startTime + timeout) ) {
             return true;
         }
         return false;
-    }
+    }*/return true; }
 
     @Override
     public void start() {
@@ -36,7 +36,7 @@ public class AutoExtender implements Action {
 
     @Override
     public void update() {
-        grabber.extendPos(position);
+        //grabber.extendPos(position);
     }
 
     @Override

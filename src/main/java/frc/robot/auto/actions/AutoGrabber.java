@@ -22,11 +22,11 @@ public class AutoGrabber implements Action {
 
     @Override
     public boolean isFinished() {
-        if( (grabber.getGrabberPosition() <= position + 500 && grabber.getGrabberPosition() >= position - 500) 
+        /*if( (grabber.getGrabberPosition() <= position + 500 && grabber.getGrabberPosition() >= position - 500) 
             || (Timer.getFPGATimestamp() > startTime + timeout) ) {
             return true;
         }
-        return false;
+        */return false;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class AutoGrabber implements Action {
 
     @Override
     public void update() {
-        grabber.grabberPos(position);
+        //grabber.grabberPos(position);
     }
 
     @Override
