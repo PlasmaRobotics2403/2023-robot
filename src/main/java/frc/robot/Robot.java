@@ -104,12 +104,12 @@ public class Robot extends TimedRobot {
     hue = 0;   
     value = 255;
     FMS_Connected = false;
-    gamePiece = "cube";
+    gamePiece = "Cube";
     robotState = "stow";
 
     DriverStation.silenceJoystickConnectionWarning(true);
     CameraServer.startAutomaticCapture();
-    compressor.disable();
+    compressor.enableDigital();
   }
 
   /**

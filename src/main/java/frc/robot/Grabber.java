@@ -73,11 +73,11 @@ public class Grabber {
     }
 
     public void openGrabber() {
-        grabberSolenoid.set(true);
+        grabberSolenoid.set(false);
     }
 
     public void closeGrabber(){
-        grabberSolenoid.set(false);
+        grabberSolenoid.set(true);
     }
 
     /**
