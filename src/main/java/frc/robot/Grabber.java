@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,6 +18,8 @@ public class Grabber {
     private TalonSRX arm;
     private Solenoid grabberSolenoid;
     private CANSparkMax grabberMotor;
+
+    private DigitalInput limitSwitch;
 
     public Grabber() {
 
@@ -52,10 +55,15 @@ public class Grabber {
         grabberMotor.setIdleMode(IdleMode.kBrake);
         grabberMotor.setInverted(true);
         grabberSolenoid = new Solenoid(Constants.IntakeConstants.PNUEMATIC_HUB_ID, PneumaticsModuleType.REVPH,  1);
+
+        limitSwitch = new DigitalInput(Constants.GrabberConstants.LIMIT_SWITCH_ID);
     }
 
     public void runGrabber(double speed) {
-        grabberMotor.set(speed);
+        if(speed > 0 && !limitSwitch.get())
+            grabberMotor.set(0);
+        else
+            grabberMotor.set(speed);
     }
 
     /**

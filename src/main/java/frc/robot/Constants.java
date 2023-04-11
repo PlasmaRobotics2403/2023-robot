@@ -172,6 +172,8 @@ public final class Constants {
         public static int grabber_id = 11;
         public static int extender_id = 16;
 
+        public static final int LIMIT_SWITCH_ID = 1;
+
         /* Extention Positions */
         public static final double ARM_MAX_EXTEND = 5100;
         public static final double ARM_MIN_EXTEND = 0;
