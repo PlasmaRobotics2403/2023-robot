@@ -4,16 +4,12 @@
 
 package frc.robot;
 
-import com.revrobotics.CANSparkMax;
-
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.modes.AudienceToCharge;
 import frc.robot.auto.modes.DoubleScore;
@@ -26,9 +22,6 @@ import frc.robot.auto.util.AutoMode;
 import frc.robot.auto.util.AutoModeRunner;
 import frc.robot.controllers.PlasmaGuitar;
 import frc.robot.controllers.PlasmaJoystick;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.REVLibError;
 
 
 
@@ -125,6 +118,15 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Auton Mode", autoModeSelection);
     SmartDashboard.putString("game piece", gamePiece);
 
+    if(gamePiece == "Cone") {
+      grabber.closeGrabber();
+      hue = 15;
+    }
+    else if(gamePiece == "Cube") {
+      grabber.openGrabber();
+      hue = 130;
+    }
+
     swerve.logging();
     limelight.logging();
     elevator.logger();
@@ -191,41 +193,25 @@ public class Robot extends TimedRobot {
     }
 
     /* robot States */
-    //grabber.extendPos(extenderTarget);
-    if(robotState != "stow") {
-      elevator.magicElevator(elevatorTarget);
-      if(elevator.distanceToPosition(elevatorTarget) <= 0.5*elevatorTarget) {
-        if(navigator.DPAD.getPOV() == 0) {
-          grabber.ArmRot(0.2);
-        }
-        else if(navigator.DPAD.getPOV() == 180) {
-          grabber.ArmRot(-0.2);
-        }
-        else if(navigator.RED.isPressed()) {
-          grabber.ArmRot(0);
-        }
-        else {
-          grabber.magicArm(armTarget);
-        }
-      }
+    elevator.magicElevator(elevatorTarget);
+    if(robotState == "stow" && navigator.GREEN.isPressed()) {
+      grabber.zeroArm();
     }
+    else if(navigator.RED.isPressed()) {
+      grabber.ArmRot(0);
+    }
+
+    else if(navigator.DPAD.getPOV() == 0) {
+      grabber.ArmRot(0.2);
+    }
+    else if(navigator.DPAD.getPOV() == 180) {
+      grabber.ArmRot(-0.2);
+        } 
+
     else {
-      if(navigator.DPAD.getPOV() == 0) {
-        grabber.ArmRot(0.15);
+      grabber.magicArm(armTarget);
+        
       }
-      else if(navigator.DPAD.getPOV() == 180) {
-        grabber.ArmRot(-0.15);
-      }
-      else if(navigator.RED.isPressed()) {
-        grabber.ArmRot(0);
-      }
-      else {
-        grabber.magicArm(armTarget);
-      }
-      if(grabber.distanceToArmPosition(elevatorTarget) <= 500) {
-        elevator.magicElevator(elevatorTarget);
-      }
-    }
 
     // reset arm zero position
     if(navigator.GREEN.isPressed() && robotState == "stow") {
@@ -266,12 +252,6 @@ public class Robot extends TimedRobot {
 
     /* grabber open close */
     if(driver.RB.isPressed()) {
-      if(gamePiece == "Cone") {
-        grabber.closeGrabber();
-      }
-      else if(gamePiece == "Cube") {
-        grabber.openGrabber();
-      }
       grabber.runGrabber(Constants.GrabberConstants.GRABBER_SPEED);
     }
     
@@ -292,7 +272,8 @@ public class Robot extends TimedRobot {
 
     else if(driver.X.isPressed()) {
       intake.passthrough();
-      grabber.runGrabber(0.25);
+      grabber.runGrabber(Constants.GrabberConstants.GRABBER_SPEED);
+      gamePiece = "Cube";
     }
     else {
       intake.idleGamePiece();
