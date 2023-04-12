@@ -191,7 +191,7 @@ public final class Constants {
         public static final double EXTENDER_RETRACTED_POSITION = 3100;
         public static final double EXTENDER_EXTENDED_POSITION = 790;
 
-        public static final double GRABBER_SPEED = 0.25;
+        public static final double GRABBER_SPEED = 0.55;
 
         /* Arm/Grabber Speeds */
         public static final double Up_Arm_Speed = 0.3;
@@ -219,7 +219,7 @@ public final class Constants {
         public static final double EXTENDER_MOTION_CRUISE_VELOCITY = 2000;
         public static final double EXTENDER_MOTION_ACCELERATION = 1000;
 
-        public static final double ARM_HIGH_EXTEND = 5000;
+        public static final double ARM_HIGH_EXTEND = 4000;
         public static final double ARM_FEEDER_EXTEND = 4000;
         public static final double ARM_LOW_EXTEND = 2000;
         public static final double ARM_STOWED_EXTEND = 0;
@@ -258,7 +258,7 @@ public final class Constants {
 
         public static final double rollerSpeed = 0.9;
         public static final double linearMotorSpeed = 0.7;
-        public static final double conveyerSpeed = 0.7;
+        public static final double conveyerSpeed = 0.8;
 
         public static final int SLOT_IDX = 0;
         public static final int PID_IDX = 0;
