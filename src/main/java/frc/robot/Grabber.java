@@ -19,7 +19,7 @@ public class Grabber {
     private Solenoid grabberSolenoid;
     private CANSparkMax grabberMotor;
 
-    private DigitalInput limitSwitch;
+    public DigitalInput limitSwitch;
 
     public Grabber() {
 
@@ -64,6 +64,10 @@ public class Grabber {
             grabberMotor.set(0);
         else
             grabberMotor.set(speed);
+    }
+
+    public boolean getLimitSwitch () {
+        return limitSwitch.get();
     }
 
     /**

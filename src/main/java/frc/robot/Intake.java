@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,6 +30,7 @@ public class Intake {
         conveyer.setNeutralMode(NeutralMode.Brake);
 
     }
+    
 
     /**
      * extends the intake with a piston
@@ -69,8 +71,13 @@ public class Intake {
         intakeRoller.set(ControlMode.PercentOutput, Constants.IntakeConstants.rollerSpeed);
     }
 
-    public void passthrough(){
-        conveyer.set(ControlMode.PercentOutput, Constants.IntakeConstants.conveyerSpeed);
+    public void passthrough(boolean lsValue){
+        if(!lsValue) {
+            conveyer.set(ControlMode.PercentOutput, 0);
+        }
+        else {
+            conveyer.set(ControlMode.PercentOutput, Constants.IntakeConstants.conveyerSpeed);
+        }
     }
 
     /**

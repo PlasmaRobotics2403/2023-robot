@@ -59,6 +59,7 @@ public class Robot extends TimedRobot {
   int hue;
   int value;
   boolean FMS_Connected;
+  boolean passthrough = false;
 
   String gamePiece;
   /**
@@ -155,7 +156,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    
+
   }
   /** This function is called once when teleop is enabled. */
   @Override
@@ -258,7 +259,7 @@ public class Robot extends TimedRobot {
     else if(driver.LB.isPressed()) {
       grabber.runGrabber(-Constants.GrabberConstants.GRABBER_SPEED);
     }
-    else {
+    else if (!passthrough) {
       grabber.runGrabber(0);
     }
 
@@ -269,15 +270,27 @@ public class Robot extends TimedRobot {
     else if(driver.RT.isPressed()) {
       intake.intakeGamePiece();
     }
-
-    else if(driver.X.isPressed()) {
-      intake.passthrough();
-      grabber.runGrabber(Constants.GrabberConstants.GRABBER_SPEED);
-      gamePiece = "Cube";
-    }
     else {
       intake.idleGamePiece();
     }
+
+    
+    if(driver.X.isPressed()) {
+      if (grabber.limitSwitch.get()){
+        passthrough = true;
+      }
+      
+    }
+
+    if(passthrough){
+      intake.passthrough(grabber.limitSwitch.get());
+      grabber.runGrabber(Constants.GrabberConstants.GRABBER_SPEED);
+      gamePiece = "Cube";
+      if (!grabber.limitSwitch.get()){
+        passthrough = false;
+      }
+    }
+
 
 
     // leds and game piece determinant
