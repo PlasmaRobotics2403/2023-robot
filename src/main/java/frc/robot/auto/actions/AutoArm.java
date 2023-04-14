@@ -13,11 +13,20 @@ public class AutoArm implements Action {
     double position;
     double timeout;
     double startTime;
+    double delay;
 
     public AutoArm(Grabber grabber, double position, double timeout) {
         this.grabber = grabber;
         this.position = position;
         this.timeout = timeout;
+        this.delay = 0.0;
+    }
+
+    public AutoArm(Grabber grabber, double position, double timeout, double delay) {
+        this.grabber = grabber;
+        this.position = position;
+        this.timeout = timeout;
+        this.delay = delay;
     }
 
     @Override
@@ -36,7 +45,9 @@ public class AutoArm implements Action {
 
     @Override
     public void update() {
-        grabber.magicArm(position);
+        if(Timer.getFPGATimestamp() > startTime + delay){
+            grabber.magicArm(position);
+        }
     }
 
     @Override

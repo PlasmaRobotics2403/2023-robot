@@ -16,6 +16,7 @@ import frc.robot.auto.modes.DoubleScore;
 import frc.robot.auto.modes.LeaveCommunity;
 import frc.robot.auto.modes.Nothing;
 import frc.robot.auto.modes.OverChargedStation;
+import frc.robot.auto.modes.Passthrough;
 import frc.robot.auto.modes.Score;
 import frc.robot.auto.modes.ScoringTableToCharge;
 import frc.robot.auto.util.AutoMode;
@@ -91,6 +92,8 @@ public class Robot extends TimedRobot {
     autoModes[4] = new OverChargedStation(swerve, elevator, grabber);
     autoModes[5] = new Score(swerve, elevator, grabber);
     autoModes[6] = new DoubleScore(swerve);
+    autoModes[7] = new Passthrough(intake, grabber, elevator);
+
     
     autoModeSelection = 0;
     
@@ -276,17 +279,17 @@ public class Robot extends TimedRobot {
 
     
     if(driver.X.isPressed()) {
-      if (grabber.limitSwitch.get()){
+      if (grabber.getLimitSwitch()){
         passthrough = true;
       }
       
     }
 
     if(passthrough){
-      intake.passthrough(grabber.limitSwitch.get());
+      intake.passthrough(grabber.getLimitSwitch());
       grabber.runGrabber(Constants.GrabberConstants.GRABBER_SPEED);
       gamePiece = "Cube";
-      if (!grabber.limitSwitch.get()){
+      if (!grabber.getLimitSwitch()){
         passthrough = false;
       }
     }

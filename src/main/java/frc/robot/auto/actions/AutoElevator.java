@@ -10,11 +10,20 @@ public class AutoElevator implements Action {
     double position;
     double timeout;
     double startTime;
+    double delay;
 
     public AutoElevator(Elevator elevator, double position, double timeout) {
         this.elevator = elevator;
         this.position = position;
         this.timeout = timeout;
+        this.delay = 0.0;
+    }
+
+    public AutoElevator(Elevator elevator, double position, double timeout, double delay) {
+        this.elevator = elevator;
+        this.position = position;
+        this.timeout = timeout;
+        this.delay = delay;
     }
 
     @Override
@@ -33,7 +42,9 @@ public class AutoElevator implements Action {
 
     @Override
     public void update() {
-        elevator.magicElevator(position);
+        if(Timer.getFPGATimestamp() > startTime + delay) {
+            elevator.magicElevator(position);
+        }
     }
 
     @Override

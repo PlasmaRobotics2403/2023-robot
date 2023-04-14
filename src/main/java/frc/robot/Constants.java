@@ -256,7 +256,9 @@ public final class Constants {
 
         public static final int backLimitSwitchID = 1;
 
-        public static final double rollerSpeed = 0.9;
+        public static final double rollerSpeed = 0.7;
+        public static final double rollerejectSpeed = 0.5;
+
         public static final double linearMotorSpeed = 0.7;
         public static final double conveyerSpeed = 0.8;
 

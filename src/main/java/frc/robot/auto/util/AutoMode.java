@@ -129,6 +129,44 @@ public abstract class AutoMode {
 		assertActive();
 	}
 
+	protected void parallel(Action[] actions) throws AutoModeEndedException {
+		assertActive();
+		boolean[] isRunning;
+		boolean allFinished = false;
+		isRunning = new boolean[actions.length];
+		for(int i = 0; i < actions.length; i++){
+			isRunning[i] = true;
+			actions[i].start();
+		}
+		long waitTime = (long) (updateRate * 1000.0);
+		while(isActive() && !allFinished) {
+			for(int i = 0; i < actions.length; i++) {
+				if(isRunning[i]) {
+					if (actions[i].isFinished()) {
+						actions[i].end();
+						isRunning[i] = false;
+					} else {
+						actions[i].update();
+					}
+				}
+			}
+			allFinished = true;
+			for(int i = 0; i < actions.length; i++) {
+				if(isRunning[i]) {
+					allFinished = false;
+					break;
+				}
+			}
+			try {
+				Thread.sleep(waitTime);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				DriverStation.reportError(e.getMessage(), true);
+				stop();
+			}
+		}
+	}
+
 	protected void runActionsRace(Action action1, Action action2) throws AutoModeEndedException {
 		assertActive();
 		boolean is1Running = true;

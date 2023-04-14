@@ -3,6 +3,7 @@ package frc.robot.auto.actions;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
 import frc.robot.Elevator;
 import frc.robot.Grabber;
 import frc.robot.auto.util.Action;
@@ -10,37 +11,37 @@ import frc.robot.auto.util.Action;
 public class AutoGrabber implements Action {
     private Grabber grabber;
 
-    private double position;
+    private double speed;
     private double timeout;
     private double startTime;
 
-    public AutoGrabber(Grabber grabber, double position, double timeout) {
+    public AutoGrabber(Grabber grabber, double speed, double timeout) {
         this.grabber = grabber;
-        this.position = position;
+        this.speed = speed;
         this.timeout = timeout;
     }
 
     @Override
     public boolean isFinished() {
-        /*if( (grabber.getGrabberPosition() <= position + 500 && grabber.getGrabberPosition() >= position - 500) 
-            || (Timer.getFPGATimestamp() > startTime + timeout) ) {
+        if(Timer.getFPGATimestamp() > startTime + timeout) {
             return true;
         }
-        */return false;
+        return false;
     }
 
     @Override
     public void start() {
         startTime = Timer.getFPGATimestamp();
+        grabber.runGrabber(speed);
     }
 
     @Override
     public void update() {
-        //grabber.grabberPos(position);
     }
 
     @Override
     public void end() {
+        grabber.runGrabber(0);
     }
     
 }

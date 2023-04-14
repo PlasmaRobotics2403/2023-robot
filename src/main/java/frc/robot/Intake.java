@@ -91,7 +91,7 @@ public class Intake {
 
     public void ejectGamePiece() {
             extendIntake();
-            intakeRoller.set(ControlMode.PercentOutput, -Constants.IntakeConstants.rollerSpeed);
+            intakeRoller.set(ControlMode.PercentOutput, -Constants.IntakeConstants.rollerejectSpeed);
             conveyer.set(ControlMode.PercentOutput, -Constants.IntakeConstants.conveyerSpeed);
     }
 

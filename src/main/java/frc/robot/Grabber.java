@@ -19,7 +19,7 @@ public class Grabber {
     private Solenoid grabberSolenoid;
     private CANSparkMax grabberMotor;
 
-    public DigitalInput limitSwitch;
+    private DigitalInput limitSwitch;
 
     public Grabber() {
 
