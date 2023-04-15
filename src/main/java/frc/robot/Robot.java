@@ -10,15 +10,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.auto.modes.AudienceToCharge;
-import frc.robot.auto.modes.DoubleScore;
-import frc.robot.auto.modes.LeaveCommunity;
-import frc.robot.auto.modes.Nothing;
-import frc.robot.auto.modes.OverChargedStation;
-import frc.robot.auto.modes.Passthrough;
-import frc.robot.auto.modes.Score;
-import frc.robot.auto.modes.ScoringTableToCharge;
+import frc.robot.auto.modes.*;
 import frc.robot.auto.util.AutoMode;
 import frc.robot.auto.util.AutoModeRunner;
 import frc.robot.controllers.PlasmaGuitar;
@@ -54,7 +48,8 @@ public class Robot extends TimedRobot {
 
   AutoModeRunner autoModeRunner;
   AutoMode[] autoModes;
-  int autoModeSelection;
+  //int autoModeSelection;
+  SendableChooser<Integer> autoChooser;
     
   LEDs leds;
   int hue;
@@ -91,11 +86,38 @@ public class Robot extends TimedRobot {
     autoModes[3] = new LeaveCommunity(swerve, elevator, grabber);
     autoModes[4] = new OverChargedStation(swerve, elevator, grabber);
     autoModes[5] = new Score(swerve, elevator, grabber);
-    autoModes[6] = new DoubleScore(swerve);
-    autoModes[7] = new Passthrough(intake, grabber, elevator);
+    autoModes[6] = new TwoCubeAuto(intake, grabber, elevator, swerve);
 
-    
-    autoModeSelection = 0;
+    // april tag locations
+    // tag #1 = red cable
+    // tag #2 = red charged station
+    // tag #3 = red clear
+    // tag #4 = blue feeder
+    // tag #5 = red feeder
+    // tag #6 = blue clear
+    // tag #7 = blue charged station
+    // tag #8 = blue cable
+
+    autoChooser = new SendableChooser<>();
+    autoChooser.setDefaultOption("nothing", 0);
+    limelight.logging();
+
+    if(limelight.getApriltag() == 2 || limelight.getApriltag() == 7) {
+      autoChooser.addOption("Balance", 4);
+      autoChooser.addOption("One Cube Auto", 5);
+    }
+    else if(limelight.getApriltag() == 3 || limelight.getApriltag() == 6) {
+      autoChooser.addOption("Two cube auto", 6);
+      autoChooser.addOption("Leave Community", 3);
+      autoChooser.addOption("One Cube Auto", 5);
+    }
+
+    else {
+      autoChooser.addOption("Leave Community", 3);
+      autoChooser.addOption("One Cube Auto", 5);
+    }
+
+    //autoModeSelection = 0;
     
     leds = new LEDs();
     hue = 0;   
@@ -118,8 +140,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    autoModeSelection = (int) SmartDashboard.getNumber("Auton Mode", 0.0);
-    SmartDashboard.putNumber("Auton Mode", autoModeSelection);
+    //autoModeSelection = (int) SmartDashboard.getNumber("Auton Mode", 0.0);
+    SmartDashboard.putData("Auto Selector", autoChooser);
+    //SmartDashboard.putNumber("Auton Mode", autoModeSelection);
     SmartDashboard.putString("game piece", gamePiece);
 
     if(gamePiece == "Cone") {
@@ -152,7 +175,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    autoModeRunner.chooseAutoMode(autoModes[autoModeSelection]);
+    autoModeRunner.chooseAutoMode(autoModes[autoChooser.getSelected()]);
     autoModeRunner.start();   
   }
 

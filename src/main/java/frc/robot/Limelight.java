@@ -12,17 +12,20 @@ public class Limelight {
     private NetworkTableEntry tx;       // x value
     private NetworkTableEntry ta;       // area value
     private NetworkTableEntry botpose;  // bot pose
+    private NetworkTableEntry tid;      // april tag number
 
     private double x_value;
     private double a_value;
     private double[] botposeArray;
     private double[] emptyArray;
+    private double apriltagVal;
 
     public Limelight() {
         table = NetworkTableInstance.getDefault().getTable("limelight");
         tx = table.getEntry("tx");
         ta = table.getEntry("ta");
         botpose = table.getEntry("botpose");
+        tid = table.getEntry("tid");
 
         emptyArray = new double[6];
         for (int i = 0; i < 6; i++) {
@@ -38,12 +41,14 @@ public class Limelight {
         //read values periodically
         try {
             botposeArray = botpose.getDoubleArray(emptyArray);
+
             SmartDashboard.putNumber("robot skew", botposeArray[5]);
         }
         catch(Exception e){
 
         }
-            
+
+        apriltagVal = tid.getDouble(0);   
         x_value = tx.getDouble(0.0);
         a_value = ta.getDouble(0.0);
         
@@ -51,6 +56,7 @@ public class Limelight {
         //post to smart dashboard periodically
         SmartDashboard.putNumber("LimelightX", x_value);
         SmartDashboard.putNumber("LimelightArea", a_value);
+        SmartDashboard.putNumber("april tag id", apriltagVal);
     }
 
 
@@ -135,5 +141,9 @@ public class Limelight {
      */
     public double getX() {
         return x_value;
+    }
+
+    public double getApriltag() {
+        return apriltagVal;
     }
 }

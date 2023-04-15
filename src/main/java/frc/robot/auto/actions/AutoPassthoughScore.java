@@ -50,16 +50,17 @@ public class AutoPassthoughScore implements Action {
 
     @Override
     public void update() {
-        if(!grabber.getLimitSwitch()) {
+        if(!grabber.getLimitSwitch() || (Timer.getFPGATimestamp() > startTime + (timeout - 0.5))) {
+            intake.idleGamePiece();
             elevator.magicElevator(elevatorPos);
             grabber.magicArm(armPos);
+            grabber.runGrabber(0);
         }
     }
 
     @Override
     public void end() {
         grabber.runGrabber(0);
-        intake.idleGamePiece();
     }
     
 }

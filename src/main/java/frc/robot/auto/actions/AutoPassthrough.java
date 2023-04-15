@@ -7,27 +7,19 @@ import frc.robot.auto.util.Action;
 
 public class AutoPassthrough implements Action {
     private Intake intake;
-    private Grabber grabber;
 
-    public AutoPassthrough(Intake intake, Grabber grabber) {
+    public AutoPassthrough(Intake intake) {
         this.intake = intake;
-        this.grabber = grabber;
     }
 
     @Override
     public boolean isFinished() {
-        if(!grabber.getLimitSwitch()) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return true;
     }
 
     @Override
     public void start() {
-        intake.passthrough(grabber.getLimitSwitch());
-        grabber.runGrabber(Constants.GrabberConstants.GRABBER_SPEED);
+        intake.passthrough(true);
     }
 
     @Override
@@ -36,8 +28,6 @@ public class AutoPassthrough implements Action {
 
     @Override
     public void end() {
-        grabber.runGrabber(0);
-        intake.idleGamePiece();
     }
     
 }

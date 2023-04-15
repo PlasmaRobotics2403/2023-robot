@@ -21,12 +21,23 @@ public class Score extends AutoMode {
     Swerve swerve;
     Elevator elevator;
     Grabber grabber;
-    PathPlannerTrajectory leaveCommunity;
+    PathPlannerTrajectory moveOneZachShoeBackward;
+    PathPlannerTrajectory moveOneZachShoeForward;
+
 
     public Score(Swerve swerve, Elevator elevator, Grabber grabber) {
         this.swerve = swerve;
         this.elevator = elevator;
         this.grabber = grabber;
+
+        try {
+                moveOneZachShoeForward = PathPlanner.loadPath("moveOneZachShoeForward", new PathConstraints(2, 2));
+                moveOneZachShoeBackward = PathPlanner.loadPath("moveOneZachShoeBackward", new PathConstraints(2, 2));
+
+        }
+        catch (Exception e) {
+            DriverStation.reportError(e.getMessage(), false);
+        }
         
 
     }
@@ -34,10 +45,14 @@ public class Score extends AutoMode {
     @Override
     protected void routine() throws AutoModeEndedException {
         DriverStation.reportWarning("Running Audience_To_Charge", false);
-        runAction(new AutoGrabber(grabber, Constants.GrabberConstants.GRABBER_CLOSED_CUBE, 0.7));
         runAction(new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_HIGH_EXTEND, 1));
-        runAction(new AutoGrabber(grabber, Constants.GrabberConstants.GRABBER_SPEED, 1));
-        runAction(new AutoGrabber(grabber, Constants.GrabberConstants.GRABBER_OPEN, 0.3));
+        runAction(new AutoArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND, 1));
+        runAction(new FollowTrajectory(moveOneZachShoeForward, swerve, true));
+        runAction(new AutoGrabber(grabber, -Constants.GrabberConstants.GRABBER_SPEED, 0.5));
+        runAction(new FollowTrajectory(moveOneZachShoeBackward, swerve, true));
+        runAction(new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_BOTTTOM_EXTEND, 1));
+        runAction(new AutoArm(grabber, Constants.GrabberConstants.ARM_STOWED_EXTEND, 1));
+
         DriverStation.reportWarning("Finished Audience_To_Charge", false);
 
     }

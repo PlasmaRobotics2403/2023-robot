@@ -22,7 +22,7 @@ import frc.robot.auto.util.Action;
 import frc.robot.auto.util.AutoMode;
 import frc.robot.auto.util.AutoModeEndedException;
 
-public class Passthrough extends AutoMode {
+public class TwoCubeAuto extends AutoMode {
 
     Grabber grabber;
     Intake intake;
@@ -35,7 +35,7 @@ public class Passthrough extends AutoMode {
     PathPlannerTrajectory moveOneZachShoeBackward;
 
 
-    public Passthrough(Intake intake, Grabber grabber, Elevator elevator, Swerve swerve) {
+    public TwoCubeAuto(Intake intake, Grabber grabber, Elevator elevator, Swerve swerve) {
         this.intake = intake;
         this.grabber = grabber;
         this.elevator = elevator;
@@ -43,9 +43,9 @@ public class Passthrough extends AutoMode {
 
         try {
             moveOneZachShoeForward = PathPlanner.loadPath("moveOneZachShoeForward", new PathConstraints(1.5, 2));
-            moveToGamePiece = PathPlanner.loadPath("grabGamePiece", new PathConstraints(1.5, 2));
-            goBackToGrid = PathPlanner.loadPath("goBackToGrid", new PathConstraints(1.5, 2));
-            moveOneZachShoeBackward = PathPlanner.loadPath("moveOneZachShoeBacward", new PathConstraints(1.5, 2));
+            moveToGamePiece = PathPlanner.loadPath("grabGamePiece", new PathConstraints(2, 3));
+            goBackToGrid = PathPlanner.loadPath("goBackToGrid", new PathConstraints(1.3, 2));
+            moveOneZachShoeBackward = PathPlanner.loadPath("moveOneZachShoeBackward", new PathConstraints(2, 3));
 
 
         }
@@ -59,26 +59,24 @@ public class Passthrough extends AutoMode {
     protected void routine() throws AutoModeEndedException {
         DriverStation.reportWarning("Running Audience_To_Charge", false);
         //move to scoring position
-       /* Action[] highScorePosition = {new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_HIGH_EXTEND, 2), new AutoArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND, 1)};
+        Action[] highScorePosition = {new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_HIGH_EXTEND, 1), new AutoArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND, 1)};
         parallel(highScorePosition);
         runAction(new FollowTrajectory(moveOneZachShoeForward, swerve, true));
         //release game piece
-        runAction(new AutoGrabber(grabber, -Constants.GrabberConstants.GRABBER_SPEED, 1));
+        runAction(new AutoGrabber(grabber, -Constants.GrabberConstants.GRABBER_SPEED, 0.75));
         // go to next game piece
         Action[] collectGamePiece = {new FollowTrajectory(moveToGamePiece, swerve, true), new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_BOTTTOM_EXTEND, 2, 1), new AutoArm(grabber, Constants.GrabberConstants.ARM_STOWED_EXTEND, 2, 1), new AutoIntake(intake, true)};
         parallel(collectGamePiece);
         // stop intaking
-        runAction(new AutoIntake(intake, false));
+        runActionsParallel((new AutoPassthrough(intake)), new AutoIntake(intake, false));
         // move to scoring position
-        Action[] moveToScoringPos = {new FollowTrajectory(goBackToGrid, swerve, true), new AutoPassthoughScore(intake, grabber, elevator, Constants.ElevatorConstants.ELEVATOR_MID_EXTEND, Constants.GrabberConstants.ARM_HIGH_EXTEND, 4)};
+        Action[] moveToScoringPos = {new FollowTrajectory(goBackToGrid, swerve, false), new AutoPassthoughScore(intake, grabber, elevator, Constants.ElevatorConstants.ELEVATOR_MID_EXTEND, Constants.GrabberConstants.ARM_HIGH_EXTEND, 3)};
         parallel(moveToScoringPos);
         // release game piece
-        runAction(new AutoGrabber(grabber, -Constants.GrabberConstants.GRABBER_SPEED, 1));
-
-        runAction(new FollowTrajectory(moveOneZachShoeBackward, swerve, true));
-        DriverStation.reportWarning("Finished Audience_To_Charge", false);*/
-
-        runAction(new AutoPassthoughScore(intake, grabber, elevator, Constants.ElevatorConstants.ELEVATOR_MID_EXTEND, Constants.GrabberConstants.ARM_HIGH_EXTEND, 10));
+        runAction(new AutoGrabber(grabber, -Constants.GrabberConstants.GRABBER_SPEED, 0.75));
+        // drive away
+        runAction(new FollowTrajectory(moveOneZachShoeBackward, swerve, false));
+        DriverStation.reportWarning("Finished Audience_To_Charge", false);
 
     }
     
