@@ -65,10 +65,18 @@ public class Limelight {
      * @return speed needed to be centered with the vision target
      */
     public double XVisionAlign() {
-        double x_speed = (x_value + 10.5)/-29;
-        x_speed = Math.max(x_speed, -Constants.LimelightConstants.maxTanslationalSpeed);
-        x_speed = Math.min(x_speed, Constants.LimelightConstants.maxTanslationalSpeed);
-        return x_speed;
+        double targetX = -15;
+        if(targetX - 1 < x_value && x_value < targetX + 1) {
+
+            return 0;
+        }
+        else {
+            double x_speed = (targetX - x_value) * 0.05;
+            x_speed = Math.max(x_speed, -Constants.LimelightConstants.maxTanslationalSpeed);
+            x_speed = Math.min(x_speed, Constants.LimelightConstants.maxTanslationalSpeed);        
+            return x_speed;
+        }
+
     }
 
 
@@ -78,11 +86,10 @@ public class Limelight {
      */
     public double SkewVisionAlign() {
         try {
-            if(Math.abs(botposeArray[5]) > 5) {
-                double s_speed = botposeArray[5]/25;
+            if(Math.abs(botposeArray[5]) > 1.5) {
+                double s_speed = botposeArray[5] * 0.11;
                 s_speed = Math.max(s_speed, -Constants.LimelightConstants.maxSkewSpeed);
-                s_speed = Math.min(botposeArray[5], Constants.LimelightConstants.maxSkewSpeed);
-                DriverStation.reportError(Double.toString(s_speed), false);
+                s_speed = Math.min(s_speed, Constants.LimelightConstants.maxSkewSpeed);
                 return s_speed;
             }
             else {
@@ -102,12 +109,28 @@ public class Limelight {
      * @return speed needed to get to 1.2 meters
      */
     public double distanceVisionAlign() {
-        double distance = a_value - 2;
-        double y_speed = distance * 1;
-        y_speed = Math.max(y_speed, -Constants.LimelightConstants.maxTanslationalSpeed);
-        y_speed = Math.min(y_speed, Constants.LimelightConstants.maxTanslationalSpeed);
-        
-        return y_speed;
+        double targetDistance = 2.5;
+        if(targetDistance - 0.2 < a_value && a_value < targetDistance + 0.2) {
+            
+            return 0;
+        }
+        else {
+            double y_speed = (a_value - targetDistance) * 0.8;
+            y_speed = Math.max(y_speed, -Constants.LimelightConstants.maxTanslationalSpeed);
+            y_speed = Math.min(y_speed, Constants.LimelightConstants.maxTanslationalSpeed);
+            return y_speed;
+        }
+    }
+
+    public double[] fullAlign() {
+        double[] speeds = {0.0, 0.0, 0.0};
+
+        speeds[2] = SkewVisionAlign();
+        speeds[0] = distanceVisionAlign();
+        if(speeds[2] == 0){
+            speeds[1] = XVisionAlign();
+        }    
+        return speeds;
     }
 
 

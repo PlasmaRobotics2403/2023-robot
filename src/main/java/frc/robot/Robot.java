@@ -48,7 +48,7 @@ public class Robot extends TimedRobot {
 
   AutoModeRunner autoModeRunner;
   AutoMode[] autoModes;
-  //int autoModeSelection;
+  int autoModeSelection;
   SendableChooser<Integer> autoChooser;
     
   LEDs leds;
@@ -87,6 +87,7 @@ public class Robot extends TimedRobot {
     autoModes[4] = new OverChargedStation(swerve, elevator, grabber);
     autoModes[5] = new Score(swerve, elevator, grabber);
     autoModes[6] = new TwoCubeAuto(intake, grabber, elevator, swerve);
+    autoModes[7] = new TwoCubeAutoOverCable(intake, grabber, elevator, swerve);
 
     // april tag locations
     // tag #1 = red cable
@@ -106,18 +107,19 @@ public class Robot extends TimedRobot {
       autoChooser.addOption("Balance", 4);
       autoChooser.addOption("One Cube Auto", 5);
     }
-    else if(limelight.getApriltag() == 3 || limelight.getApriltag() == 6) {
-      autoChooser.addOption("Two cube auto", 6);
+    else if(limelight.getApriltag() == 1 || limelight.getApriltag() == 8) {
+      autoChooser.addOption("Two cube auto", 7);
       autoChooser.addOption("Leave Community", 3);
       autoChooser.addOption("One Cube Auto", 5);
     }
 
     else {
+      autoChooser.addOption("Two cube auto", 6);
       autoChooser.addOption("Leave Community", 3);
       autoChooser.addOption("One Cube Auto", 5);
     }
 
-    //autoModeSelection = 0;
+    autoModeSelection = 0;
     
     leds = new LEDs();
     hue = 0;   
@@ -140,9 +142,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    //autoModeSelection = (int) SmartDashboard.getNumber("Auton Mode", 0.0);
+    autoModeSelection = (int) SmartDashboard.getNumber("Auton Mode", 0.0);
     SmartDashboard.putData("Auto Selector", autoChooser);
-    //SmartDashboard.putNumber("Auton Mode", autoModeSelection);
+    SmartDashboard.putNumber("Auton Mode", autoModeSelection);
     SmartDashboard.putString("game piece", gamePiece);
 
     if(gamePiece == "Cone") {
@@ -175,7 +177,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    autoModeRunner.chooseAutoMode(autoModes[autoChooser.getSelected()]);
+    autoModeRunner.chooseAutoMode(autoModes[autoModeSelection]);
     autoModeRunner.start();   
   }
 
@@ -200,7 +202,8 @@ public class Robot extends TimedRobot {
 
     /* vision align */
     if(driver.A.isPressed()) {
-      swerve.teleopDrive(limelight.distanceVisionAlign(), limelight.XVisionAlign(), limelight.SkewVisionAlign(), true);
+      double[] speeds = limelight.fullAlign();
+      swerve.teleopDrive(limelight.distanceVisionAlign(), limelight.XVisionAlign(), 0, true);
     }
     /* auto balance */
     else if(driver.BACK.isPressed()) {
@@ -308,7 +311,9 @@ public class Robot extends TimedRobot {
       
     }
 
-    if(passthrough){
+    
+
+    if(passthrough) {
       intake.passthrough(grabber.getLimitSwitch());
       grabber.runGrabber(Constants.GrabberConstants.GRABBER_SPEED);
       gamePiece = "Cube";
