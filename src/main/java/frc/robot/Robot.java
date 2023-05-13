@@ -205,10 +205,6 @@ public class Robot extends TimedRobot {
       double[] speeds = limelight.fullAlign();
       swerve.teleopDrive(limelight.distanceVisionAlign(), limelight.XVisionAlign(), 0, true);
     }
-    /* auto balance */
-    else if(driver.BACK.isPressed()) {
-      swerve.balance();
-    }
     /* rezero robot heading */
     else if(driver.START.isPressed()) {
       swerve.zeroHeading();
@@ -304,6 +300,10 @@ public class Robot extends TimedRobot {
     }
 
     
+    if(driver.BACK.isPressed()) {
+      passthrough = false;
+    }
+
     if(driver.X.isPressed()) {
       if (grabber.getLimitSwitch()){
         passthrough = true;
