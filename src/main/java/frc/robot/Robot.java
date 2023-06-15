@@ -159,7 +159,9 @@ public class Robot extends TimedRobot {
     swerve.logging();
     limelight.logging();
     elevator.logger();
+    SmartDashboard.putNumber("Elevator Target", elevatorTarget);
     grabber.logging();
+    SmartDashboard.putNumber("Arm Target", armTarget);
     intake.logging();
 
     leds.sendData();

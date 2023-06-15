@@ -84,7 +84,7 @@ public final class Constants {
         /* Swerve Profiling Values */
         /** Meters per Second */
         public static final double maxSpeed = 10; //TODO: This must be tuned to specific robot
-        public static final double creepSpeed = 0.3;
+        public static final double creepSpeed = 0.25;
         /** Radians per Second */
         public static final double maxAngularVelocity = 10; //TODO: This must be tuned to specific robot
 
@@ -148,9 +148,9 @@ public final class Constants {
         public static final int ELEVATOR_LIMIT_ID = 0;
         public static final double MAX_EXTEND = 45000;
 
-        public static final double ELEVATOR_HIGH_EXTEND = 44000;
+        public static final double ELEVATOR_HIGH_EXTEND = 42000;
         public static final double ELEVATOR_FEEDER_EXTEND = 29000;
-        public static final double ELEVATOR_MID_EXTEND = 21000;
+        public static final double ELEVATOR_MID_EXTEND = 15000;
         public static final double ELEVATOR_LOW_EXTEND = 5000;
         public static final double ELEVATOR_BOTTTOM_EXTEND = 0;
 
@@ -173,6 +173,7 @@ public final class Constants {
         public static int extender_id = 16;
 
         public static final int LIMIT_SWITCH_ID = 1;
+        public static final int BEAM_BREAK_ID = 2;
 
         /* Extention Positions */
         public static final double ARM_MAX_EXTEND = 5100;
@@ -191,7 +192,7 @@ public final class Constants {
         public static final double EXTENDER_RETRACTED_POSITION = 3100;
         public static final double EXTENDER_EXTENDED_POSITION = 790;
 
-        public static final double GRABBER_SPEED = 0.65;
+        public static final double GRABBER_SPEED = 0.95;
 
         /* Arm/Grabber Speeds */
         public static final double Up_Arm_Speed = 0.3;
@@ -219,8 +220,8 @@ public final class Constants {
         public static final double EXTENDER_MOTION_CRUISE_VELOCITY = 2000;
         public static final double EXTENDER_MOTION_ACCELERATION = 1000;
 
-        public static final double ARM_HIGH_EXTEND = 4000;
-        public static final double ARM_FEEDER_EXTEND = 4000;
+        public static final double ARM_HIGH_EXTEND = 4400;
+        public static final double ARM_FEEDER_EXTEND = 4600;
         public static final double ARM_LOW_EXTEND = 2000;
         public static final double ARM_STOWED_EXTEND = 0;
 

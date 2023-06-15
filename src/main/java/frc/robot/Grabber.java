@@ -20,6 +20,7 @@ public class Grabber {
     private CANSparkMax grabberMotor;
 
     private DigitalInput limitSwitch;
+    private DigitalInput beamBreak;
 
     public Grabber() {
 
@@ -57,6 +58,7 @@ public class Grabber {
         grabberSolenoid = new Solenoid(Constants.IntakeConstants.PNUEMATIC_HUB_ID, PneumaticsModuleType.REVPH,  1);
 
         limitSwitch = new DigitalInput(Constants.GrabberConstants.LIMIT_SWITCH_ID);
+        beamBreak = new DigitalInput(Constants.GrabberConstants.BEAM_BREAK_ID);
     }
 
     public void runGrabber(double speed) {
@@ -68,6 +70,10 @@ public class Grabber {
 
     public boolean getLimitSwitch () {
         return limitSwitch.get();
+    }
+
+    public boolean getBeamBreak () {
+        return beamBreak.get();
     }
 
     /**
@@ -116,5 +122,7 @@ public class Grabber {
      */
     public void logging() {
         SmartDashboard.putNumber("Arm Encoder", arm.getSelectedSensorPosition());
+        SmartDashboard.putBoolean("Beam Break", getBeamBreak());
+        SmartDashboard.putBoolean("Grabber Limit Switch", getLimitSwitch());
     }
 }

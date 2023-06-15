@@ -98,7 +98,7 @@ public class Elevator {
      * @param position in inches
      */
     public void magicElevator(double position) {
-        if(position >= Constants.ElevatorConstants.MAX_EXTEND || position < 0) {
+        if(position > Constants.ElevatorConstants.MAX_EXTEND || position < 0) {
             master.set(ControlMode.PercentOutput, 0);
         }
         else if(position <= 0 && master.getSelectedSensorPosition() <= 500 && !limitSwitch.get()) {

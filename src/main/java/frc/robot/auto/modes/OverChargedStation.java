@@ -33,7 +33,8 @@ public class OverChargedStation extends AutoMode {
         
         try {
             overChargedStation = PathPlanner.loadPath("over charged station", new PathConstraints(1.5, 2));
-            moveOneZachShoeForward = PathPlanner.loadPath("moveOneZachShoeForward", new PathConstraints(1.5, 2));
+            moveOneZachShoeForward = PathPlanner.loadPath("moveOneZachShoeForward", new PathConstraints(1.5 , 2));
+            
         }
         catch (Exception e) {
             DriverStation.reportError(e.getMessage(), false);
@@ -43,12 +44,14 @@ public class OverChargedStation extends AutoMode {
     @Override
     protected void routine() throws AutoModeEndedException {
         DriverStation.reportWarning("Running Audience_To_Charge", false);
-        runAction (new AutoArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND, 1));
-        runAction(new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_HIGH_EXTEND, 2.5));
+        //move to scoring position
+        Action[] highScorePosition = {new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_HIGH_EXTEND, 1), new AutoArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND, 1)};
+        parallel(highScorePosition);
         runAction(new FollowTrajectory(moveOneZachShoeForward, swerve, true));
-        runAction(new AutoGrabber(grabber, -Constants.GrabberConstants.GRABBER_SPEED, 1));
-        Action[] stowAndDrive = {new FollowTrajectory(overChargedStation, swerve, true), new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_BOTTTOM_EXTEND, 2, 0.07), new AutoArm(grabber, Constants.GrabberConstants.ARM_STOWED_EXTEND, 2, 0.1)};
-        parallel(stowAndDrive);        
+        //release game piece
+        runAction(new AutoGrabber(grabber, -Constants.GrabberConstants.GRABBER_SPEED, 0.75));
+        Action[] balance = {new FollowTrajectory(overChargedStation, swerve, true), new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_BOTTTOM_EXTEND, 2, 0.07), new AutoArm(grabber, Constants.GrabberConstants.ARM_STOWED_EXTEND, 2, 0.1)};
+        parallel(balance);
         runAction(new Balance(swerve));
         DriverStation.reportWarning("Finished Audience_To_Charge", false);
 
