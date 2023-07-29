@@ -101,6 +101,7 @@ public class Elevator {
         if(position > Constants.ElevatorConstants.MAX_EXTEND || position < 0) {
             master.set(ControlMode.PercentOutput, 0);
         }
+
         else if(position <= 0 && master.getSelectedSensorPosition() <= 500 && !limitSwitch.get()) {
             master.setSelectedSensorPosition(0);
             master.set(ControlMode.PercentOutput, 0);
@@ -108,6 +109,10 @@ public class Elevator {
         else {
             master.set(ControlMode.MotionMagic, position);
         }
+    }
+
+    public void killElevator() {
+        master.DestroyObject();
     }
 
 
