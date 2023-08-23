@@ -32,7 +32,7 @@ public class AutoGrabber implements Action {
     @Override
     public void start() {
         startTime = Timer.getFPGATimestamp();
-        grabber.runGrabber(speed);
+        grabber.runGrabberPassthrough(speed);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class AutoGrabber implements Action {
 
     @Override
     public void end() {
-        grabber.runGrabber(0);
+        grabber.runGrabberPassthrough(0);
     }
     
 }

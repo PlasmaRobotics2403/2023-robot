@@ -113,6 +113,7 @@ public class Elevator {
 
     public void killElevator() {
         master.DestroyObject();
+        slave.DestroyObject();
     }
 
 

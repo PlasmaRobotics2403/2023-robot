@@ -95,7 +95,7 @@ public class SwerveModule {
         mAngleMotor.setInverted(Constants.Swerve.angleMotorInvert);
         mAngleMotor.setNeutralMode(Constants.Swerve.angleNeutralMode);
 
-        Timer.delay(1.0);
+        Timer.delay(2.0);
         resetToAbsolute();
     }
 

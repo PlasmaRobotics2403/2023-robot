@@ -5,32 +5,57 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.WPI_CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
+import frc.lib.math.Conversions;
+import frc.lib.util.CTREConfigs;
 
 public class Grabber {
     private TalonSRX arm;
     private Solenoid grabberSolenoid;
     private CANSparkMax grabberMotor;
+    private WPI_CANCoder absoluteArm;
 
     private DigitalInput limitSwitch;
     private DigitalInput beamBreakOutside;
     private DigitalInput beamBreakInside;
 
+    private ProfiledPIDController controller;
+    private TrapezoidProfile.Constraints constraints;
+    private ArmFeedforward feedForward;
+
     public Grabber() {
+        constraints = new TrapezoidProfile.Constraints(0.7, 0.2);
+        controller = new ProfiledPIDController(Constants.GrabberConstants.armkP, Constants.GrabberConstants.armkI, Constants.GrabberConstants.armkD, constraints);
+        feedForward = new ArmFeedforward(0.4, 0.4, 0.4);
+
+        absoluteArm = new WPI_CANCoder(Constants.GrabberConstants.absolute_arm_id);
+        absoluteArm.configFactoryDefault();
+        absoluteArm.configAllSettings(CTREConfigs.armCanCoderConfig());
 
         /* Arm Setup */
         arm = new TalonSRX(Constants.GrabberConstants.arm_id);
+        arm.configFactoryDefault();
+        arm.setInverted(true);
+        arm.setNeutralMode(NeutralMode.Brake);
 
-        arm.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, Constants.GrabberConstants.ARM_PID_IDX, Constants.TIMEOUT_MS);
-        arm.setSelectedSensorPosition(0, Constants.GrabberConstants.ARM_PID_IDX, Constants.TIMEOUT_MS);
+        arm.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, Constants.GrabberConstants.ARM_PID_IDX, Constants.TIMEOUT_MS);
 
         arm.configNominalOutputForward(0, Constants.TIMEOUT_MS);
         arm.configNominalOutputReverse(0, Constants.TIMEOUT_MS);
@@ -39,9 +64,6 @@ public class Grabber {
 
         arm.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, Constants.TIMEOUT_MS);
 		arm.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, Constants.TIMEOUT_MS);
-
-        arm.setInverted(true);
-        arm.setNeutralMode(NeutralMode.Brake);
 
         arm.selectProfileSlot(Constants.GrabberConstants.ARM_SLOT_IDX, Constants.GrabberConstants.ARM_PID_IDX);
         arm.config_kF(0, Constants.GrabberConstants.armkF);
@@ -102,6 +124,11 @@ public class Grabber {
         }
     }*/
 
+
+    public Rotation2d getCanCoder(){
+        return Rotation2d.fromDegrees(absoluteArm.getAbsolutePosition());
+    }
+
     public boolean getLimitSwitch() {
         return limitSwitch.get();
     }
@@ -121,9 +148,15 @@ public class Grabber {
     public double getArmPosition() {
         return arm.getSelectedSensorPosition();
     }
+
+    public double getAbsoluteArmPosition() {
+        return absoluteArm.getAbsolutePosition();
+    }
+
     public double distanceToArmPosition(double position) {
         return Math.abs(position - getArmPosition());
     }
+    
     public void ArmRot(double armSpeed) {
         arm.set(ControlMode.PercentOutput, armSpeed);
     }
@@ -141,16 +174,13 @@ public class Grabber {
      * @param rotPosition
      */
     public void magicArm(double rotPosition) {
-        if(rotPosition >= Constants.GrabberConstants.ARM_MAX_EXTEND || rotPosition < Constants.GrabberConstants.ARM_MIN_EXTEND) {
-            arm.set(ControlMode.PercentOutput, 0);
-        }
-        else {
-            arm.set(ControlMode.MotionMagic, rotPosition);
-        }
-    }    
+        controller.setGoal(Math.toRadians(rotPosition));
+        double speed =  controller.calculate(Math.toRadians(absoluteArm.getAbsolutePosition()));
+        arm.set(ControlMode.PercentOutput, speed);
+    }
 
     public void zeroArm() {
-        arm.setSelectedSensorPosition(0);
+        absoluteArm.setPosition(0);
     }
 
     
@@ -163,5 +193,6 @@ public class Grabber {
         SmartDashboard.putBoolean("Beam Break Outside", getBeamBreakOutside());
         SmartDashboard.putBoolean("Beam Break Insikde", getBeamBreakInside());
         SmartDashboard.putBoolean("Grabber Limit Switch", getLimitSwitch());
+        SmartDashboard.putNumber("GrabberCC", getAbsoluteArmPosition());
     }
 }

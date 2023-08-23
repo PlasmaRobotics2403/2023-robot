@@ -44,7 +44,7 @@ public class OverChargedStationCone extends AutoMode {
     @Override
     protected void routine() throws AutoModeEndedException {
         //move to scoring position
-        Action[] highScorePosition = {new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_HIGH_EXTEND, 1), new AutoArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND, 1, 0.5)};
+        Action[] highScorePosition = {new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_HIGH_EXTEND, 1), new AutoArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND_AUTO, 1, 0.5)};
         parallel(highScorePosition);
         runAction(new FollowTrajectory(moveOneZachShoeForward, swerve, true));
         //release game piece

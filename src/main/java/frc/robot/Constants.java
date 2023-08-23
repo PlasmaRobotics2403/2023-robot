@@ -93,7 +93,7 @@ public final class Constants {
         public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
 
         /*Balance Multiplier */
-        public static final double balanceMultiplier = 0.0132;
+        public static final double balanceMultiplier = 0.0142;
 
         /* Module Specific Constants */
         /* Front Left Module - Module 0 */
@@ -101,7 +101,7 @@ public final class Constants {
             public static final int driveMotorID = 0;
             public static final int angleMotorID = 1;
             public static final int canCoderID = 0;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(150.59); //Practice: 250.75    Final: 150.59
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(150.59); 
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -168,9 +168,14 @@ public final class Constants {
     }
 
     public static final class GrabberConstants{
+        public static int arm_gear_ratio = 1;
+        public static boolean cancoder_invert = false;
+        public static double grabberCC = 67.9;
+        
         public static int arm_id = 10;
         public static int grabber_id = 11;
         public static int extender_id = 16;
+        public static int absolute_arm_id = 10;
 
         public static final int LIMIT_SWITCH_ID = 1;
         public static final int BEAM_BREAK_OUTSIDE_ID = 2;
@@ -221,15 +226,16 @@ public final class Constants {
         public static final double EXTENDER_MOTION_CRUISE_VELOCITY = 2000;
         public static final double EXTENDER_MOTION_ACCELERATION = 1000;
 
-        public static final double ARM_HIGH_EXTEND = 4100;
-        public static final double ARM_FEEDER_EXTEND = 4100;
-        public static final double ARM_LOW_EXTEND = 2000;
+        public static final double ARM_HIGH_EXTEND = 80;
+        public static final double ARM_HIGH_EXTEND_AUTO = 80;
+        public static final double ARM_FEEDER_EXTEND = 80;
+        public static final double ARM_LOW_EXTEND = 80;
         public static final double ARM_STOWED_EXTEND = 0;
 
 
-        public static double armkF = 0.3;
-        public static double armkP = 0.2;
-        public static double armkI = 0.0001;
+        public static double armkF = 0.01;
+        public static double armkP = 2;
+        public static double armkI = 0.001;
         public static double armkD = 0;
 
         public static double extenderkF = 0.2;
