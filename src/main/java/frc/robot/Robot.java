@@ -84,11 +84,13 @@ public class Robot extends TimedRobot {
     autoModes[1] = new ScoringTableToCharge(swerve, elevator, grabber);
     autoModes[2] = new AudienceToCharge(swerve, elevator, grabber);
     autoModes[3] = new LeaveCommunity(swerve, elevator, grabber);
-    autoModes[4] = new OverChargedStation(swerve, elevator, grabber);
-    autoModes[5] = new Score(swerve, elevator, grabber);
-    autoModes[6] = new TwoCubeAuto(intake, grabber, elevator, swerve);
-    autoModes[7] = new TwoCubeAutoOverCable(intake, grabber, elevator, swerve);
-
+    autoModes[4] = new Score(swerve, elevator, grabber);
+    autoModes[5] = new TwoCubeAuto(intake, grabber, elevator, swerve);
+    autoModes[6] = new TwoCubeAutoOverCable(intake, grabber, elevator, swerve);
+    autoModes[7] = new OverChargedStation(swerve, elevator, grabber);
+    autoModes[8] = new OverChargedStationCone(swerve, elevator, grabber);
+    autoModes[9] = new OverChargedStationCubeGrab(swerve, elevator, grabber, intake);
+    autoModes[10] = new OverChargedStationConeGrab(swerve, elevator, grabber, intake);
     // april tag locations
     // tag #1 = red cable
     // tag #2 = red charged station
@@ -101,6 +103,18 @@ public class Robot extends TimedRobot {
 
     autoChooser = new SendableChooser<>();
     autoChooser.setDefaultOption("nothing", 0);
+    SmartDashboard.putNumber("Nothing", 0);
+    SmartDashboard.putNumber("Scoringtable Side Charge", 1);
+    SmartDashboard.putNumber("Audience Side Charge", 2);
+    SmartDashboard.putNumber("Leave Community", 3);
+    SmartDashboard.putNumber("Score", 4);
+    SmartDashboard.putNumber("Two Cube Auto", 5);
+    SmartDashboard.putNumber("Two Cube Auto Bump Side", 6);
+    SmartDashboard.putNumber("Over Charge Station Place Cube", 7);
+    SmartDashboard.putNumber("Over Charge Station Place Cone", 8);
+    SmartDashboard.putNumber("Over Charge Station Place Cube and Grab Cube", 9);
+    SmartDashboard.putNumber("Over Charge Station Place Cone and Grab Cone", 10);
+
     limelight.logging();
 
     if(limelight.getApriltag() == 2 || limelight.getApriltag() == 7) {
@@ -287,7 +301,7 @@ public class Robot extends TimedRobot {
       grabber.runGrabber(-Constants.GrabberConstants.GRABBER_SPEED);
     }
     else if (!passthrough) {
-      grabber.runGrabber(0);
+      grabber.runGrabberPassthrough(0);;
     }
 
     // intake controls
@@ -317,7 +331,7 @@ public class Robot extends TimedRobot {
 
     if(passthrough) {
       intake.passthrough(grabber.getLimitSwitch());
-      grabber.runGrabber(Constants.GrabberConstants.GRABBER_SPEED);
+      grabber.runGrabberPassthrough(Constants.GrabberConstants.GRABBER_SPEED);
       gamePiece = "Cube";
       if (!grabber.getLimitSwitch()){
         passthrough = false;

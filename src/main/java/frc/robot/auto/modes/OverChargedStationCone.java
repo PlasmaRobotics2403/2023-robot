@@ -18,7 +18,7 @@ import frc.robot.auto.util.Action;
 import frc.robot.auto.util.AutoMode;
 import frc.robot.auto.util.AutoModeEndedException;
 
-public class OverChargedStation extends AutoMode {
+public class OverChargedStationCone extends AutoMode {
 
     Swerve swerve;
     Elevator elevator;
@@ -26,14 +26,14 @@ public class OverChargedStation extends AutoMode {
     PathPlannerTrajectory overChargedStation;
     PathPlannerTrajectory moveOneZachShoeForward;
 
-    public OverChargedStation(Swerve swerve, Elevator elevator, Grabber grabber) {
+    public OverChargedStationCone(Swerve swerve, Elevator elevator, Grabber grabber) {
         this.swerve = swerve;
         this.elevator = elevator;
         this.grabber = grabber;
         
         try {
-            overChargedStation = PathPlanner.loadPath("over charged station", new PathConstraints(1.5, 2));
-            moveOneZachShoeForward = PathPlanner.loadPath("moveOneZachShoeForward", new PathConstraints(1.5 , 2));
+            overChargedStation = PathPlanner.loadPath("over charged station two", new PathConstraints(1.5, 2));
+            moveOneZachShoeForward = PathPlanner.loadPath("moveOneZachShoeForward", new PathConstraints(0.6 , 2));
             
         }
         catch (Exception e) {
@@ -48,6 +48,7 @@ public class OverChargedStation extends AutoMode {
         parallel(highScorePosition);
         runAction(new FollowTrajectory(moveOneZachShoeForward, swerve, true));
         //release game piece
+
         runAction(new AutoGrabber(grabber, -Constants.GrabberConstants.GRABBER_SPEED, 0.75));
         Action[] balance = {new FollowTrajectory(overChargedStation, swerve, true), new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_BOTTTOM_EXTEND, 2, 0.07), new AutoArm(grabber, Constants.GrabberConstants.ARM_STOWED_EXTEND, 2, 0.1)};
         parallel(balance);

@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Grabber {
@@ -20,7 +21,8 @@ public class Grabber {
     private CANSparkMax grabberMotor;
 
     private DigitalInput limitSwitch;
-    private DigitalInput beamBreak;
+    private DigitalInput beamBreakOutside;
+    private DigitalInput beamBreakInside;
 
     public Grabber() {
 
@@ -58,22 +60,58 @@ public class Grabber {
         grabberSolenoid = new Solenoid(Constants.IntakeConstants.PNUEMATIC_HUB_ID, PneumaticsModuleType.REVPH,  1);
 
         limitSwitch = new DigitalInput(Constants.GrabberConstants.LIMIT_SWITCH_ID);
-        beamBreak = new DigitalInput(Constants.GrabberConstants.BEAM_BREAK_ID);
+        beamBreakOutside = new DigitalInput(Constants.GrabberConstants.BEAM_BREAK_OUTSIDE_ID);
+        beamBreakInside = new DigitalInput(Constants.GrabberConstants.BEAM_BREAK_INSIDE_ID);
     }
 
-    public void runGrabber(double speed) {
-        if(speed > 0 && !limitSwitch.get())
+    public void runGrabber(double grabberSpeed) {
+        if(grabberSpeed > 0 && !getBeamBreakOutside()){
+            Timer.delay(0.2);
             grabberMotor.set(0);
-        else
-            grabberMotor.set(speed);
+        }     
+        else if(!beamBreakInside.get() && getArmPosition() >= 3800) {
+            grabberMotor.set(grabberSpeed);
+            if(getBeamBreakOutside()){
+                arm.set(ControlMode.PercentOutput, -0.2);
+            }
+        }
+        else{
+            grabberMotor.set(grabberSpeed);
+        }
     }
 
-    public boolean getLimitSwitch () {
+    public void runGrabberPassthrough(double speed) {
+        if(speed > 0 && !limitSwitch.get()) {
+            grabberMotor.set(0);
+        }
+        else{
+            grabberMotor.set(speed);
+        }
+    }
+
+    /*public void runGrabber(double speed) {
+        if(speed > 0 && !limitSwitch.get()){
+            grabberMotor.set(0);
+        }
+        else if(speed > 0 && !beamBreakGrabberOutside.get()) {
+            Timer.delay(0.25);
+            grabberMotor.set(0);
+        }
+        else {
+            grabberMotor.set(speed);
+        }
+    }*/
+
+    public boolean getLimitSwitch() {
         return limitSwitch.get();
     }
 
-    public boolean getBeamBreak () {
-        return beamBreak.get();
+    public boolean getBeamBreakOutside() {
+        return beamBreakOutside.get();
+    }
+
+    public boolean getBeamBreakInside() {
+        return beamBreakInside.get();
     }
 
     /**
@@ -122,7 +160,8 @@ public class Grabber {
      */
     public void logging() {
         SmartDashboard.putNumber("Arm Encoder", arm.getSelectedSensorPosition());
-        SmartDashboard.putBoolean("Beam Break", getBeamBreak());
+        SmartDashboard.putBoolean("Beam Break Outside", getBeamBreakOutside());
+        SmartDashboard.putBoolean("Beam Break Insikde", getBeamBreakInside());
         SmartDashboard.putBoolean("Grabber Limit Switch", getLimitSwitch());
     }
 }

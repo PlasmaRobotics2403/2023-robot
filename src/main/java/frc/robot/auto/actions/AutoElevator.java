@@ -37,7 +37,7 @@ public class AutoElevator implements Action {
 
     @Override
     public void start() {
-        startTime =Timer.getFPGATimestamp();
+        startTime = Timer.getFPGATimestamp();
     }
 
     @Override

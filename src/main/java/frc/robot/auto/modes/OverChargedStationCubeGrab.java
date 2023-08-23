@@ -8,28 +8,33 @@ import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants;
 import frc.robot.Elevator;
 import frc.robot.Grabber;
+import frc.robot.Intake;
 import frc.robot.Swerve;
 import frc.robot.auto.actions.AutoArm;
 import frc.robot.auto.actions.AutoElevator;
 import frc.robot.auto.actions.AutoGrabber;
+import frc.robot.auto.actions.AutoIntake;
 import frc.robot.auto.actions.Balance;
 import frc.robot.auto.actions.FollowTrajectory;
 import frc.robot.auto.util.Action;
 import frc.robot.auto.util.AutoMode;
 import frc.robot.auto.util.AutoModeEndedException;
 
-public class OverChargedStation extends AutoMode {
+public class OverChargedStationCubeGrab extends AutoMode {
 
     Swerve swerve;
     Elevator elevator;
     Grabber grabber;
+    Intake intake;
+
     PathPlannerTrajectory overChargedStation;
     PathPlannerTrajectory moveOneZachShoeForward;
 
-    public OverChargedStation(Swerve swerve, Elevator elevator, Grabber grabber) {
+    public OverChargedStationCubeGrab(Swerve swerve, Elevator elevator, Grabber grabber, Intake intake) {
         this.swerve = swerve;
         this.elevator = elevator;
         this.grabber = grabber;
+        this.intake = intake;
         
         try {
             overChargedStation = PathPlanner.loadPath("over charged station", new PathConstraints(1.5, 2));
@@ -49,7 +54,7 @@ public class OverChargedStation extends AutoMode {
         runAction(new FollowTrajectory(moveOneZachShoeForward, swerve, true));
         //release game piece
         runAction(new AutoGrabber(grabber, -Constants.GrabberConstants.GRABBER_SPEED, 0.75));
-        Action[] balance = {new FollowTrajectory(overChargedStation, swerve, true), new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_BOTTTOM_EXTEND, 2, 0.07), new AutoArm(grabber, Constants.GrabberConstants.ARM_STOWED_EXTEND, 2, 0.1)};
+        Action[] balance = {new FollowTrajectory(overChargedStation, swerve, true), new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_BOTTTOM_EXTEND, 2, 0.07), new AutoArm(grabber, Constants.GrabberConstants.ARM_STOWED_EXTEND, 2, 0.1), new AutoIntake(intake, true, 3), new AutoIntake(intake, false, 4.5)};
         parallel(balance);
         runAction(new Balance(swerve));
 
