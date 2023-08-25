@@ -5,7 +5,6 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -16,14 +15,10 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
-import frc.lib.math.Conversions;
 import frc.lib.util.CTREConfigs;
 
 public class Grabber {
@@ -41,7 +36,7 @@ public class Grabber {
     private ArmFeedforward feedForward;
 
     public Grabber() {
-        constraints = new TrapezoidProfile.Constraints(0.7, 0.2);
+        constraints = new TrapezoidProfile.Constraints(1.8, 2.4);
         controller = new ProfiledPIDController(Constants.GrabberConstants.armkP, Constants.GrabberConstants.armkI, Constants.GrabberConstants.armkD, constraints);
         feedForward = new ArmFeedforward(0.4, 0.4, 0.4);
 
@@ -91,10 +86,10 @@ public class Grabber {
             Timer.delay(0.2);
             grabberMotor.set(0);
         }     
-        else if(!beamBreakInside.get() && getArmPosition() >= 3800) {
+        else if(!beamBreakInside.get() && getArmPosition() >= 112) {
             grabberMotor.set(grabberSpeed);
-            if(getBeamBreakOutside()){
-                arm.set(ControlMode.PercentOutput, -0.2);
+            if(getBeamBreakOutside()) {
+                magicArm(Constants.GrabberConstants.ARM_FEEDER_DROPPED_EXTEND);
             }
         }
         else{

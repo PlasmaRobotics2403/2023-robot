@@ -292,7 +292,6 @@ public class Robot extends TimedRobot {
     }
 
 
-    /* grabber open close */
     if(driver.RB.isPressed()) {
       grabber.runGrabber(Constants.GrabberConstants.GRABBER_SPEED);
     }
@@ -300,8 +299,9 @@ public class Robot extends TimedRobot {
     else if(driver.LB.isPressed()) {
       grabber.runGrabber(-Constants.GrabberConstants.GRABBER_SPEED);
     }
+
     else if (!passthrough) {
-      grabber.runGrabberPassthrough(0);;
+      grabber.runGrabberPassthrough(0);
     }
 
     // intake controls
