@@ -38,7 +38,7 @@ public class Grabber {
     public Grabber() {
         constraints = new TrapezoidProfile.Constraints(1.8, 2.4);
         controller = new ProfiledPIDController(Constants.GrabberConstants.armkP, Constants.GrabberConstants.armkI, Constants.GrabberConstants.armkD, constraints);
-        feedForward = new ArmFeedforward(0.4, 0.4, 0.4);
+        feedForward = new ArmFeedforward(0.2, 0.2, 0.2);
 
         absoluteArm = new WPI_CANCoder(Constants.GrabberConstants.absolute_arm_id);
         absoluteArm.configFactoryDefault();
@@ -86,12 +86,7 @@ public class Grabber {
             Timer.delay(0.2);
             grabberMotor.set(0);
         }     
-        else if(!beamBreakInside.get() && getArmPosition() >= 112) {
-            grabberMotor.set(grabberSpeed);
-            if(getBeamBreakOutside()) {
-                magicArm(Constants.GrabberConstants.ARM_FEEDER_DROPPED_EXTEND);
-            }
-        }
+
         else{
             grabberMotor.set(grabberSpeed);
         }
@@ -171,7 +166,9 @@ public class Grabber {
     public void magicArm(double rotPosition) {
         controller.setGoal(Math.toRadians(rotPosition));
         double speed =  controller.calculate(Math.toRadians(absoluteArm.getAbsolutePosition()));
+        speed -= feedForward.calculate(Math.toRadians(absoluteArm.getAbsolutePosition()) - Math.PI/2, 0);
         arm.set(ControlMode.PercentOutput, speed);
+       // double armGoal = rotPosition;
     }
 
     public void zeroArm() {

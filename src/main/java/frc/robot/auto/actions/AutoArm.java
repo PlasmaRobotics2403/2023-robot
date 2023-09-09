@@ -31,7 +31,7 @@ public class AutoArm implements Action {
 
     @Override
     public boolean isFinished() {
-        if ( (grabber.getArmPosition() <= position + 200 && grabber.getArmPosition() >= position - 200) 
+        if ( (grabber.getAbsoluteArmPosition() <= position + 10 && grabber.getAbsoluteArmPosition() >= position - 10) 
         || (Timer.getFPGATimestamp() > startTime + timeout) ){
             return true;
         }
@@ -46,6 +46,7 @@ public class AutoArm implements Action {
     @Override
     public void update() {
         if(Timer.getFPGATimestamp() > startTime + delay){
+            DriverStation.reportError("Auto Arm Target: " + String.valueOf(position), false);
             grabber.magicArm(position);
         }
     }

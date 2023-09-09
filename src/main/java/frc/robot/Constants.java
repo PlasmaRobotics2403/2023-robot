@@ -150,7 +150,7 @@ public final class Constants {
 
         public static final double ELEVATOR_HIGH_EXTEND = 38000;
         public static final double ELEVATOR_FEEDER_EXTEND = 42000;
-        public static final double ELEVATOR_MID_EXTEND = 12000;
+        public static final double ELEVATOR_MID_EXTEND = 17500;
         public static final double ELEVATOR_LOW_EXTEND = 5000;
         public static final double ELEVATOR_BOTTTOM_EXTEND = 0;
 
@@ -228,21 +228,16 @@ public final class Constants {
 
         public static final double ARM_HIGH_EXTEND = 112; //112
         public static final double ARM_HIGH_EXTEND_AUTO = 112; // 112
-        public static final double ARM_FEEDER_EXTEND = 117; //117
-        public static final double ARM_FEEDER_DROPPED_EXTEND = 112;
+        public static final double ARM_FEEDER_EXTEND = 120; //117
+        public static final double ARM_FEEDER_DROPPED_EXTEND = 100;
         public static final double ARM_LOW_EXTEND = 60; //60
-        public static final double ARM_STOWED_EXTEND = 0;
+        public static final double ARM_STOWED_EXTEND = 3;
 
 
         public static double armkF = 0.01;
         public static double armkP = 2;
         public static double armkI = 0.001;
         public static double armkD = 0;
-
-        public static double extenderkF = 0.2;
-        public static double extenderkP = 0.3;
-        public static double extenderkI = 0.0003;
-        public static double extenderkD = 0;
 
         public static double grabberkF = 0.3;
         public static double grabberkP = 0.45;

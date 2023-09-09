@@ -57,6 +57,8 @@ public class Robot extends TimedRobot {
   boolean FMS_Connected;
   boolean passthrough = false;
 
+  boolean attemptingConeGrab = false;
+
   String gamePiece;
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -235,25 +237,22 @@ public class Robot extends TimedRobot {
     }
 
     /* robot States */
-    elevator.magicElevator(elevatorTarget);
     if(robotState == "stow" && navigator.GREEN.isPressed()) {
       grabber.zeroArm();
     }
     else if(navigator.RED.isPressed()) {
       grabber.ArmRot(0);
     }
-
     else if(navigator.DPAD.getPOV() == 0) {
       grabber.ArmRot(0.2);
     }
     else if(navigator.DPAD.getPOV() == 180) {
       grabber.ArmRot(-0.2);
-        } 
-
+    } 
     else {
-      grabber.magicArm(armTarget);
-        
-      }
+      grabber.magicArm(armTarget);   
+    }
+    elevator.magicElevator(elevatorTarget);
 
     // reset arm zero position
     if(navigator.GREEN.isPressed() && robotState == "stow") {
@@ -261,8 +260,8 @@ public class Robot extends TimedRobot {
     }
 
     if(driver.dPad.getPOV() == 0) { /* high score state */
-      elevatorTarget = Constants.ElevatorConstants.ELEVATOR_HIGH_EXTEND;
-      armTarget = Constants.GrabberConstants.ARM_HIGH_EXTEND;
+      elevatorTarget = Constants.ElevatorConstants.ELEVATOR_FEEDER_EXTEND;
+      armTarget = Constants.GrabberConstants.ARM_FEEDER_EXTEND;
       extenderTarget = Constants.GrabberConstants.EXTENDER_RETRACTED_POSITION;
       robotState = "high";
     }
@@ -291,9 +290,17 @@ public class Robot extends TimedRobot {
       robotState = "feeder";
     }
 
-
     if(driver.RB.isPressed()) {
       grabber.runGrabber(Constants.GrabberConstants.GRABBER_SPEED);
+      if(robotState == "feeder") {
+        attemptingConeGrab = true;
+        if(!grabber.getBeamBreakOutside()) {
+          armTarget = Constants.GrabberConstants.ARM_FEEDER_EXTEND;
+        }
+        else if(!grabber.getBeamBreakInside()) {
+          armTarget = Constants.GrabberConstants.ARM_FEEDER_DROPPED_EXTEND;
+        }
+      }
     }
     
     else if(driver.LB.isPressed()) {
@@ -302,6 +309,11 @@ public class Robot extends TimedRobot {
 
     else if (!passthrough) {
       grabber.runGrabberPassthrough(0);
+    }
+
+    if (attemptingConeGrab && !driver.RB.isPressed()) {
+      armTarget = Constants.GrabberConstants.ARM_FEEDER_EXTEND;
+      attemptingConeGrab = false;
     }
 
     // intake controls
