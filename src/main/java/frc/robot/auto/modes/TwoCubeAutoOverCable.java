@@ -58,7 +58,6 @@ public class TwoCubeAutoOverCable extends AutoMode {
 
     @Override
     protected void routine() throws AutoModeEndedException {
-        DriverStation.reportWarning("Running Audience_To_Charge", false);
         //move to scoring position
         Action[] highScorePosition = {new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_HIGH_EXTEND, 1), new AutoArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND, 1)};
         parallel(highScorePosition);
@@ -75,7 +74,6 @@ public class TwoCubeAutoOverCable extends AutoMode {
         parallel(moveToScoringPos);
         // release game piece
         runAction(new AutoEntakeEject(intake, 15));
-        DriverStation.reportWarning("Finished Audience_To_Charge", false);
 
     }
     

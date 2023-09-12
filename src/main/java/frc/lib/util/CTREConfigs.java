@@ -64,7 +64,7 @@ public final class CTREConfigs {
         config.sensorDirection = Constants.GrabberConstants.cancoder_invert;
         config.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
         config.sensorTimeBase = SensorTimeBase.PerSecond;
-        config.magnetOffsetDegrees = Constants.GrabberConstants.grabberCC;
+        config.magnetOffsetDegrees = Constants.GrabberConstants.grabberCCoffset;
 
         return config;
     }

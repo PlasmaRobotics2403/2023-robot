@@ -50,7 +50,7 @@ public class Robot extends TimedRobot {
   AutoMode[] autoModes;
   int autoModeSelection;
   SendableChooser<Integer> autoChooser;
-    
+  
   LEDs leds;
   int hue;
   int value;
@@ -80,6 +80,7 @@ public class Robot extends TimedRobot {
     elevatorTarget = 0;
     armTarget = 0;
 
+   
     autoModeRunner = new AutoModeRunner();
     autoModes = new AutoMode[20];
     autoModes[0] = new Nothing();

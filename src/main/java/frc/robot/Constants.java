@@ -170,7 +170,7 @@ public final class Constants {
     public static final class GrabberConstants{
         public static int arm_gear_ratio = 1;
         public static boolean cancoder_invert = false;
-        public static double grabberCC = 67.9;
+        public static double grabberCCoffset = 67.9;
         
         public static int arm_id = 10;
         public static int grabber_id = 11;
@@ -180,6 +180,10 @@ public final class Constants {
         public static final int LIMIT_SWITCH_ID = 1;
         public static final int BEAM_BREAK_OUTSIDE_ID = 2;
         public static final int BEAM_BREAK_INSIDE_ID = 3;
+
+        public static final double ARM_KS = 0.3;
+        public static final double ARM_KG = 0.6;
+        public static final double ARM_KV = 0.04;
 
         /* Extention Positions */
         public static final double ARM_MAX_EXTEND = 5100;
@@ -234,10 +238,9 @@ public final class Constants {
         public static final double ARM_STOWED_EXTEND = 3;
 
 
-        public static double armkF = 0.01;
-        public static double armkP = 2;
-        public static double armkI = 0.001;
-        public static double armkD = 0;
+        public static double armkP = 0.013;
+        public static double armkI = 0.0;
+        public static double armkD = 0.002;
 
         public static double grabberkF = 0.3;
         public static double grabberkP = 0.45;
