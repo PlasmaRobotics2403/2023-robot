@@ -11,10 +11,12 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
@@ -31,14 +33,17 @@ public class Grabber {
     private DigitalInput beamBreakOutside;
     private DigitalInput beamBreakInside;
 
-    private ProfiledPIDController controller;
+    private PIDController controller;
     private TrapezoidProfile.Constraints constraints;
     private ArmFeedforward feedForward;
 
     public Grabber() {
-        constraints = new TrapezoidProfile.Constraints(1.8, 2.4);
-        controller = new ProfiledPIDController(Constants.GrabberConstants.armkP, Constants.GrabberConstants.armkI, Constants.GrabberConstants.armkD, constraints);
-        feedForward = new ArmFeedforward(0.2, 0.2, 0.2);
+        controller = new PIDController(Constants.GrabberConstants.armkP, 
+                                       Constants.GrabberConstants.armkI,
+                                       Constants.GrabberConstants.armkD);
+        feedForward = new ArmFeedforward(Constants.GrabberConstants.ARM_KS,
+                                         Constants.GrabberConstants.ARM_KG,
+                                         Constants.GrabberConstants.ARM_KV);
 
         absoluteArm = new WPI_CANCoder(Constants.GrabberConstants.absolute_arm_id);
         absoluteArm.configFactoryDefault();
@@ -61,10 +66,6 @@ public class Grabber {
 		arm.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, Constants.TIMEOUT_MS);
 
         arm.selectProfileSlot(Constants.GrabberConstants.ARM_SLOT_IDX, Constants.GrabberConstants.ARM_PID_IDX);
-        arm.config_kF(0, Constants.GrabberConstants.armkF);
-        arm.config_kP(0, Constants.GrabberConstants.armkP);
-        arm.config_kI(0, Constants.GrabberConstants.armkI);
-        arm.config_kD(0, Constants.GrabberConstants.armkD);
 
         arm.configMotionCruiseVelocity(Constants.GrabberConstants.ARM_MOTION_CRUISE_VELOCITY);
         arm.configMotionAcceleration(Constants.GrabberConstants.ARM_MOTION_ACCELERATION);
@@ -164,11 +165,21 @@ public class Grabber {
      * @param rotPosition
      */
     public void magicArm(double rotPosition) {
-        controller.setGoal(Math.toRadians(rotPosition));
-        double speed =  controller.calculate(Math.toRadians(absoluteArm.getAbsolutePosition()));
-        speed -= feedForward.calculate(Math.toRadians(absoluteArm.getAbsolutePosition()) - Math.PI/2, 0);
+        ///controller.setGoal(Math.toRadians(rotPosition));
+        //double speed =  controller.calculate(Math.toRadians(absoluteArm.getAbsolutePosition()));
+        //speed -= feedForward.calculate(Math.toRadians(absoluteArm.getAbsolutePosition()) - Math.PI/2, 0);
+        double feed = feedForward.calculate(rotPosition-80, 0);
+        double pid = controller.calculate(absoluteArm.getAbsolutePosition(), rotPosition);
+        double speed = feed + pid;
+        if(speed > 0) {
+            speed = Math.min(speed, 0.5);
+        }
+        else {
+            speed = Math.max(speed, -0.5);
+        }
         arm.set(ControlMode.PercentOutput, speed);
-       // double armGoal = rotPosition;
+
+        DriverStation.reportError(Double.toString(speed), false);
     }
 
     public void zeroArm() {
