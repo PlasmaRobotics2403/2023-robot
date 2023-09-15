@@ -149,7 +149,7 @@ public final class Constants {
         public static final double MAX_EXTEND = 45000;
 
         public static final double ELEVATOR_HIGH_EXTEND = 38000;
-        public static final double ELEVATOR_FEEDER_EXTEND = 42000;
+        public static final double ELEVATOR_FEEDER_EXTEND = 44000;
         public static final double ELEVATOR_MID_EXTEND = 17500;
         public static final double ELEVATOR_LOW_EXTEND = 5000;
         public static final double ELEVATOR_BOTTTOM_EXTEND = 0;
@@ -230,17 +230,18 @@ public final class Constants {
         public static final double EXTENDER_MOTION_CRUISE_VELOCITY = 2000;
         public static final double EXTENDER_MOTION_ACCELERATION = 1000;
 
-        public static final double ARM_HIGH_EXTEND = 112; //112
-        public static final double ARM_HIGH_EXTEND_AUTO = 112; // 112
-        public static final double ARM_FEEDER_EXTEND = 120; //117
+        public static final double ARM_MID_EXTEND = 110;
+        public static final double ARM_HIGH_EXTEND = 110; 
+        public static final double ARM_HIGH_EXTEND_AUTO = 90; // 112
+        public static final double ARM_FEEDER_EXTEND = 115; //117
         public static final double ARM_FEEDER_DROPPED_EXTEND = 100;
-        public static final double ARM_LOW_EXTEND = 60; //60
-        public static final double ARM_STOWED_EXTEND = 3;
+        public static final double ARM_LOW_EXTEND = 50; //60
+        public static final double ARM_STOWED_EXTEND = 5;
 
 
-        public static double armkP = 0.013;
+        public static double armkP = 0.013; //0.013
         public static double armkI = 0.0;
-        public static double armkD = 0.002;
+        public static double armkD = 0.00; //0.002
 
         public static double grabberkF = 0.3;
         public static double grabberkP = 0.45;

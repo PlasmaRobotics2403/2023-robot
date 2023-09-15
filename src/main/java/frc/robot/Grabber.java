@@ -73,7 +73,7 @@ public class Grabber {
         /* Grabber Setup */
         grabberMotor = new CANSparkMax(33, MotorType.kBrushless);
 
-        grabberMotor.setIdleMode(IdleMode.kBrake);
+        grabberMotor.setIdleMode(IdleMode.kCoast);
         grabberMotor.setInverted(true);
         grabberSolenoid = new Solenoid(Constants.IntakeConstants.PNUEMATIC_HUB_ID, PneumaticsModuleType.REVPH,  1);
 
@@ -168,18 +168,18 @@ public class Grabber {
         ///controller.setGoal(Math.toRadians(rotPosition));
         //double speed =  controller.calculate(Math.toRadians(absoluteArm.getAbsolutePosition()));
         //speed -= feedForward.calculate(Math.toRadians(absoluteArm.getAbsolutePosition()) - Math.PI/2, 0);
-        double feed = feedForward.calculate(rotPosition-80, 0);
+        double feed = feedForward.calculate(Math.toRadians(rotPosition)-Math.toRadians(92), 0);
         double pid = controller.calculate(absoluteArm.getAbsolutePosition(), rotPosition);
         double speed = feed + pid;
-        if(speed > 0) {
-            speed = Math.min(speed, 0.5);
+        if(pid > 0) {
+            pid = Math.min(pid, 0.5);
         }
         else {
-            speed = Math.max(speed, -0.5);
+            pid = Math.max(pid, -0.5);
         }
-        arm.set(ControlMode.PercentOutput, speed);
+        arm.set(ControlMode.PercentOutput, pid);
 
-        DriverStation.reportError(Double.toString(speed), false);
+        DriverStation.reportError(Double.toString(pid), false);
     }
 
     public void zeroArm() {

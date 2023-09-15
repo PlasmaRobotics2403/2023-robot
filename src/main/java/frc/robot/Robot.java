@@ -78,7 +78,7 @@ public class Robot extends TimedRobot {
     grabber = new Grabber();
 
     elevatorTarget = 0;
-    armTarget = 0;
+    armTarget = 5;
 
    
     autoModeRunner = new AutoModeRunner();
@@ -262,32 +262,32 @@ public class Robot extends TimedRobot {
 
     if(driver.dPad.getPOV() == 0) { /* high score state */
       elevatorTarget = Constants.ElevatorConstants.ELEVATOR_FEEDER_EXTEND;
-      armTarget = Constants.GrabberConstants.ARM_FEEDER_EXTEND;
-      extenderTarget = Constants.GrabberConstants.EXTENDER_RETRACTED_POSITION;
+      armTarget = Constants.GrabberConstants.ARM_HIGH_EXTEND;
+      //extenderTarget = Constants.GrabberConstants.EXTENDER_RETRACTED_POSITION;
       robotState = "high";
     }
     else if(driver.dPad.getPOV() == 90) { /* mid score state */
       elevatorTarget = Constants.ElevatorConstants.ELEVATOR_MID_EXTEND;
-      armTarget = Constants.GrabberConstants.ARM_HIGH_EXTEND;
-      extenderTarget = Constants.GrabberConstants.EXTENDER_RETRACTED_POSITION;
+      armTarget = Constants.GrabberConstants.ARM_MID_EXTEND;
+      //extenderTarget = Constants.GrabberConstants.EXTENDER_RETRACTED_POSITION;
       robotState = "mid";
     }
     else if(driver.dPad.getPOV() == 270) { /* low score state */
       elevatorTarget = Constants.ElevatorConstants.ELEVATOR_LOW_EXTEND;
       armTarget = Constants.GrabberConstants.ARM_LOW_EXTEND;
-      extenderTarget = Constants.GrabberConstants.EXTENDER_RETRACTED_POSITION;
+      //extenderTarget = Constants.GrabberConstants.EXTENDER_RETRACTED_POSITION;
       robotState = "low";
     }
     else if(driver.dPad.getPOV() == 180) { /* stow state */
       elevatorTarget = Constants.ElevatorConstants.ELEVATOR_BOTTTOM_EXTEND;
       armTarget = Constants.GrabberConstants.ARM_STOWED_EXTEND;
-      extenderTarget = Constants.GrabberConstants.EXTENDER_RETRACTED_POSITION;
+      //extenderTarget = Constants.GrabberConstants.EXTENDER_RETRACTED_POSITION;
       robotState = "stow";
     }
     else if(driver.Y.isPressed()) { /* feeder state */
       elevatorTarget = Constants.ElevatorConstants.ELEVATOR_FEEDER_EXTEND;
       armTarget = Constants.GrabberConstants.ARM_FEEDER_EXTEND;
-      extenderTarget = Constants.GrabberConstants.EXTENDER_EXTENDED_POSITION;
+      //extenderTarget = Constants.GrabberConstants.EXTENDER_EXTENDED_POSITION;
       robotState = "feeder";
     }
 
