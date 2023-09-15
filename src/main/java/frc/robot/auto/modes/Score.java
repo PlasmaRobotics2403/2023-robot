@@ -13,6 +13,7 @@ import frc.robot.auto.actions.AutoArm;
 import frc.robot.auto.actions.AutoElevator;
 import frc.robot.auto.actions.AutoGrabber;
 import frc.robot.auto.actions.FollowTrajectory;
+import frc.robot.auto.util.Action;
 import frc.robot.auto.util.AutoMode;
 import frc.robot.auto.util.AutoModeEndedException;
 
@@ -45,13 +46,13 @@ public class Score extends AutoMode {
     @Override
     protected void routine() throws AutoModeEndedException {
         DriverStation.reportWarning("Running Audience_To_Charge", false);
-        runAction(new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_HIGH_EXTEND, 1));
-        runAction(new AutoArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND, 1));
-        runAction(new FollowTrajectory(moveOneZachShoeForward, swerve, true));
-        runAction(new AutoGrabber(grabber, -Constants.GrabberConstants.GRABBER_SPEED, 0.5));
-        runAction(new FollowTrajectory(moveOneZachShoeBackward, swerve, true));
-        runAction(new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_BOTTTOM_EXTEND, 1));
-        runAction(new AutoArm(grabber, Constants.GrabberConstants.ARM_STOWED_EXTEND, 1));
+        Action[] highScorePosition = {new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_HIGH_EXTEND, 1), new AutoArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND, 10, 0.5)};
+        parallel(highScorePosition);
+
+        runAction(new AutoGrabber(grabber, -Constants.GrabberConstants.GRABBER_SPEED, 0.75));
+
+        Action[] stowPosition = {new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_BOTTTOM_EXTEND, 1), new AutoArm(grabber, Constants.GrabberConstants.ARM_STOWED_EXTEND,5, 0.5)};
+        //parallel(stowPosition);
 
         DriverStation.reportWarning("Finished Audience_To_Charge", false);
 
