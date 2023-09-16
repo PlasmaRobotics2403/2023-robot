@@ -180,6 +180,7 @@ public class Robot extends TimedRobot {
     grabber.logging();
     SmartDashboard.putNumber("Arm Target", armTarget);
     intake.logging();
+    SmartDashboard.putString("Robot State", robotState);
 
     leds.sendData();
   }
@@ -261,39 +262,46 @@ public class Robot extends TimedRobot {
     }
 
     if(driver.dPad.getPOV() == 0) { /* high score state */
-      elevatorTarget = Constants.ElevatorConstants.ELEVATOR_FEEDER_EXTEND;
-      armTarget = Constants.GrabberConstants.ARM_HIGH_EXTEND;
-      //extenderTarget = Constants.GrabberConstants.EXTENDER_RETRACTED_POSITION;
+      /*elevatorTarget = Constants.ElevatorConstants.ELEVATOR_FEEDER_EXTEND;
+      if(elevator.getPosition() > Constants.ElevatorConstants.ELEVATOR_WAIT) {
+        armTarget = Constants.GrabberConstants.ARM_HIGH_EXTEND;
+      }*/
       robotState = "high";
     }
     else if(driver.dPad.getPOV() == 90) { /* mid score state */
-      elevatorTarget = Constants.ElevatorConstants.ELEVATOR_MID_EXTEND;
-      armTarget = Constants.GrabberConstants.ARM_MID_EXTEND;
-      //extenderTarget = Constants.GrabberConstants.EXTENDER_RETRACTED_POSITION;
+      /*elevatorTarget = Constants.ElevatorConstants.ELEVATOR_MID_EXTEND;
+      if(elevator.getPosition() > Constants.ElevatorConstants.ELEVATOR_WAIT) {
+        armTarget = Constants.GrabberConstants.ARM_MID_EXTEND;
+      }*/  
       robotState = "mid";
     }
     else if(driver.dPad.getPOV() == 270) { /* low score state */
-      elevatorTarget = Constants.ElevatorConstants.ELEVATOR_LOW_EXTEND;
-      armTarget = Constants.GrabberConstants.ARM_LOW_EXTEND;
-      //extenderTarget = Constants.GrabberConstants.EXTENDER_RETRACTED_POSITION;
+      /*elevatorTarget = Constants.ElevatorConstants.ELEVATOR_LOW_EXTEND;
+      if(elevator.getPosition() > Constants.ElevatorConstants.ELEVATOR_WAIT) {
+        armTarget = Constants.GrabberConstants.ARM_LOW_EXTEND;
+      }*/
       robotState = "low";
     }
     else if(driver.dPad.getPOV() == 180) { /* stow state */
-      elevatorTarget = Constants.ElevatorConstants.ELEVATOR_BOTTTOM_EXTEND;
-      armTarget = Constants.GrabberConstants.ARM_STOWED_EXTEND;
-      //extenderTarget = Constants.GrabberConstants.EXTENDER_RETRACTED_POSITION;
+      /*elevatorTarget = Constants.ElevatorConstants.ELEVATOR_BOTTTOM_EXTEND;
+      armTarget = Constants.GrabberConstants.ARM_STOWED_EXTEND;*/
       robotState = "stow";
     }
     else if(driver.Y.isPressed()) { /* feeder state */
-      elevatorTarget = Constants.ElevatorConstants.ELEVATOR_FEEDER_EXTEND;
-      armTarget = Constants.GrabberConstants.ARM_FEEDER_EXTEND;
-      //extenderTarget = Constants.GrabberConstants.EXTENDER_EXTENDED_POSITION;
+      /*elevatorTarget = Constants.ElevatorConstants.ELEVATOR_FEEDER_EXTEND;
+      if(elevator.getPosition() > Constants.ElevatorConstants.ELEVATOR_WAIT) {
+        armTarget = Constants.GrabberConstants.ARM_FEEDER_EXTEND;
+      }*/
       robotState = "feeder";
     }
 
+
     if(driver.RB.isPressed()) {
       grabber.runGrabber(Constants.GrabberConstants.GRABBER_SPEED);
-      if(robotState == "feeder") {
+      if(attemptingConeGrab) {
+        robotState = "attemptCone";
+      }
+      /*if(robotState == "feeder") {
         attemptingConeGrab = true;
         if(!grabber.getBeamBreakOutside()) {
           armTarget = Constants.GrabberConstants.ARM_FEEDER_EXTEND;
@@ -301,7 +309,7 @@ public class Robot extends TimedRobot {
         else if(!grabber.getBeamBreakInside()) {
           armTarget = Constants.GrabberConstants.ARM_FEEDER_DROPPED_EXTEND;
         }
-      }
+      }*/
     }
     
     else if(driver.LB.isPressed()) {
@@ -366,6 +374,57 @@ public class Robot extends TimedRobot {
       }
       else if(navigator.ORANGE.isPressed()) {
         hue = 7;
+      }
+
+      switch(robotState){
+        case "stow":
+          elevatorTarget = Constants.ElevatorConstants.ELEVATOR_BOTTTOM_EXTEND;
+          armTarget = Constants.GrabberConstants.ARM_STOWED_EXTEND;
+          attemptingConeGrab = false;
+          break;
+        case "low":
+          elevatorTarget = Constants.ElevatorConstants.ELEVATOR_LOW_EXTEND;
+          if(elevator.getPosition() > Constants.ElevatorConstants.ELEVATOR_WAIT) {
+            armTarget = Constants.GrabberConstants.ARM_LOW_EXTEND;
+          }
+          attemptingConeGrab = false;
+          break;
+        case "mid":
+          elevatorTarget = Constants.ElevatorConstants.ELEVATOR_MID_EXTEND;
+          if(elevator.getPosition() > Constants.ElevatorConstants.ELEVATOR_WAIT) {
+            armTarget = Constants.GrabberConstants.ARM_MID_EXTEND;
+          }
+          attemptingConeGrab = false;
+          break;
+        case "high":
+          elevatorTarget = Constants.ElevatorConstants.ELEVATOR_FEEDER_EXTEND;
+          if(elevator.getPosition() > Constants.ElevatorConstants.ELEVATOR_WAIT) {
+            armTarget = Constants.GrabberConstants.ARM_HIGH_EXTEND;
+          }
+          attemptingConeGrab = false;
+          break;
+        case "feeder":
+          elevatorTarget = Constants.ElevatorConstants.ELEVATOR_FEEDER_EXTEND;
+          if(elevator.getPosition() > Constants.ElevatorConstants.ELEVATOR_WAIT) {
+            armTarget = Constants.GrabberConstants.ARM_FEEDER_EXTEND;
+          }
+          attemptingConeGrab = true;
+          break;
+        case "attemptCone":
+          if(!driver.RB.isPressed()) {
+            armTarget = Constants.GrabberConstants.ARM_FEEDER_EXTEND;
+            robotState = "feeder";
+            break;
+          }
+          if(!grabber.getBeamBreakOutside()) {
+            armTarget = Constants.GrabberConstants.ARM_FEEDER_EXTEND;
+          }
+          else if(!grabber.getBeamBreakInside()) {
+            armTarget = Constants.GrabberConstants.ARM_FEEDER_DROPPED_EXTEND;
+          }
+          break;
+        default:
+          robotState = "stow";
       }
     }
 

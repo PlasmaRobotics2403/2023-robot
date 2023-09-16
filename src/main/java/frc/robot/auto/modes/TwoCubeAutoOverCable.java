@@ -15,6 +15,7 @@ import frc.robot.auto.actions.AutoElevator;
 import frc.robot.auto.actions.AutoEntakeEject;
 import frc.robot.auto.actions.AutoGrabber;
 import frc.robot.auto.actions.AutoIntake;
+import frc.robot.auto.actions.AutoPIDOnlyArm;
 import frc.robot.auto.actions.AutoPassthoughScore;
 import frc.robot.auto.actions.AutoPassthrough;
 import frc.robot.auto.actions.FollowTrajectory;
@@ -59,13 +60,14 @@ public class TwoCubeAutoOverCable extends AutoMode {
     @Override
     protected void routine() throws AutoModeEndedException {
         //move to scoring position
-        Action[] highScorePosition = {new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_HIGH_EXTEND, 1), new AutoArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND, 1)};
+        Action[] highScorePosition = {new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_HIGH_EXTEND, 1), new AutoArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND, 5)};
         parallel(highScorePosition);
         runAction(new FollowTrajectory(moveOneZachShoeForward, swerve, true));
         //release game piece
-        runAction(new AutoGrabber(grabber, -Constants.GrabberConstants.GRABBER_SPEED, 0.75));
+        Action[] outakeGrabber = {new AutoGrabber(grabber, -Constants.GrabberConstants.GRABBER_SPEED, 0.75), new AutoPIDOnlyArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND, 0.75)};
+        parallel(outakeGrabber);
         // go to next game piece
-        Action[] collectGamePiece = {new FollowTrajectory(moveToGamePiece, swerve, true), new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_BOTTTOM_EXTEND, 2, 0.1125), new AutoArm(grabber, Constants.GrabberConstants.ARM_STOWED_EXTEND, 2, 1), new AutoIntake(intake, true)};
+        Action[] collectGamePiece = {new FollowTrajectory(moveToGamePiece, swerve, true), new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_BOTTTOM_EXTEND, 2, 0.1125), new AutoArm(grabber, Constants.GrabberConstants.ARM_STOWED_EXTEND, 5, 1), new AutoIntake(intake, true)};
         parallel(collectGamePiece);
         // stop intaking
         runActionsParallel((new AutoPassthrough(intake)), new AutoIntake(intake, false));

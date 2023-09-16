@@ -78,7 +78,7 @@ public class Passthrough extends AutoMode {
         runAction(new FollowTrajectory(moveOneZachShoeBackward, swerve, true));
         DriverStation.reportWarning("Finished Audience_To_Charge", false);*/
 
-        runAction(new AutoPassthoughScore(intake, grabber, elevator, Constants.ElevatorConstants.ELEVATOR_MID_EXTEND, Constants.GrabberConstants.ARM_HIGH_EXTEND, 10));
+        runAction(new AutoPassthoughScore(intake, grabber, elevator, Constants.ElevatorConstants.ELEVATOR_MID_EXTEND, Constants.GrabberConstants.ARM_HIGH_EXTEND, 10, 0));
 
     }
     

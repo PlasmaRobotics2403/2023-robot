@@ -12,6 +12,7 @@ import frc.robot.Swerve;
 import frc.robot.auto.actions.AutoArm;
 import frc.robot.auto.actions.AutoElevator;
 import frc.robot.auto.actions.AutoGrabber;
+import frc.robot.auto.actions.AutoPIDOnlyArm;
 import frc.robot.auto.actions.Balance;
 import frc.robot.auto.actions.FollowTrajectory;
 import frc.robot.auto.util.Action;
@@ -44,13 +45,14 @@ public class OverChargedStationCone extends AutoMode {
     @Override
     protected void routine() throws AutoModeEndedException {
         //move to scoring position
-        Action[] highScorePosition = {new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_HIGH_EXTEND, 1), new AutoArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND_AUTO, 1, 0.5)};
+        Action[] highScorePosition = {new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_HIGH_EXTEND, 1), new AutoArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND_AUTO, 5, 0.5)};
         parallel(highScorePosition);
         runAction(new FollowTrajectory(moveOneZachShoeForward, swerve, true));
         //release game piece
-
-        runAction(new AutoGrabber(grabber, -Constants.GrabberConstants.GRABBER_SPEED, 0.75));
-        Action[] balance = {new FollowTrajectory(overChargedStation, swerve, true), new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_BOTTTOM_EXTEND, 2, 0.07), new AutoArm(grabber, Constants.GrabberConstants.ARM_STOWED_EXTEND, 2, 0.1)};
+        Action[] outakeGrabber = {new AutoGrabber(grabber, -Constants.GrabberConstants.GRABBER_SPEED, 0.75), new AutoPIDOnlyArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND, 0.75)};
+        parallel(outakeGrabber);
+        
+        Action[] balance = {new FollowTrajectory(overChargedStation, swerve, true), new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_BOTTTOM_EXTEND, 2, 0.07), new AutoArm(grabber, Constants.GrabberConstants.ARM_STOWED_EXTEND, 5, 0.1)};
         parallel(balance);
         runAction(new Balance(swerve));
 

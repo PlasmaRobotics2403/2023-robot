@@ -16,8 +16,9 @@ public class AutoPassthoughScore implements Action {
     private double armPos;
     private double timeout;
     private double startTime;
+    private double armDelay;
 
-    public AutoPassthoughScore(Intake intake, Grabber grabber, Elevator elevator, double elevatorPos, double armPos, double timeout) {
+    public AutoPassthoughScore(Intake intake, Grabber grabber, Elevator elevator, double elevatorPos, double armPos, double timeout, double armDelay) {
         this.intake = intake;
         this.grabber = grabber;
         this.elevator = elevator;
@@ -25,13 +26,14 @@ public class AutoPassthoughScore implements Action {
         this.elevatorPos = elevatorPos;
         this.armPos = armPos;
         this.timeout = timeout;
+        this.armDelay = armDelay;
     }   
 
     @Override
     public boolean isFinished() {
         if(( !grabber.getLimitSwitch() &&
              (elevator.getPosition() <= elevatorPos + 200 && elevator.getPosition() >= elevatorPos - 200) &&
-             (grabber.getArmPosition() <= armPos + 200 && grabber.getArmPosition() >= armPos - 200)
+             (grabber.getAbsoluteArmPosition() <= armPos + 10 && grabber.getAbsoluteArmPosition() >= armPos - 10)
            ) || (Timer.getFPGATimestamp() > startTime + timeout))
             {
             return true;
@@ -53,8 +55,10 @@ public class AutoPassthoughScore implements Action {
         if(!grabber.getLimitSwitch() || (Timer.getFPGATimestamp() > startTime + (timeout - 0.5))) {
             intake.idleGamePiece();
             elevator.magicElevator(elevatorPos);
-            grabber.magicArm(armPos);
             grabber.runGrabber(0);
+            if(Timer.getFPGATimestamp() > startTime + armDelay){            
+                grabber.magicArm(armPos);
+            }
         }
     }
 

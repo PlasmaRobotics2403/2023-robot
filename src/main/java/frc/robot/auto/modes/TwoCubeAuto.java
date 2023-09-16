@@ -14,6 +14,7 @@ import frc.robot.auto.actions.AutoArm;
 import frc.robot.auto.actions.AutoElevator;
 import frc.robot.auto.actions.AutoGrabber;
 import frc.robot.auto.actions.AutoIntake;
+import frc.robot.auto.actions.AutoPIDOnlyArm;
 import frc.robot.auto.actions.AutoPassthoughScore;
 import frc.robot.auto.actions.AutoPassthrough;
 import frc.robot.auto.actions.FollowTrajectory;
@@ -59,23 +60,25 @@ public class TwoCubeAuto extends AutoMode {
     protected void routine() throws AutoModeEndedException {
         DriverStation.reportWarning("Running Audience_To_Charge", false);
         //move to scoring position
-        Action[] highScorePosition = {new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_HIGH_EXTEND, 1), new AutoArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND, 1, 0.5)};
+        Action[] highScorePosition = {new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_HIGH_EXTEND, 1), new AutoArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND, 5, 0.5)};
         parallel(highScorePosition);
         runAction(new FollowTrajectory(moveOneZachShoeForward, swerve, true));
         //release game piece
-        runAction(new AutoGrabber(grabber, -Constants.GrabberConstants.GRABBER_SPEED, 0.75));
+        Action[] outakeGrabber = {new AutoGrabber(grabber, -Constants.GrabberConstants.GRABBER_SPEED, 0.75), new AutoPIDOnlyArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND, 1.00)};
+        parallel(outakeGrabber);
         // go to next game piece
-        Action[] collectGamePiece = {new FollowTrajectory(moveToGamePiece, swerve, true), new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_BOTTTOM_EXTEND, 2, 0.07), new AutoArm(grabber, Constants.GrabberConstants.ARM_STOWED_EXTEND, 2, 0.1), new AutoIntake(intake, true)};
+        Action[] collectGamePiece = {new FollowTrajectory(moveToGamePiece, swerve, true), new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_BOTTTOM_EXTEND, 2, 0.07), new AutoArm(grabber, Constants.GrabberConstants.ARM_STOWED_EXTEND, 5, 0.1), new AutoIntake(intake, true)};
         parallel(collectGamePiece);
         // stop intaking
         runActionsParallel((new AutoPassthrough(intake)), new AutoIntake(intake, false));
         // move to scoring position
-        Action[] moveToScoringPos = {new FollowTrajectory(goBackToGrid, swerve, false), new AutoPassthoughScore(intake, grabber, elevator, Constants.ElevatorConstants.ELEVATOR_MID_EXTEND, Constants.GrabberConstants.ARM_HIGH_EXTEND, 3)};
+        Action[] moveToScoringPos = {new FollowTrajectory(goBackToGrid, swerve, false), new AutoPassthoughScore(intake, grabber, elevator, Constants.ElevatorConstants.ELEVATOR_MID_EXTEND, Constants.GrabberConstants.ARM_HIGH_EXTEND, 6, 0.5)};
         parallel(moveToScoringPos);
         // release game piece
-        runAction(new AutoGrabber(grabber, -Constants.GrabberConstants.GRABBER_SPEED, 0.75));
-        // drive away
-        runAction(new FollowTrajectory(moveOneZachShoeBackward, swerve, false));
+        parallel(outakeGrabber);
+
+        Action[] backUp = {new FollowTrajectory(moveOneZachShoeBackward, swerve, false), new AutoPIDOnlyArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND, 15)};
+        parallel(backUp);
         DriverStation.reportWarning("Finished Audience_To_Charge", false);
 
     }

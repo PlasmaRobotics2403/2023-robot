@@ -153,6 +153,7 @@ public final class Constants {
         public static final double ELEVATOR_MID_EXTEND = 17500;
         public static final double ELEVATOR_LOW_EXTEND = 5000;
         public static final double ELEVATOR_BOTTTOM_EXTEND = 0;
+        public static final double ELEVATOR_WAIT = 3000;
 
         /*Elevator Pid */
         public static final int PID_IDX = 0;
