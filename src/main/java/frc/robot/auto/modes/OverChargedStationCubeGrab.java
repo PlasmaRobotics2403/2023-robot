@@ -51,11 +51,11 @@ public class OverChargedStationCubeGrab extends AutoMode {
     protected void routine() throws AutoModeEndedException {
         //move to scoring position
         Action[] highScorePosition = {new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_HIGH_EXTEND, 1),
-                                      new AutoArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND_AUTO, 5, 0.5)};
+                                      new AutoArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND_AUTO, 5.5, 0.5)};
         parallel(highScorePosition);
-        runAction(new FollowTrajectory(moveOneZachShoeForward, swerve, true));
+        runActionsParallel(new FollowTrajectory(moveOneZachShoeForward, swerve, true), new AutoPIDOnlyArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND, 0.5));
         //release game piece
-        Action[] outakeGrabber = {new AutoGrabber(grabber, -Constants.GrabberConstants.GRABBER_SPEED, 0.75), new AutoPIDOnlyArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND, 0.75)};
+        Action[] outakeGrabber = {new AutoGrabber(grabber, -Constants.GrabberConstants.GRABBER_SPEED, 0.75), new AutoPIDOnlyArm(grabber, Constants.GrabberConstants.ARM_HIGH_EXTEND, 1)};
         parallel(outakeGrabber);
 
         Action[] balance = {new FollowTrajectory(overChargedStation, swerve, true), new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_BOTTTOM_EXTEND, 2, 0.07), new AutoArm(grabber, Constants.GrabberConstants.ARM_STOWED_EXTEND, 5, 0.5), new AutoIntake(intake, true, 3), new AutoIntake(intake, false, 4.5)};

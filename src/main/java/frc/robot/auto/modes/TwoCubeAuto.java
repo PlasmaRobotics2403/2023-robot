@@ -70,9 +70,9 @@ public class TwoCubeAuto extends AutoMode {
         Action[] collectGamePiece = {new FollowTrajectory(moveToGamePiece, swerve, true), new AutoElevator(elevator, Constants.ElevatorConstants.ELEVATOR_BOTTTOM_EXTEND, 2, 0.07), new AutoArm(grabber, Constants.GrabberConstants.ARM_STOWED_EXTEND, 5, 0.1), new AutoIntake(intake, true)};
         parallel(collectGamePiece);
         // stop intaking
-        runActionsParallel((new AutoPassthrough(intake)), new AutoIntake(intake, false));
+        runAction(new AutoIntake(intake, false));
         // move to scoring position
-        Action[] moveToScoringPos = {new FollowTrajectory(goBackToGrid, swerve, false), new AutoPassthoughScore(intake, grabber, elevator, Constants.ElevatorConstants.ELEVATOR_MID_EXTEND, Constants.GrabberConstants.ARM_HIGH_EXTEND, 6, 0.5)};
+        Action[] moveToScoringPos = {new AutoIntake(intake, true, 0.5), new AutoIntake(intake, false, 0.9), new FollowTrajectory(goBackToGrid, swerve, false), new AutoPassthoughScore(intake, grabber, elevator, Constants.ElevatorConstants.ELEVATOR_MID_EXTEND, Constants.GrabberConstants.ARM_HIGH_EXTEND, 3, 0.5)};
         parallel(moveToScoringPos);
         // release game piece
         parallel(outakeGrabber);

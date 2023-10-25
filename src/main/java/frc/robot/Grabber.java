@@ -73,7 +73,7 @@ public class Grabber {
         /* Grabber Setup */
         grabberMotor = new CANSparkMax(33, MotorType.kBrushless);
 
-        grabberMotor.setIdleMode(IdleMode.kCoast);
+        grabberMotor.setIdleMode(IdleMode.kBrake);
         grabberMotor.setInverted(true);
         grabberSolenoid = new Solenoid(Constants.IntakeConstants.PNUEMATIC_HUB_ID, PneumaticsModuleType.REVPH,  1);
 
@@ -178,8 +178,6 @@ public class Grabber {
             pid = Math.max(pid, -0.5);
         }
         arm.set(ControlMode.PercentOutput, pid);
-
-        DriverStation.reportError(Double.toString(pid), false);
     }
 
     public void zeroArm() {
